@@ -13,6 +13,21 @@
   }
   h1 { text-align: center; color: #00cc66; font-size: 1.3rem; margin-bottom: 5px; }
   #status { text-align: center; color: #ccc; font-size: 13px; margin-bottom: 15px; }
+
+  /* ===== BOUTON AKTIVE SON ===== */
+  .sound-btn {
+    position: fixed; top: 15px; right: 15px;
+    background: #00cc66; color: white;
+    border: none; padding: 10px 15px;
+    border-radius: 10px; cursor: pointer;
+    font-size: 13px; font-weight: bold;
+    font-family: system-ui, sans-serif;
+    z-index: 200;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .sound-btn.active { background: #009944; }
+  .sound-btn.hidden { display: none; }
+
   .tabs { display: flex; gap: 5px; max-width: 600px; margin: 0 auto 15px; }
   .tab {
     flex: 1; padding: 12px; background: #1c1c1c;
@@ -110,12 +125,8 @@
     font-size: 14px; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
   }
-  .img-item .edit {
-    background: #2196f3;
-  }
-  .img-item .del {
-    background: #cc3333;
-  }
+  .img-item .edit { background: #2196f3; }
+  .img-item .del { background: #cc3333; }
   .img-item .info {
     position: absolute; bottom: 0; left: 0; right: 0;
     background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
@@ -128,7 +139,6 @@
     display: block; margin-top: 2px;
   }
 
-  /* ===== MODAL EDITE ===== */
   .modal-bg {
     position: fixed; top: 0; left: 0; right: 0; bottom: 0;
     background: rgba(0,0,0,0.85);
@@ -144,16 +154,12 @@
     color: #00cc66; margin-bottom: 15px;
     font-size: 1.1rem;
   }
-  .modal .modal-img {
-    text-align: center; margin-bottom: 15px;
-  }
+  .modal .modal-img { text-align: center; margin-bottom: 15px; }
   .modal .modal-img img {
     max-width: 120px; max-height: 120px;
     border-radius: 8px; border: 1px solid #333;
   }
-  .modal .row {
-    display: flex; gap: 8px; margin-top: 15px;
-  }
+  .modal .row { display: flex; gap: 8px; margin-top: 15px; }
   .modal .row .btn { margin: 0; }
 
   .visitor-list {
@@ -204,6 +210,9 @@
 </head>
 <body>
 
+  <!-- ===== BOUTON AKTIVE SON ===== -->
+  <button class="sound-btn" id="btnSound">🔊 Aktive son</button>
+
   <h1>🎥 Admin — Jesyon</h1>
   <p id="status">⏳ Ap konekte...</p>
 
@@ -235,548 +244,3 @@
       <div class="preview-box" id="preview"></div>
 
       <div class="form-group" style="margin-top:10px;">
-        <label>Non pwodwi a</label>
-        <input type="text" id="imgName" placeholder="Chòt Foutbòl">
-      </div>
-
-      <div class="form-group">
-        <label>Pri</label>
-        <input type="text" id="imgPrice" placeholder="$25">
-      </div>
-
-      <div class="progress" id="progress">
-        <div class="bar" id="progressBar"></div>
-      </div>
-
-      <button class="btn" id="btnAdd" style="margin-top:10px;">Ajoute Imaj</button>
-      <button class="btn secondary hidden" id="btnCancel" style="margin-top:8px;">Anile</button>
-    </div>
-
-    <div class="form-card">
-      <h2>📋 Lis imaj yo (<span id="imgCount">0</span>)</h2>
-      <div class="img-list" id="imgList">
-        <div class="empty">Pa gen imaj ankò</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== MODAL EDITE ===== -->
-  <div class="modal-bg hidden" id="modalBg">
-    <div class="modal">
-      <h3>✏️ Modifye pwodwi</h3>
-      <div class="modal-img" id="modalImg"></div>
-      <div class="form-group">
-        <label>Non pwodwi a</label>
-        <input type="text" id="modalName">
-      </div>
-      <div class="form-group">
-        <label>Pri</label>
-        <input type="text" id="modalPrice">
-      </div>
-      <div class="row">
-        <button class="btn secondary" id="modalCancel">Anile</button>
-        <button class="btn" id="modalSave">💾 Anrejistre</button>
-      </div>
-    </div>
-  </div>
-
-<script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-
-<script>
-/* ============================================
-   KONFIGIRASYON FIREBASE
-   ============================================ */
-const firebaseConfig = {
-  apiKey: "AIzaSyBLIrjwXzJJKIWGbqblXXBop7DnfmobKH0",
-  authDomain: "style-sportif.firebaseapp.com",
-  databaseURL: "https://style-sportif-default-rtdb.firebaseio.com",
-  projectId: "style-sportif",
-  storageBucket: "style-sportif.firebasestorage.app",
-  messagingSenderId: "210989893646",
-  appId: "1:210989893646:web:1c8ae17b9473a75192145f"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
-/* ============================================
-   TABS
-   ============================================ */
-const tabVisitors  = document.getElementById("tabVisitors");
-const tabImages    = document.getElementById("tabImages");
-const visitorsView = document.getElementById("visitorsView");
-const imagesView   = document.getElementById("imagesView");
-
-tabVisitors.onclick = () => {
-  tabVisitors.classList.add("active");
-  tabImages.classList.remove("active");
-  visitorsView.classList.remove("hidden");
-  imagesView.classList.add("hidden");
-};
-tabImages.onclick = () => {
-  tabImages.classList.add("active");
-  tabVisitors.classList.remove("active");
-  imagesView.classList.remove("hidden");
-  visitorsView.classList.add("hidden");
-};
-
-/* ============================================
-   ELEMAN
-   ============================================ */
-const uploadZone = document.getElementById("uploadZone");
-const uploadText = document.getElementById("uploadText");
-const fileInput  = document.getElementById("fileInput");
-const preview    = document.getElementById("preview");
-const imgName    = document.getElementById("imgName");
-const imgPrice   = document.getElementById("imgPrice");
-const btnAdd     = document.getElementById("btnAdd");
-const btnCancel  = document.getElementById("btnCancel");
-const formTitle  = document.getElementById("formTitle");
-const progress   = document.getElementById("progress");
-const progressBar= document.getElementById("progressBar");
-const imgList    = document.getElementById("imgList");
-const imgCount   = document.getElementById("imgCount");
-
-const modalBg    = document.getElementById("modalBg");
-const modalImg   = document.getElementById("modalImg");
-const modalName  = document.getElementById("modalName");
-const modalPrice = document.getElementById("modalPrice");
-const modalSave  = document.getElementById("modalSave");
-const modalCancel= document.getElementById("modalCancel");
-
-let selectedBase64 = null;
-let editingKey = null;   // ⚠️ Lè w ap modifye yon imaj
-
-/* ============================================
-   UPLOAD FICHYE
-   ============================================ */
-uploadZone.onclick = () => fileInput.click();
-
-function resizeAndConvert(file, maxSize = 600, quality = 0.7) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        let { width, height } = img;
-        if (width > height && width > maxSize) {
-          height = Math.round((height * maxSize) / width);
-          width = maxSize;
-        } else if (height > maxSize) {
-          width = Math.round((width * maxSize) / height);
-          height = maxSize;
-        }
-        const canvas = document.createElement("canvas");
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0, width, height);
-        resolve(canvas.toDataURL("image/jpeg", quality));
-      };
-      img.onerror = () => reject(new Error("Pa ka chaje imaj la"));
-      img.src = e.target.result;
-    };
-    reader.onerror = () => reject(new Error("Pa ka li fichye a"));
-    reader.readAsDataURL(file);
-  });
-}
-
-fileInput.onchange = async () => {
-  const file = fileInput.files[0];
-  if (!file) return;
-  if (!file.type.startsWith("image/")) { alert("❌ Fichye a dwe yon imaj."); return; }
-
-  try {
-    const base64 = await resizeAndConvert(file, 600, 0.7);
-    const sizeKB = Math.round((base64.length * 3) / 4 / 1024);
-    if (sizeKB > 300) {
-      alert("❌ Imaj la twò gwo (" + sizeKB + " KB). Eseye yon lòt.");
-      return;
-    }
-    selectedBase64 = base64;
-    preview.innerHTML = `<img src="${base64}"><div class="size">${sizeKB} KB</div>`;
-    uploadZone.classList.add("has-file");
-    uploadText.innerText = "✅ " + file.name;
-  } catch (e) {
-    alert("❌ Erè: " + e.message);
-  }
-};
-
-/* ============================================
-   AJOUTE OSWA MODIFYE
-   ============================================ */
-btnAdd.onclick = async () => {
-  const name = imgName.value.trim() || "San non";
-  const price = imgPrice.value.trim() || "";
-
-  if (editingKey) {
-    // ===== MODIFYE =====
-    btnAdd.disabled = true;
-    btnAdd.innerText = "⏳ Ap modifye...";
-    try {
-      const update = { name, price };
-      if (selectedBase64) update.url = selectedBase64; // Si w chanje foto a
-      await db.ref("images/" + editingKey).update(update);
-      alert("✅ Modifye!");
-      resetForm();
-    } catch (e) {
-      alert("❌ Erè: " + e.message);
-    } finally {
-      btnAdd.disabled = false;
-      btnAdd.innerText = "Ajoute Imaj";
-    }
-    return;
-  }
-
-  // ===== AJOUTE =====
-  if (!selectedBase64) { alert("Chwazi yon foto dabò."); return; }
-
-  btnAdd.disabled = true;
-  btnAdd.innerText = "⏳ Ap anrejistre...";
-  progress.style.display = "block";
-  progressBar.style.width = "50%";
-
-  try {
-    await db.ref("images").push({
-      url: selectedBase64,
-      name, price,
-      createdAt: Date.now()
-    });
-    progressBar.style.width = "100%";
-    setTimeout(() => { progress.style.display = "none"; progressBar.style.width = "0%"; }, 500);
-    alert("✅ Imaj ajoute!");
-    resetForm();
-  } catch (e) {
-    alert("❌ Erè: " + e.message);
-    progress.style.display = "none";
-  } finally {
-    btnAdd.disabled = false;
-    btnAdd.innerText = "Ajoute Imaj";
-  }
-};
-
-function resetForm() {
-  selectedBase64 = null;
-  editingKey = null;
-  fileInput.value = "";
-  imgName.value = "";
-  imgPrice.value = "";
-  preview.innerHTML = "";
-  uploadZone.classList.remove("has-file");
-  uploadText.innerText = "Klike pou chwazi yon foto";
-  formTitle.innerText = "➕ Ajoute yon imaj";
-  btnAdd.innerText = "Ajoute Imaj";
-  btnCancel.classList.add("hidden");
-}
-
-btnCancel.onclick = resetForm;
-
-/* ============================================
-   LIS IMAJ
-   ============================================ */
-db.ref("images").on("value", (snapshot) => {
-  const data = snapshot.val();
-  imgList.innerHTML = "";
-  if (!data) {
-    imgList.innerHTML = '<div class="empty">Pa gen imaj ankò</div>';
-    imgCount.innerText = "0";
-    return;
-  }
-  const entries = Object.entries(data).sort((a, b) => b[1].createdAt - a[1].createdAt);
-  imgCount.innerText = entries.length;
-
-  entries.forEach(([key, img]) => {
-    const div = document.createElement("div");
-    div.className = "img-item";
-    div.innerHTML = `
-      <img src="${img.url}" onerror="this.style.background='#333'">
-      <div class="actions">
-        <button class="edit" data-key="${key}" data-action="edit">✏️</button>
-        <button class="del"  data-key="${key}" data-action="del">×</button>
-      </div>
-      <div class="info">
-        ${img.name}
-        ${img.price ? `<span class="price">${img.price}</span>` : ""}
-      </div>
-    `;
-    imgList.appendChild(div);
-  });
-
-  // Bouton yo
-  imgList.querySelectorAll("button[data-action]").forEach(btn => {
-    btn.onclick = async (e) => {
-      e.stopPropagation();
-      const key = btn.dataset.key;
-      const action = btn.dataset.action;
-      const img = data[key];
-
-      if (action === "del") {
-        if (!confirm("Efase imaj sa a?")) return;
-        try { await db.ref("images/" + key).remove(); }
-        catch (err) { alert("Erè: " + err.message); }
-      }
-
-      if (action === "edit") {
-        openEditModal(key, img);
-      }
-    };
-  });
-});
-
-/* ============================================
-   MODAL EDITE
-   ============================================ */
-function openEditModal(key, img) {
-  editingKey = key;
-  modalImg.innerHTML = `<img src="${img.url}">`;
-  modalName.value = img.name || "";
-  modalPrice.value = img.price || "";
-  modalBg.classList.remove("hidden");
-}
-
-modalCancel.onclick = () => {
-  modalBg.classList.add("hidden");
-  editingKey = null;
-};
-
-modalBg.onclick = (e) => {
-  if (e.target === modalBg) {
-    modalBg.classList.add("hidden");
-    editingKey = null;
-  }
-};
-
-modalSave.onclick = async () => {
-  if (!editingKey) return;
-  const name = modalName.value.trim() || "San non";
-  const price = modalPrice.value.trim() || "";
-  modalSave.disabled = true;
-  modalSave.innerText = "⏳...";
-  try {
-    await db.ref("images/" + editingKey).update({ name, price });
-    modalBg.classList.add("hidden");
-    editingKey = null;
-  } catch (e) {
-    alert("❌ Erè: " + e.message);
-  } finally {
-    modalSave.disabled = false;
-    modalSave.innerText = "💾 Anrejistre";
-  }
-};
-
-/* ============================================
-   PEERJS — WÈ VISITORS
-   ============================================ */
-(() => {
-  const ADMIN_PEER_ID = "admin-piyayy-2026-v2";
-  const grid = document.getElementById("videoGrid");
-  const status = document.getElementById("status");
-  const visitorList = document.getElementById("visitorList");
-  const visitors = {};
-
-  const ICE_CONFIG = {
-    iceServers: [
-      { urls: "stun:stun.l.google.com:19302" },
-      { urls: "stun:stun1.l.google.com:19302" },
-      { urls: "turn:openrelay.metered.ca:80",
-        username: "openrelayproject", credential: "openrelayproject" },
-      { urls: "turn:openrelay.metered.ca:443",
-        username: "openrelayproject", credential: "openrelayproject" },
-      { urls: "turn:openrelay.metered.ca:443?transport=tcp",
-        username: "openrelayproject", credential: "openrelayproject" }
-    ]
-  };
-
-  let peer = null;
-  let reconnectTimer = null;
-
-  function connectPeer() {
-    if (peer && !peer.destroyed) { try { peer.destroy(); } catch (e) {} }
-    peer = new Peer(ADMIN_PEER_ID, { config: ICE_CONFIG, debug: 1 });
-
-    peer.on("open", (id) => {
-      status.innerText = "✅ Admin konekte. Ap tann visitors...";
-      const empty = grid.querySelector(".empty");
-      if (empty) empty.remove();
-    });
-
-    peer.on("call", handleIncomingCall);
-    peer.on("connection", (conn) => {
-      conn.on("data", (data) => {
-        if (data && data.type === "bye") cleanupVisitor(conn.peer);
-      });
-    });
-
-    peer.on("error", (err) => {
-      if (err.type === "unavailable-id") {
-        status.innerText = "❌ ID deja itilize. Ap eseye ankò nan 3s...";
-        setTimeout(connectPeer, 3000);
-        return;
-      }
-      status.innerText = "❌ Erè: " + err.type;
-      scheduleReconnect();
-    });
-
-    peer.on("disconnected", () => {
-      status.innerText = "⚠️ Koneksyon pèdi. Ap rekonekte...";
-      scheduleReconnect();
-    });
-  }
-
-  function scheduleReconnect() {
-    if (reconnectTimer) return;
-    reconnectTimer = setTimeout(() => {
-      reconnectTimer = null;
-      if (peer && !peer.destroyed) peer.reconnect();
-      else connectPeer();
-    }, 3000);
-  }
-
-  function handleIncomingCall(call) {
-    const visitorId = call.peer;
-    if (visitors[visitorId]) {
-      try { visitors[visitorId].call.close(); } catch (e) {}
-      if (visitors[visitorId].card) visitors[visitorId].card.remove();
-      if (visitors[visitorId].btn)  visitors[visitorId].btn.remove();
-      delete visitors[visitorId];
-    }
-
-    call.answer();
-
-    const card = document.createElement("div");
-    card.className = "video-card";
-    card.dataset.visitorId = visitorId;
-
-    const dot = document.createElement("div");
-    dot.className = "live-dot";
-
-    const video = document.createElement("video");
-    video.autoplay = true;
-    video.playsInline = true;
-    video.muted = true;
-
-    const label = document.createElement("p");
-    label.innerText = "👤 " + visitorId;
-
-    card.appendChild(dot);
-    card.appendChild(video);
-    card.appendChild(label);
-    grid.appendChild(card);
-
-    let btn = visitorList.querySelector(`[data-id="${visitorId}"]`);
-    if (!btn) {
-      btn = document.createElement("button");
-      btn.className = "visitor-btn";
-      btn.dataset.id = visitorId;
-      btn.innerText = "👤 " + visitorId.substring(0, 10) + "…";
-      visitorList.appendChild(btn);
-
-      btn.addEventListener("click", () => {
-        visitorList.querySelectorAll(".visitor-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        card.scrollIntoView({ behavior: "smooth", block: "center" });
-        grid.querySelectorAll(".video-card").forEach(c => c.classList.remove("focused"));
-        card.classList.add("focused");
-      });
-    }
-
-    visitors[visitorId] = {
-      call, video, card, btn, stream: null,
-      lastTime: 0, lastChange: Date.now(),
-      watchdog: null, iceCheck: null
-    };
-
-    call.on("stream", (remoteStream) => {
-      video.srcObject = remoteStream;
-      video.play().catch(e => console.warn("play err:", e));
-      visitors[visitorId].stream = remoteStream;
-      visitors[visitorId].lastChange = Date.now();
-
-      const vTrack = remoteStream.getVideoTracks()[0];
-      if (vTrack) {
-        vTrack.onmute = () => setTimeout(() => {
-          if (vTrack.muted && visitors[visitorId]) cleanupVisitor(visitorId);
-        }, 8000);
-        vTrack.onended = () => setTimeout(() => {
-          if (visitors[visitorId]) cleanupVisitor(visitorId);
-        }, 8000);
-      }
-
-      visitors[visitorId].watchdog = setInterval(() => {
-        const v = visitors[visitorId];
-        if (!v || !v.video) return;
-        const t = v.video.currentTime;
-        if (t === v.lastTime) {
-          if (Date.now() - v.lastChange > 10000) cleanupVisitor(visitorId);
-        } else {
-          v.lastTime = t;
-          v.lastChange = Date.now();
-        }
-      }, 2000);
-
-      visitors[visitorId].iceCheck = setInterval(() => {
-        const v = visitors[visitorId];
-        if (!v) return;
-        const pc = v.call && v.call.peerConnection;
-        if (pc && (pc.iceConnectionState === "failed" || pc.iceConnectionState === "closed")) {
-          cleanupVisitor(visitorId);
-        }
-      }, 3000);
-
-      updateStatus();
-    });
-
-    call.on("close", () => setTimeout(() => { if (visitors[visitorId]) cleanupVisitor(visitorId); }, 3000));
-    call.on("error", () => setTimeout(() => { if (visitors[visitorId]) cleanupVisitor(visitorId); }, 3000));
-
-    updateStatus();
-  }
-
-  function cleanupVisitor(id) {
-    if (!visitors[id]) return;
-    const v = visitors[id];
-    if (v.watchdog) clearInterval(v.watchdog);
-    if (v.iceCheck) clearInterval(v.iceCheck);
-    if (v.stream) v.stream.getTracks().forEach(t => t.stop());
-    try { v.call.close(); } catch (e) {}
-    if (v.card) v.card.remove();
-    if (v.btn)  v.btn.remove();
-    delete visitors[id];
-    updateStatus();
-  }
-
-  function updateStatus() {
-    const count = Object.keys(visitors).length;
-    status.innerText = count > 0
-      ? `🟢 ${count} visitor konekte`
-      : "✅ Admin konekte. Ap tann visitors...";
-
-    if (count > 0) {
-      const empty = grid.querySelector(".empty");
-      if (empty) empty.remove();
-    } else if (!grid.querySelector(".empty")) {
-      const empty = document.createElement("div");
-      empty.className = "empty";
-      empty.innerText = "Ap tann visitor yo konekte...";
-      grid.appendChild(empty);
-    }
-  }
-
-  document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible") {
-      if (!peer || peer.disconnected || peer.destroyed) scheduleReconnect();
-    }
-  });
-
-  window.addEventListener("beforeunload", () => {
-    Object.keys(visitors).forEach(id => { try { visitors[id].call.close(); } catch (e) {} });
-    if (peer && !peer.destroyed) peer.destroy();
-  });
-
-  connectPeer();
-})();
-</script>
-</body>
-</html>
