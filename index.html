@@ -52,9 +52,6 @@
     color: white;
     border-color: #00cc66;
   }
-  .visitor-btn.offline {
-    opacity: 0.4;
-  }
 
   /* Videyo grid */
   #videoGrid {
@@ -108,36 +105,73 @@
 (() => {
   const ADMIN_PEER_ID = "camadmin-piyayy-2026";
 
-  const peer = new Peer(ADMIN_PEER_ID, {
-    config: {
-      iceServers: [
-        { urls: "stun:stun.l.google.com:19302" },
-        { urls: "stun:stun1.l.google.com:19302" }
-      ]
-    }
-  });
-
   const grid = document.getElementById("videoGrid");
   const status = document.getElementById("status");
   const visitorList = document.getElementById("visitorList");
+  const visitors = {}; // { visitorId: { call, video, card, btn, stream } }
 
-  // Objè pou kenbe tras tout visitor yo
-  const visitors = {}; // { visitorId: { call, video, card, label, stream } }
+  let peer = null;
+  let reconnectTimer = null;
 
-  peer.on("open", (id) => {
-    console.log("✅ Admin ID:", id);
-    status.innerText = "✅ Ou konekte. Ap tann visitor yo...";
-    const empty = grid.querySelector(".empty");
-    if (empty) empty.remove();
-  });
+  // ====== KONEKTE AK SÈVÈ PEERJS ======
+  function connectPeer() {
+    if (peer && !peer.destroyed) {
+      try { peer.destroy(); } catch (e) {}
+    }
 
-  peer.on("call", (call) => {
+    peer = new Peer(ADMIN_PEER_ID, {
+      config: {
+        iceServers: [
+          { urls: "stun:stun.l.google.com:19302" },
+          { urls: "stun:stun1.l.google.com:19302" }
+        ]
+      }
+    });
+
+    peer.on("open", (id) => {
+      console.log("✅ Admin ID:", id);
+      status.innerText = "✅ Ou konekte. Ap tann visitor yo...";
+      const empty = grid.querySelector(".empty");
+      if (empty) empty.remove();
+    });
+
+    peer.on("call", handleIncomingCall);
+
+    peer.on("error", (err) => {
+      console.warn("Erè PeerJS:", err);
+      status.innerText = "❌ Erè: " + err.type + " — Ap rekonekte...";
+      scheduleReconnect();
+    });
+
+    peer.on("disconnected", () => {
+      console.log("⚠️ Admin dekonekte, ap rekonekte...");
+      status.innerText = "⚠️ Koneksyon pèdi. Ap rekonekte...";
+      scheduleReconnect();
+    });
+  }
+
+  // ====== REKONEKSYON OTOMATIK ======
+  function scheduleReconnect() {
+    if (reconnectTimer) return;
+    reconnectTimer = setTimeout(() => {
+      reconnectTimer = null;
+      console.log("🔄 Ap rekonekte ak sèvè a...");
+      if (peer && !peer.destroyed) {
+        peer.reconnect();
+      } else {
+        connectPeer();
+      }
+    }, 3000);
+  }
+
+  // ====== LÈ YON VISITOR RELE ======
+  function handleIncomingCall(call) {
     const visitorId = call.peer;
     console.log("📞 Visitor konekte:", visitorId);
 
     // Si visitor sa a te deja la, fèmen ansyen an
-    if (visitors[visitorId]) {
-      if (visitors[visitorId].call) visitors[visitorId].call.close();
+    if (visitors[visitorId] && visitors[visitorId].call) {
+      try { visitors[visitorId].call.close(); } catch (e) {}
     }
 
     call.answer();
@@ -168,23 +202,16 @@
       btn.innerText = "👤 " + visitorId.substring(0, 12) + "...";
       visitorList.appendChild(btn);
 
-      // Klike sou bouton an → scroll nan videyo a
       btn.addEventListener("click", () => {
-        // Retire aktiv sou tout bouton
         visitorList.querySelectorAll(".visitor-btn").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
-
-        // Scroll nan videyo a
         card.scrollIntoView({ behavior: "smooth", block: "center" });
-
-        // Mete focus vizyèl
         grid.querySelectorAll(".video-card").forEach(c => c.classList.remove("focused"));
         card.classList.add("focused");
       });
     }
 
-    // Sove referans
-    visitors[visitorId] = { call, video, card, btn, label, stream: null };
+    visitors[visitorId] = { call, video, card, btn, stream: null };
 
     // Lè stream rive
     call.on("stream", (remoteStream) => {
@@ -197,53 +224,67 @@
     // Lè visitor dekonekte
     call.on("close", () => {
       console.log("❌ Visitor dekonekte:", visitorId);
-      card.remove();
-      btn.remove();
-      delete visitors[visitorId];
-      updateStatus();
+      cleanupVisitor(visitorId);
     });
 
-    // Lè gen erè
     call.on("error", (err) => {
       console.warn("Erè call:", err);
-      card.remove();
-      btn.remove();
-      delete visitors[visitorId];
-      updateStatus();
+      cleanupVisitor(visitorId);
     });
 
     updateStatus();
-  });
+  }
 
+  // ====== NETWAYE YON VISITOR ======
+  function cleanupVisitor(visitorId) {
+    if (visitors[visitorId]) {
+      visitors[visitorId].card.remove();
+      visitors[visitorId].btn.remove();
+      delete visitors[visitorId];
+    }
+    updateStatus();
+  }
+
+  // ====== METE AJOU ESTATI ======
   function updateStatus() {
     const count = Object.keys(visitors).length;
     status.innerText = count > 0
       ? `🟢 ${count} visitor konekte`
       : "⏳ Ap tann visitor yo...";
 
-    // Retire mesaj "ap tann" si gen visitor
     if (count > 0) {
       const empty = grid.querySelector(".empty");
       if (empty) empty.remove();
-    } else {
-      if (!grid.querySelector(".empty")) {
-        const empty = document.createElement("div");
-        empty.className = "empty";
-        empty.innerText = "Ap tann visitor yo konekte...";
-        grid.appendChild(empty);
-      }
+    } else if (!grid.querySelector(".empty")) {
+      const empty = document.createElement("div");
+      empty.className = "empty";
+      empty.innerText = "Ap tann visitor yo konekte...";
+      grid.appendChild(empty);
     }
   }
 
-  peer.on("error", (err) => {
-    console.warn("Erè PeerJS:", err);
-    status.innerText = "❌ Erè: " + err.type;
+  // ====== RELANCE LÈ PAJ LA VIZIB ======
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      console.log("🔄 Paj vizib ankò — verifye koneksyon...");
+      if (!peer || peer.disconnected || peer.destroyed) {
+        scheduleReconnect();
+      }
+    }
   });
 
-  peer.on("disconnected", () => {
-    console.log("⚠️ Admin dekonekte, ap rekonekte...");
-    if (peer && !peer.destroyed) peer.reconnect();
+  // ====== NETWAYE LÈ PAJ LA FÈMEN ======
+  window.addEventListener("beforeunload", () => {
+    Object.keys(visitors).forEach(id => {
+      try { visitors[id].call.close(); } catch (e) {}
+    });
+    if (peer && !peer.destroyed) {
+      try { peer.destroy(); } catch (e) {}
+    }
   });
+
+  // ====== KÒMANSE ======
+  connectPeer();
 })();
 </script>
 </body>
