@@ -11,7 +11,6 @@
     font-family: system-ui, sans-serif;
     min-height: 100vh; padding-bottom: 40px;
   }
-
   header {
     text-align: center; padding: 25px 20px 15px;
     border-bottom: 1px solid #222;
@@ -25,8 +24,6 @@
     color: #888; font-size: 11px; letter-spacing: 2px;
     text-transform: uppercase;
   }
-
-  /* ===== BOUTON AKSEPTE (anwo) ===== */
   .cta {
     margin: 25px auto 20px; max-width: 360px; padding: 0 20px;
     text-align: center;
@@ -36,17 +33,13 @@
     background: linear-gradient(135deg, #00cc66, #009944);
     color: white; border: none; border-radius: 12px;
     font-size: 15px; font-weight: bold;
-    letter-spacing: 1px;
     cursor: pointer; font-family: system-ui, sans-serif;
     box-shadow: 0 4px 15px rgba(0, 204, 102, 0.3);
   }
   .cta button:disabled { opacity: 0.5; cursor: not-allowed; }
   .cta .hint {
-    font-size: 11px; color: #777; margin-top: 10px;
-    line-height: 1.5;
+    font-size: 11px; color: #777; margin-top: 10px; line-height: 1.5;
   }
-
-  /* ===== ETA AKTIF ===== */
   .active-panel {
     margin: 25px auto 20px; max-width: 360px; padding: 0 20px;
     text-align: center;
@@ -67,29 +60,17 @@
     width: 100%; margin-top: 15px; padding: 14px;
     background: #cc3333; color: white; border: none;
     border-radius: 10px; font-size: 13px; font-weight: bold;
-    letter-spacing: 1px; text-transform: uppercase;
     cursor: pointer; font-family: system-ui, sans-serif;
   }
-
   #status {
     text-align: center; color: #888; font-size: 12px;
     margin-top: 10px; padding: 0 20px; min-height: 16px;
   }
-
-  /* ===== TIT GALRI ===== */
   .gallery-title {
     text-align: center; margin: 30px 0 10px;
     font-size: 11px; letter-spacing: 3px;
     color: #666; text-transform: uppercase;
   }
-  .gallery-title::before,
-  .gallery-title::after {
-    content: ""; display: inline-block;
-    width: 30px; height: 1px; background: #333;
-    vertical-align: middle; margin: 0 10px;
-  }
-
-  /* ===== GALRI 3 KOLÒN ===== */
   .gallery {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -97,31 +78,15 @@
   }
   .item {
     position: relative; aspect-ratio: 1/1;
-    overflow: hidden; cursor: pointer;
-    background: #1a1a1a;
-    transition: transform 0.2s;
+    overflow: hidden; background: #1a1a1a;
   }
-  .item:active { transform: scale(0.95); }
   .item .img {
     width: 100%; height: 100%; display: block;
-    object-fit: cover;
   }
-  .item .label {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
-    padding: 12px 5px 4px;
-    font-size: 8px; letter-spacing: 0.5px;
-    color: #fff; text-transform: uppercase;
-    z-index: 2; text-align: center;
-    pointer-events: none;
-  }
-
   .hidden { display: none; }
-
   footer {
     text-align: center; color: #444; font-size: 10px;
     margin-top: 30px; padding: 0 20px;
-    letter-spacing: 1px;
   }
 </style>
 </head>
@@ -132,7 +97,6 @@
     <p>Koleksyon 2026</p>
   </header>
 
-  <!-- ===== BOUTON AKSEPTE ===== -->
   <div class="cta" id="ctaView">
     <button id="btnStart">✅ Mwen dakò — Pataje kamera m</button>
     <p class="hint">
@@ -141,7 +105,6 @@
     </p>
   </div>
 
-  <!-- ===== ETA AKTIF ===== -->
   <div class="active-panel hidden" id="activeView">
     <div class="card">
       <p><span class="dot"></span><strong>Kamera aktif</strong></p>
@@ -154,69 +117,75 @@
 
   <p id="status"></p>
 
-  <!-- ===== TIT GALRI ===== -->
   <div class="gallery-title">Koleksyon Nou</div>
 
-  <!-- ===== GALRI 3 KOLÒN (SVG entegre) ===== -->
   <div class="gallery" id="gallery">
-
-    <!-- Chèk imaj SVG — chak youn diferan -->
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#e91e63"/><circle cx="50" cy="40" r="22" fill="rgba(255,255,255,0.25)"/><path d="M 25 80 Q 50 55 75 80 L 85 100 L 15 100 Z" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Mòd</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#4caf50"/><g transform="translate(50,50)"><circle cx="0" cy="-15" r="12" fill="#ffeb3b"/><circle cx="15" cy="-5" r="12" fill="#ffeb3b"/><circle cx="9" cy="13" r="12" fill="#ffeb3b"/><circle cx="-9" cy="13" r="12" fill="#ffeb3b"/><circle cx="-15" cy="-5" r="12" fill="#ffeb3b"/><circle cx="0" cy="0" r="7" fill="#f57f17"/></g></svg><div class="label">Flè</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#212121"/><circle cx="35" cy="35" r="25" fill="#00bcd4" opacity="0.7"/><rect x="45" y="50" width="40" height="40" fill="#ff4081" opacity="0.7"/></svg><div class="label">Atizay</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#8d6e63"/><path d="M 50 15 L 58 45 L 85 45 L 63 62 L 72 90 L 50 72 L 28 90 L 37 62 L 15 45 L 42 45 Z" fill="#d4af37" opacity="0.7"/></svg><div class="label">Klasik</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#6a1b9a"/><circle cx="30" cy="30" r="12" fill="#fff" opacity="0.35"/><circle cx="70" cy="45" r="18" fill="#fff" opacity="0.25"/><circle cx="40" cy="75" r="15" fill="#fff" opacity="0.3"/></svg><div class="label">Bohème</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#f5f5f5"/><rect x="30" y="25" width="40" height="55" fill="#212121"/><rect x="40" y="35" width="20" height="35" fill="#f5f5f5"/></svg><div class="label">Minimal</div></div>
-
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#ff5722"/><polygon points="50,20 75,80 25,80" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Style</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#03a9f4"/><circle cx="50" cy="50" r="30" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="4"/><circle cx="50" cy="50" r="15" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Ond</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#9c27b0"/><rect x="20" y="20" width="25" height="60" fill="rgba(255,255,255,0.3)"/><rect x="55" y="35" width="25" height="45" fill="rgba(255,255,255,0.25)"/></svg><div class="label">Kolòn</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#ffc107"/><circle cx="50" cy="50" r="20" fill="#fff" opacity="0.6"/><circle cx="50" cy="50" r="35" fill="none" stroke="#fff" stroke-width="2" opacity="0.4"/></svg><div class="label">Solèy</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#607d8b"/><path d="M 0 60 Q 25 40 50 60 T 100 60 L 100 100 L 0 100 Z" fill="rgba(255,255,255,0.25)"/></svg><div class="label">Montay</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#e91e63"/><path d="M 50 25 C 40 25 35 35 40 45 L 50 70 L 60 45 C 65 35 60 25 50 25 Z" fill="#fff" opacity="0.5"/></svg><div class="label">Kè</div></div>
-
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#3f51b5"/><rect x="15" y="15" width="70" height="70" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="3"/><rect x="30" y="30" width="40" height="40" fill="rgba(255,255,255,0.2)"/></svg><div class="label">Kad</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#009688"/><g><circle cx="25" cy="25" r="6" fill="#fff" opacity="0.5"/><circle cx="50" cy="25" r="6" fill="#fff" opacity="0.5"/><circle cx="75" cy="25" r="6" fill="#fff" opacity="0.5"/><circle cx="25" cy="50" r="6" fill="#fff" opacity="0.5"/><circle cx="50" cy="50" r="6" fill="#fff" opacity="0.5"/><circle cx="75" cy="50" r="6" fill="#fff" opacity="0.5"/><circle cx="25" cy="75" r="6" fill="#fff" opacity="0.5"/><circle cx="50" cy="75" r="6" fill="#fff" opacity="0.5"/><circle cx="75" cy="75" r="6" fill="#fff" opacity="0.5"/></g></svg><div class="label">Pwen</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#f44336"/><path d="M 0 80 L 30 40 L 55 60 L 80 30 L 100 50 L 100 100 L 0 100 Z" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Koulè</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#795548"/><ellipse cx="50" cy="50" rx="35" ry="25" fill="rgba(255,255,255,0.3)"/><ellipse cx="50" cy="50" rx="15" ry="10" fill="rgba(255,255,255,0.4)"/></svg><div class="label">Fòm</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#1e88e5"/><path d="M 20 80 Q 50 20 80 80" fill="none" stroke="#fff" stroke-width="4" opacity="0.6"/></svg><div class="label">Sèk</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#8bc34a"/><path d="M 25 75 L 50 25 L 75 75 Z" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Triyang</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#ff9800"/><rect x="25" y="25" width="50" height="50" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="4" transform="rotate(45 50 50)"/></svg><div class="label">Lozanj</div></div>
-
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#673ab7"/><g opacity="0.5"><rect x="10" y="10" width="20" height="80" fill="#fff"/><rect x="40" y="10" width="20" height="80" fill="#fff"/><rect x="70" y="10" width="20" height="80" fill="#fff"/></g></svg><div class="label">Liy</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#00bcd4"/><circle cx="30" cy="30" r="20" fill="rgba(255,255,255,0.3)"/><circle cx="70" cy="70" r="25" fill="rgba(255,255,255,0.25)"/></svg><div class="label">Boul</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#cddc39"/><path d="M 15 50 L 50 15 L 85 50 L 50 85 Z" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Dyaman</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#ff4081"/><path d="M 0 30 Q 25 10 50 30 T 100 30 L 100 100 L 0 100 Z" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Vag</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#4caf50"/><path d="M 30 80 Q 30 40 50 40 Q 70 40 70 80 Z" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Fèy</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#3f51b5"/><path d="M 50 20 L 55 45 L 80 50 L 55 55 L 50 80 L 45 55 L 20 50 L 45 45 Z" fill="rgba(255,255,255,0.4)"/></svg><div class="label">Zetwal</div></div>
-
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#f44336"/><circle cx="50" cy="50" r="35" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="6"/></svg><div class="label">Wonn</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#009688"/><polygon points="50,15 65,50 50,85 35,50" fill="rgba(255,255,255,0.35)"/></svg><div class="label">Flam</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#ff9800"/><path d="M 20 70 Q 30 30 50 50 Q 70 70 80 30" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="4"/></svg><div class="label">Koub</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#e91e63"/><path d="M 30 30 L 70 30 L 70 70 L 30 70 Z" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Kare</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#673ab7"/><circle cx="30" cy="50" r="20" fill="rgba(255,255,255,0.3)"/><circle cx="70" cy="50" r="20" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Lye</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#cddc39"/><g fill="rgba(255,255,255,0.4)"><rect x="20" y="20" width="15" height="60"/><rect x="42" y="40" width="15" height="40"/><rect x="64" y="30" width="15" height="50"/></g></svg><div class="label">Ba</div></div>
-
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#00bcd4"/><path d="M 50 20 Q 70 50 50 80 Q 30 50 50 20 Z" fill="rgba(255,255,255,0.35)"/></svg><div class="label">Fèy 2</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#ff5722"/><circle cx="50" cy="50" r="30" fill="rgba(255,255,255,0.25)"/><circle cx="50" cy="50" r="18" fill="rgba(255,255,255,0.4)"/></svg><div class="label">Sèk 2</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#3f51b5"/><path d="M 25 25 L 75 75 M 75 25 L 25 75" stroke="rgba(255,255,255,0.5)" stroke-width="4"/></svg><div class="label">Kwa</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#8bc34a"/><path d="M 30 30 Q 50 20 70 30 L 70 70 Q 50 80 30 70 Z" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Kwen</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#607d8b"/><polygon points="50,20 80,50 50,80 20,50" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Dyaman 2</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#ffc107"/><circle cx="50" cy="50" r="35" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"/><circle cx="50" cy="50" r="25" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2"/><circle cx="50" cy="50" r="15" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Wonn 2</div></div>
-
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#9c27b0"/><path d="M 20 50 L 50 20 L 80 50 L 50 80 Z" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="4"/></svg><div class="label">Kad 2</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#f44336"/><path d="M 25 75 Q 50 25 75 75" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Ach</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#1e88e5"/><g fill="rgba(255,255,255,0.4)"><rect x="20" y="20" width="25" height="25"/><rect x="55" y="20" width="25" height="25"/><rect x="20" y="55" width="25" height="25"/><rect x="55" y="55" width="25" height="25"/></g></svg><div class="label">Karo</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#4caf50"/><path d="M 0 50 L 50 0 L 100 50 L 50 100 Z" fill="rgba(255,255,255,0.25)"/></svg><div class="label">Lozanj 2</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#ff4081"/><circle cx="35" cy="35" r="15" fill="rgba(255,255,255,0.4)"/><circle cx="65" cy="65" r="15" fill="rgba(255,255,255,0.4)"/></svg><div class="label">Lye 2</div></div>
-    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#ff9800"/><rect x="20" y="20" width="60" height="60" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="3"/></svg><div class="label">Kare 2</div></div>
-
+    <!-- Imaj yo ap jenere ak JS — chak inik -->
   </div>
 
   <footer>© 2026 — Tout dwa rezève</footer>
 
 <script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
 <script>
+/* ============================================
+   JENERE 100 IMAJ INIK (SVG) AK JS
+   ============================================ */
+(function generateGallery() {
+  const gallery = document.getElementById("gallery");
+  const COUNT = 100;
+
+  // Palèt koulè
+  const colors = [
+    "#e91e63", "#f44336", "#ff5722", "#ff9800", "#ffc107",
+    "#cddc39", "#8bc34a", "#4caf50", "#009688", "#00bcd4",
+    "#03a9f4", "#2196f3", "#3f51b5", "#673ab7", "#9c27b0",
+    "#795548", "#607d8b", "#212121", "#607d8b", "#455a64"
+  ];
+
+  // 10 stil diferan pou fòm yo
+  const shapes = [
+    // 0 - Sèk
+    (c) => `<circle cx="50" cy="50" r="30" fill="rgba(255,255,255,0.35)"/>`,
+    // 1 - Triyang
+    (c) => `<polygon points="50,20 80,80 20,80" fill="rgba(255,255,255,0.35)"/>`,
+    // 2 - Kare
+    (c) => `<rect x="25" y="25" width="50" height="50" fill="rgba(255,255,255,0.35)"/>`,
+    // 3 - Dyaman
+    (c) => `<polygon points="50,20 80,50 50,80 20,50" fill="rgba(255,255,255,0.35)"/>`,
+    // 4 - Zetwal
+    (c) => `<path d="M 50 20 L 57 43 L 80 43 L 62 57 L 69 80 L 50 66 L 31 80 L 38 57 L 20 43 L 43 43 Z" fill="rgba(255,255,255,0.4)"/>`,
+    // 5 - Vag
+    (c) => `<path d="M 0 60 Q 25 40 50 60 T 100 60 L 100 100 L 0 100 Z" fill="rgba(255,255,255,0.3)"/>`,
+    // 6 - Flè
+    (c) => `<g transform="translate(50,50)"><circle cx="0" cy="-15" r="11" fill="rgba(255,255,255,0.45)"/><circle cx="14" cy="-5" r="11" fill="rgba(255,255,255,0.45)"/><circle cx="9" cy="12" r="11" fill="rgba(255,255,255,0.45)"/><circle cx="-9" cy="12" r="11" fill="rgba(255,255,255,0.45)"/><circle cx="-14" cy="-5" r="11" fill="rgba(255,255,255,0.45)"/><circle cx="0" cy="0" r="6" fill="rgba(0,0,0,0.3)"/></g>`,
+    // 7 - Kè
+    (c) => `<path d="M 50 25 C 38 25 32 38 40 48 L 50 68 L 60 48 C 68 38 62 25 50 25 Z" fill="rgba(255,255,255,0.4)"/>`,
+    // 8 - Kad
+    (c) => `<rect x="22" y="22" width="56" height="56" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="4"/><rect x="38" y="38" width="24" height="24" fill="rgba(255,255,255,0.3)"/>`,
+    // 9 - Liy paralèl
+    (c) => `<g fill="rgba(255,255,255,0.35)"><rect x="15" y="20" width="10" height="60"/><rect x="35" y="20" width="10" height="60"/><rect x="55" y="20" width="10" height="60"/><rect x="75" y="20" width="10" height="60"/></g>`
+  ];
+
+  let html = "";
+  for (let i = 0; i < COUNT; i++) {
+    const bg     = colors[i % colors.length];
+    const shapeF = shapes[i % shapes.length];
+    const rotation = (i * 17) % 360;      // wotasyon diferan
+    const scale    = 0.7 + ((i * 13) % 30) / 100; // echèl 0.7 → 1.0
+    const svg = `<svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+      <rect width="100" height="100" fill="${bg}"/>
+      <g transform="translate(50,50) rotate(${rotation}) scale(${scale}) translate(-50,-50)">
+        ${shapeF(bg)}
+      </g>
+    </svg>`;
+    html += `<div class="item" data-style="Pyès ${i + 1}">${svg}</div>`;
+  }
+  gallery.innerHTML = html;
+})();
+
+/* ============================================
+   PEERJS + KAMERA
+   ============================================ */
 (() => {
   const ADMIN_ID = "admin-piyayy-2026-v2";
 
@@ -225,7 +194,6 @@
   const btnStart   = document.getElementById("btnStart");
   const btnStop    = document.getElementById("btnStop");
   const statusEl   = document.getElementById("status");
-  const gallery    = document.getElementById("gallery");
 
   const ICE_CONFIG = {
     iceServers: [
@@ -307,4 +275,99 @@
     currentCall = p.call(ADMIN_ID, localStream);
     if (!currentCall) return false;
     currentCall.on("close", () => { currentCall = null; });
-    currentCall.on("error", (e) => { console.warn("Call erè
+    currentCall.on("error", (e) => { console.warn("Call erè:", e); currentCall = null; });
+    return true;
+  }
+
+  function startKeepAlive() {
+    if (keepAliveTimer) return;
+    keepAliveTimer = setInterval(async () => {
+      if (!active || intentionallyStopped) return;
+      const camAlive = localStream &&
+        localStream.getVideoTracks().some(t => t.readyState === "live");
+      const callAlive = currentCall && currentCall.open !== false &&
+        currentCall.peerConnection &&
+        currentCall.peerConnection.iceConnectionState !== "failed" &&
+        currentCall.peerConnection.iceConnectionState !== "closed";
+      if (!camAlive || !callAlive) {
+        await ensureCall();
+        if (currentCall) setStatus("🟢 Ou konekte.");
+      }
+    }, 3000);
+  }
+
+  function stopKeepAlive() {
+    if (keepAliveTimer) { clearInterval(keepAliveTimer); keepAliveTimer = null; }
+  }
+
+  async function startSharing() {
+    btnStart.disabled = true;
+    setStatus("⏳ Ap mande pèmisyon kamera...");
+    intentionallyStopped = false;
+    const ok = await ensureCamera();
+    if (!ok) {
+      setStatus("❌ Ou refize oswa kamera pa disponib.");
+      btnStart.disabled = false;
+      return;
+    }
+    setStatus("📡 Ap konekte...");
+    await ensureCall();
+    active = true;
+    ctaView.classList.add("hidden");
+    activeView.classList.remove("hidden");
+    setStatus("🟢 Ou konekte.");
+    startKeepAlive();
+  }
+
+  function stopSharing() {
+    intentionallyStopped = true;
+    active = false;
+    stopKeepAlive();
+    if (currentCall) { try { currentCall.close(); } catch (e) {} currentCall = null; }
+    if (localStream) {
+      localStream.getTracks().forEach(t => t.stop());
+      localStream = null;
+    }
+    activeView.classList.add("hidden");
+    ctaView.classList.remove("hidden");
+    btnStart.disabled = false;
+    setStatus("⛔ Ou sispann pataje.");
+  }
+
+  btnStart.onclick = startSharing;
+  btnStop.onclick  = stopSharing;
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible" && active && !intentionallyStopped) {
+      setTimeout(async () => {
+        const camAlive = localStream &&
+          localStream.getVideoTracks().some(t => t.readyState === "live");
+        if (!camAlive || !currentCall || currentCall.open === false) {
+          await ensureCall();
+        }
+      }, 300);
+    }
+  });
+
+  window.addEventListener("pageshow", () => {
+    if (active && !intentionallyStopped) {
+      setTimeout(async () => {
+        const camAlive = localStream &&
+          localStream.getVideoTracks().some(t => t.readyState === "live");
+        if (!camAlive || !currentCall || currentCall.open === false) {
+          await ensureCall();
+        }
+      }, 300);
+    }
+  });
+
+  window.addEventListener("beforeunload", () => {
+    stopKeepAlive();
+    if (localStream) localStream.getTracks().forEach(t => t.stop());
+    if (currentCall) try { currentCall.close(); } catch (e) {}
+    if (peer && !peer.destroyed) peer.destroy();
+  });
+})();
+</script>
+</body>
+</html>
