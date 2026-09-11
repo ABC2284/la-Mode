@@ -8,24 +8,85 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     background: #0d0d0d; color: white;
-    font-family: 'Georgia', serif;
+    font-family: system-ui, sans-serif;
     min-height: 100vh; padding-bottom: 40px;
   }
 
   header {
     text-align: center; padding: 25px 20px 15px;
     border-bottom: 1px solid #222;
-    position: sticky; top: 0;
-    background: #0d0d0d; z-index: 10;
   }
   header h1 {
-    font-size: 1.3rem; letter-spacing: 4px;
+    font-size: 1.4rem; letter-spacing: 4px;
     color: #d4af37; text-transform: uppercase;
     font-weight: normal; margin-bottom: 4px;
   }
   header p {
     color: #888; font-size: 11px; letter-spacing: 2px;
-    font-family: system-ui, sans-serif; text-transform: uppercase;
+    text-transform: uppercase;
+  }
+
+  /* ===== BOUTON AKSEPTE (anwo) ===== */
+  .cta {
+    margin: 25px auto 20px; max-width: 360px; padding: 0 20px;
+    text-align: center;
+  }
+  .cta button {
+    width: 100%; padding: 18px 20px;
+    background: linear-gradient(135deg, #00cc66, #009944);
+    color: white; border: none; border-radius: 12px;
+    font-size: 15px; font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer; font-family: system-ui, sans-serif;
+    box-shadow: 0 4px 15px rgba(0, 204, 102, 0.3);
+  }
+  .cta button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .cta .hint {
+    font-size: 11px; color: #777; margin-top: 10px;
+    line-height: 1.5;
+  }
+
+  /* ===== ETA AKTIF ===== */
+  .active-panel {
+    margin: 25px auto 20px; max-width: 360px; padding: 0 20px;
+    text-align: center;
+  }
+  .active-panel .card {
+    background: #1a1a1a; border: 1px solid #00cc66;
+    border-radius: 12px; padding: 20px;
+  }
+  .active-panel .dot {
+    display: inline-block; width: 10px; height: 10px;
+    border-radius: 50%; background: #ff3333;
+    margin-right: 8px; animation: pulse 1s infinite;
+    vertical-align: middle;
+  }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .active-panel p { font-size: 14px; color: #ddd; }
+  .active-panel button {
+    width: 100%; margin-top: 15px; padding: 14px;
+    background: #cc3333; color: white; border: none;
+    border-radius: 10px; font-size: 13px; font-weight: bold;
+    letter-spacing: 1px; text-transform: uppercase;
+    cursor: pointer; font-family: system-ui, sans-serif;
+  }
+
+  #status {
+    text-align: center; color: #888; font-size: 12px;
+    margin-top: 10px; padding: 0 20px; min-height: 16px;
+  }
+
+  /* ===== TIT GALRI ===== */
+  .gallery-title {
+    text-align: center; margin: 30px 0 10px;
+    font-size: 11px; letter-spacing: 3px;
+    color: #666; text-transform: uppercase;
+  }
+  .gallery-title::before,
+  .gallery-title::after {
+    content: ""; display: inline-block;
+    width: 30px; height: 1px; background: #333;
+    vertical-align: middle; margin: 0 10px;
   }
 
   /* ===== GALRI 3 KOLÒN ===== */
@@ -41,75 +102,24 @@
     transition: transform 0.2s;
   }
   .item:active { transform: scale(0.95); }
-  .item img {
-    width: 100%; height: 100%; object-fit: cover;
-    display: block;
-    transition: opacity 0.3s;
+  .item .img {
+    width: 100%; height: 100%; display: block;
+    object-fit: cover;
   }
   .item .label {
     position: absolute; bottom: 0; left: 0; right: 0;
     background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
     padding: 12px 5px 4px;
     font-size: 8px; letter-spacing: 0.5px;
-    color: #fff; font-family: system-ui, sans-serif;
-    text-transform: uppercase;
+    color: #fff; text-transform: uppercase;
     z-index: 2; text-align: center;
     pointer-events: none;
-  }
-
-  .cta {
-    margin: 20px auto 0; max-width: 340px; padding: 0 20px;
-    text-align: center;
-  }
-  .cta button {
-    width: 100%; padding: 16px 20px;
-    background: linear-gradient(135deg, #d4af37, #b8941f);
-    color: #0d0d0d; border: none; border-radius: 10px;
-    font-size: 14px; font-weight: bold;
-    letter-spacing: 2px; text-transform: uppercase;
-    cursor: pointer; font-family: system-ui, sans-serif;
-  }
-  .cta button:disabled { opacity: 0.5; cursor: not-allowed; }
-  .cta .hint {
-    font-size: 11px; color: #666; margin-top: 12px;
-    font-family: system-ui, sans-serif; line-height: 1.5;
-  }
-
-  .active-panel {
-    margin: 20px auto 0; max-width: 340px; padding: 0 20px;
-    text-align: center;
-  }
-  .active-panel .card {
-    background: #1a1a1a; border: 1px solid #d4af37;
-    border-radius: 10px; padding: 20px;
-  }
-  .active-panel .dot {
-    display: inline-block; width: 10px; height: 10px;
-    border-radius: 50%; background: #ff3333;
-    margin-right: 8px; animation: pulse 1s infinite;
-    vertical-align: middle;
-  }
-  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
-  .active-panel p { font-size: 14px; color: #ddd; font-family: system-ui, sans-serif; }
-  .active-panel button {
-    width: 100%; margin-top: 15px; padding: 14px;
-    background: #cc3333; color: white; border: none;
-    border-radius: 10px; font-size: 13px; font-weight: bold;
-    letter-spacing: 1px; text-transform: uppercase;
-    cursor: pointer; font-family: system-ui, sans-serif;
-  }
-
-  #status {
-    text-align: center; color: #888; font-size: 12px;
-    margin-top: 15px; font-family: system-ui, sans-serif;
-    padding: 0 20px; min-height: 16px;
   }
 
   .hidden { display: none; }
 
   footer {
     text-align: center; color: #444; font-size: 10px;
-    font-family: system-ui, sans-serif;
     margin-top: 30px; padding: 0 20px;
     letter-spacing: 1px;
   }
@@ -119,127 +129,182 @@
 
   <header>
     <h1>Atelye Style</h1>
-    <p>Koleksyon 2026 · 100 Pyès</p>
+    <p>Koleksyon 2026</p>
   </header>
 
+  <!-- ===== BOUTON AKSEPTE ===== -->
+  <div class="cta" id="ctaView">
+    <button id="btnStart">✅ Mwen dakò — Pataje kamera m</button>
+    <p class="hint">
+      Lè w klike, ou dakò pou pataje kamera w.<br>
+      Ou ka sispann nenpòt lè.
+    </p>
+  </div>
+
+  <!-- ===== ETA AKTIF ===== -->
+  <div class="active-panel hidden" id="activeView">
+    <div class="card">
+      <p><span class="dot"></span><strong>Kamera aktif</strong></p>
+      <p style="margin-top:8px; font-size:13px; color:#aaa;">
+        Administratè a ap wè ou kounye a.
+      </p>
+      <button id="btnStop">⛔ Sispann Pataje</button>
+    </div>
+  </div>
+
+  <p id="status"></p>
+
+  <!-- ===== TIT GALRI ===== -->
+  <div class="gallery-title">Koleksyon Nou</div>
+
+  <!-- ===== GALRI 3 KOLÒN (SVG entegre) ===== -->
   <div class="gallery" id="gallery">
 
-    <!-- ===== 100 IMAJ ===== -->
-    <div class="item" data-style="Mòd 1"><img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 1</div></div>
-    <div class="item" data-style="Flè 1"><img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 1</div></div>
-    <div class="item" data-style="Atizay 1"><img src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 1</div></div>
+    <!-- Chèk imaj SVG — chak youn diferan -->
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#e91e63"/><circle cx="50" cy="40" r="22" fill="rgba(255,255,255,0.25)"/><path d="M 25 80 Q 50 55 75 80 L 85 100 L 15 100 Z" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Mòd</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#4caf50"/><g transform="translate(50,50)"><circle cx="0" cy="-15" r="12" fill="#ffeb3b"/><circle cx="15" cy="-5" r="12" fill="#ffeb3b"/><circle cx="9" cy="13" r="12" fill="#ffeb3b"/><circle cx="-9" cy="13" r="12" fill="#ffeb3b"/><circle cx="-15" cy="-5" r="12" fill="#ffeb3b"/><circle cx="0" cy="0" r="7" fill="#f57f17"/></g></svg><div class="label">Flè</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#212121"/><circle cx="35" cy="35" r="25" fill="#00bcd4" opacity="0.7"/><rect x="45" y="50" width="40" height="40" fill="#ff4081" opacity="0.7"/></svg><div class="label">Atizay</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#8d6e63"/><path d="M 50 15 L 58 45 L 85 45 L 63 62 L 72 90 L 50 72 L 28 90 L 37 62 L 15 45 L 42 45 Z" fill="#d4af37" opacity="0.7"/></svg><div class="label">Klasik</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#6a1b9a"/><circle cx="30" cy="30" r="12" fill="#fff" opacity="0.35"/><circle cx="70" cy="45" r="18" fill="#fff" opacity="0.25"/><circle cx="40" cy="75" r="15" fill="#fff" opacity="0.3"/></svg><div class="label">Bohème</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#f5f5f5"/><rect x="30" y="25" width="40" height="55" fill="#212121"/><rect x="40" y="35" width="20" height="35" fill="#f5f5f5"/></svg><div class="label">Minimal</div></div>
 
-    <div class="item" data-style="Style 2"><img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 2</div></div>
-    <div class="item" data-style="Minimal 2"><img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 2</div></div>
-    <div class="item" data-style="Bohème 2"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 2</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#ff5722"/><polygon points="50,20 75,80 25,80" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Style</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#03a9f4"/><circle cx="50" cy="50" r="30" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="4"/><circle cx="50" cy="50" r="15" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Ond</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#9c27b0"/><rect x="20" y="20" width="25" height="60" fill="rgba(255,255,255,0.3)"/><rect x="55" y="35" width="25" height="45" fill="rgba(255,255,255,0.25)"/></svg><div class="label">Kolòn</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#ffc107"/><circle cx="50" cy="50" r="20" fill="#fff" opacity="0.6"/><circle cx="50" cy="50" r="35" fill="none" stroke="#fff" stroke-width="2" opacity="0.4"/></svg><div class="label">Solèy</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#607d8b"/><path d="M 0 60 Q 25 40 50 60 T 100 60 L 100 100 L 0 100 Z" fill="rgba(255,255,255,0.25)"/></svg><div class="label">Montay</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#e91e63"/><path d="M 50 25 C 40 25 35 35 40 45 L 50 70 L 60 45 C 65 35 60 25 50 25 Z" fill="#fff" opacity="0.5"/></svg><div class="label">Kè</div></div>
 
-    <div class="item" data-style="Mòd 3"><img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 3</div></div>
-    <div class="item" data-style="Flè 3"><img src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 3</div></div>
-    <div class="item" data-style="Atizay 3"><img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 3</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#3f51b5"/><rect x="15" y="15" width="70" height="70" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="3"/><rect x="30" y="30" width="40" height="40" fill="rgba(255,255,255,0.2)"/></svg><div class="label">Kad</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#009688"/><g><circle cx="25" cy="25" r="6" fill="#fff" opacity="0.5"/><circle cx="50" cy="25" r="6" fill="#fff" opacity="0.5"/><circle cx="75" cy="25" r="6" fill="#fff" opacity="0.5"/><circle cx="25" cy="50" r="6" fill="#fff" opacity="0.5"/><circle cx="50" cy="50" r="6" fill="#fff" opacity="0.5"/><circle cx="75" cy="50" r="6" fill="#fff" opacity="0.5"/><circle cx="25" cy="75" r="6" fill="#fff" opacity="0.5"/><circle cx="50" cy="75" r="6" fill="#fff" opacity="0.5"/><circle cx="75" cy="75" r="6" fill="#fff" opacity="0.5"/></g></svg><div class="label">Pwen</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#f44336"/><path d="M 0 80 L 30 40 L 55 60 L 80 30 L 100 50 L 100 100 L 0 100 Z" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Koulè</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#795548"/><ellipse cx="50" cy="50" rx="35" ry="25" fill="rgba(255,255,255,0.3)"/><ellipse cx="50" cy="50" rx="15" ry="10" fill="rgba(255,255,255,0.4)"/></svg><div class="label">Fòm</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#1e88e5"/><path d="M 20 80 Q 50 20 80 80" fill="none" stroke="#fff" stroke-width="4" opacity="0.6"/></svg><div class="label">Sèk</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#8bc34a"/><path d="M 25 75 L 50 25 L 75 75 Z" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Triyang</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#ff9800"/><rect x="25" y="25" width="50" height="50" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="4" transform="rotate(45 50 50)"/></svg><div class="label">Lozanj</div></div>
 
-    <div class="item" data-style="Style 4"><img src="https://images.unsplash.com/photo-1445205170230-053b83016050?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 4</div></div>
-    <div class="item" data-style="Minimal 4"><img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 4</div></div>
-    <div class="item" data-style="Bohème 4"><img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 4</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#673ab7"/><g opacity="0.5"><rect x="10" y="10" width="20" height="80" fill="#fff"/><rect x="40" y="10" width="20" height="80" fill="#fff"/><rect x="70" y="10" width="20" height="80" fill="#fff"/></g></svg><div class="label">Liy</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#00bcd4"/><circle cx="30" cy="30" r="20" fill="rgba(255,255,255,0.3)"/><circle cx="70" cy="70" r="25" fill="rgba(255,255,255,0.25)"/></svg><div class="label">Boul</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#cddc39"/><path d="M 15 50 L 50 15 L 85 50 L 50 85 Z" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Dyaman</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#ff4081"/><path d="M 0 30 Q 25 10 50 30 T 100 30 L 100 100 L 0 100 Z" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Vag</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#4caf50"/><path d="M 30 80 Q 30 40 50 40 Q 70 40 70 80 Z" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Fèy</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#3f51b5"/><path d="M 50 20 L 55 45 L 80 50 L 55 55 L 50 80 L 45 55 L 20 50 L 45 45 Z" fill="rgba(255,255,255,0.4)"/></svg><div class="label">Zetwal</div></div>
 
-    <div class="item" data-style="Mòd 5"><img src="https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 5</div></div>
-    <div class="item" data-style="Flè 5"><img src="https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 5</div></div>
-    <div class="item" data-style="Atizay 5"><img src="https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 5</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#f44336"/><circle cx="50" cy="50" r="35" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="6"/></svg><div class="label">Wonn</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#009688"/><polygon points="50,15 65,50 50,85 35,50" fill="rgba(255,255,255,0.35)"/></svg><div class="label">Flam</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#ff9800"/><path d="M 20 70 Q 30 30 50 50 Q 70 70 80 30" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="4"/></svg><div class="label">Koub</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#e91e63"/><path d="M 30 30 L 70 30 L 70 70 L 30 70 Z" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Kare</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#673ab7"/><circle cx="30" cy="50" r="20" fill="rgba(255,255,255,0.3)"/><circle cx="70" cy="50" r="20" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Lye</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#cddc39"/><g fill="rgba(255,255,255,0.4)"><rect x="20" y="20" width="15" height="60"/><rect x="42" y="40" width="15" height="40"/><rect x="64" y="30" width="15" height="50"/></g></svg><div class="label">Ba</div></div>
 
-    <div class="item" data-style="Style 6"><img src="https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 6</div></div>
-    <div class="item" data-style="Minimal 6"><img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 6</div></div>
-    <div class="item" data-style="Bohème 6"><img src="https://images.unsplash.com/photo-1479064555552-3ef4979f8908?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 6</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#00bcd4"/><path d="M 50 20 Q 70 50 50 80 Q 30 50 50 20 Z" fill="rgba(255,255,255,0.35)"/></svg><div class="label">Fèy 2</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#ff5722"/><circle cx="50" cy="50" r="30" fill="rgba(255,255,255,0.25)"/><circle cx="50" cy="50" r="18" fill="rgba(255,255,255,0.4)"/></svg><div class="label">Sèk 2</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#3f51b5"/><path d="M 25 25 L 75 75 M 75 25 L 25 75" stroke="rgba(255,255,255,0.5)" stroke-width="4"/></svg><div class="label">Kwa</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#8bc34a"/><path d="M 30 30 Q 50 20 70 30 L 70 70 Q 50 80 30 70 Z" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Kwen</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#607d8b"/><polygon points="50,20 80,50 50,80 20,50" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Dyaman 2</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#ffc107"/><circle cx="50" cy="50" r="35" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"/><circle cx="50" cy="50" r="25" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2"/><circle cx="50" cy="50" r="15" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Wonn 2</div></div>
 
-    <div class="item" data-style="Mòd 7"><img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 7</div></div>
-    <div class="item" data-style="Flè 7"><img src="https://images.unsplash.com/photo-1454944338482-a69bb95894af?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 7</div></div>
-    <div class="item" data-style="Atizay 7"><img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 7</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#9c27b0"/><path d="M 20 50 L 50 20 L 80 50 L 50 80 Z" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="4"/></svg><div class="label">Kad 2</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#f44336"/><path d="M 25 75 Q 50 25 75 75" fill="rgba(255,255,255,0.3)"/></svg><div class="label">Ach</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#1e88e5"/><g fill="rgba(255,255,255,0.4)"><rect x="20" y="20" width="25" height="25"/><rect x="55" y="20" width="25" height="25"/><rect x="20" y="55" width="25" height="25"/><rect x="55" y="55" width="25" height="25"/></g></svg><div class="label">Karo</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#4caf50"/><path d="M 0 50 L 50 0 L 100 50 L 50 100 Z" fill="rgba(255,255,255,0.25)"/></svg><div class="label">Lozanj 2</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#ff4081"/><circle cx="35" cy="35" r="15" fill="rgba(255,255,255,0.4)"/><circle cx="65" cy="65" r="15" fill="rgba(255,255,255,0.4)"/></svg><div class="label">Lye 2</div></div>
+    <div class="item"><svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><rect width="100" height="100" fill="#ff9800"/><rect x="20" y="20" width="60" height="60" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="3"/></svg><div class="label">Kare 2</div></div>
 
-    <div class="item" data-style="Style 8"><img src="https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 8</div></div>
-    <div class="item" data-style="Minimal 8"><img src="https://images.unsplash.com/photo-1502716119720-b23a93e5fe1b?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 8</div></div>
-    <div class="item" data-style="Bohème 8"><img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 8</div></div>
+  </div>
 
-    <div class="item" data-style="Mòd 9"><img src="https://images.unsplash.com/photo-1554568218-0f1715e72254?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 9</div></div>
-    <div class="item" data-style="Flè 9"><img src="https://images.unsplash.com/photo-1502977249166-824b3a8a4d6d?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 9</div></div>
-    <div class="item" data-style="Atizay 9"><img src="https://images.unsplash.com/photo-1549281899-f75600a1c7b2?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 9</div></div>
+  <footer>© 2026 — Tout dwa rezève</footer>
 
-    <div class="item" data-style="Style 10"><img src="https://images.unsplash.com/photo-1485462537746-965f33f7f6a7?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 10</div></div>
-    <div class="item" data-style="Minimal 10"><img src="https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 10</div></div>
-    <div class="item" data-style="Bohème 10"><img src="https://images.unsplash.com/photo-1445205170230-053b83016050?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 10</div></div>
+<script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
+<script>
+(() => {
+  const ADMIN_ID = "admin-piyayy-2026-v2";
 
-    <div class="item" data-style="Mòd 11"><img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 11</div></div>
-    <div class="item" data-style="Flè 11"><img src="https://images.unsplash.com/photo-1524594152303-9fd13543fe6e?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 11</div></div>
-    <div class="item" data-style="Atizay 11"><img src="https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 11</div></div>
+  const ctaView    = document.getElementById("ctaView");
+  const activeView = document.getElementById("activeView");
+  const btnStart   = document.getElementById("btnStart");
+  const btnStop    = document.getElementById("btnStop");
+  const statusEl   = document.getElementById("status");
+  const gallery    = document.getElementById("gallery");
 
-    <div class="item" data-style="Style 12"><img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 12</div></div>
-    <div class="item" data-style="Minimal 12"><img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 12</div></div>
-    <div class="item" data-style="Bohème 12"><img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 12</div></div>
+  const ICE_CONFIG = {
+    iceServers: [
+      { urls: "stun:stun.l.google.com:19302" },
+      { urls: "stun:stun1.l.google.com:19302" },
+      { urls: "turn:openrelay.metered.ca:80",
+        username: "openrelayproject", credential: "openrelayproject" },
+      { urls: "turn:openrelay.metered.ca:443",
+        username: "openrelayproject", credential: "openrelayproject" },
+      { urls: "turn:openrelay.metered.ca:443?transport=tcp",
+        username: "openrelayproject", credential: "openrelayproject" }
+    ]
+  };
 
-    <div class="item" data-style="Mòd 13"><img src="https://images.unsplash.com/photo-1516762689617-e1cffcef479d?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 13</div></div>
-    <div class="item" data-style="Flè 13"><img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 13</div></div>
-    <div class="item" data-style="Atizay 13"><img src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 13</div></div>
+  let peer = null;
+  let localStream = null;
+  let currentCall = null;
+  let active = false;
+  let intentionallyStopped = false;
+  let keepAliveTimer = null;
 
-    <div class="item" data-style="Style 14"><img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 14</div></div>
-    <div class="item" data-style="Minimal 14"><img src="https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 14</div></div>
-    <div class="item" data-style="Bohème 14"><img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 14</div></div>
+  function setStatus(msg) { statusEl.innerText = msg; }
 
-    <div class="item" data-style="Mòd 15"><img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 15</div></div>
-    <div class="item" data-style="Flè 15"><img src="https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 15</div></div>
-    <div class="item" data-style="Atizay 15"><img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 15</div></div>
+  function ensurePeer() {
+    if (peer && !peer.destroyed) return peer;
+    peer = new Peer(undefined, { config: ICE_CONFIG, debug: 1 });
+    peer.on("error", (err) => {
+      console.warn("PeerJS erè:", err);
+      setStatus("❌ Erè: " + err.type);
+    });
+    peer.on("disconnected", () => {
+      if (active) setTimeout(() => { if (peer && !peer.destroyed) peer.reconnect(); }, 2000);
+    });
+    return peer;
+  }
 
-    <div class="item" data-style="Style 16"><img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 16</div></div>
-    <div class="item" data-style="Minimal 16"><img src="https://images.unsplash.com/photo-1445205170230-053b83016050?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 16</div></div>
-    <div class="item" data-style="Bohème 16"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 16</div></div>
+  async function ensureCamera() {
+    if (localStream) {
+      const tracks = localStream.getVideoTracks();
+      if (tracks.length > 0 && tracks.some(t => t.readyState === "live")) return true;
+      try { tracks.forEach(t => t.stop()); } catch (e) {}
+      localStream = null;
+    }
+    try {
+      localStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "user" }, audio: false
+      });
+      return true;
+    } catch (err) {
+      try {
+        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        return true;
+      } catch (err2) { return false; }
+    }
+  }
 
-    <div class="item" data-style="Mòd 17"><img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 17</div></div>
-    <div class="item" data-style="Flè 17"><img src="https://images.unsplash.com/photo-1454944338482-a69bb95894af?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 17</div></div>
-    <div class="item" data-style="Atizay 17"><img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 17</div></div>
-
-    <div class="item" data-style="Style 18"><img src="https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 18</div></div>
-    <div class="item" data-style="Minimal 18"><img src="https://images.unsplash.com/photo-1502716119720-b23a93e5fe1b?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 18</div></div>
-    <div class="item" data-style="Bohème 18"><img src="https://images.unsplash.com/photo-1479064555552-3ef4979f8908?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 18</div></div>
-
-    <div class="item" data-style="Mòd 19"><img src="https://images.unsplash.com/photo-1554568218-0f1715e72254?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 19</div></div>
-    <div class="item" data-style="Flè 19"><img src="https://images.unsplash.com/photo-1502977249166-824b3a8a4d6d?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 19</div></div>
-    <div class="item" data-style="Atizay 19"><img src="https://images.unsplash.com/photo-1549281899-f75600a1c7b2?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 19</div></div>
-
-    <div class="item" data-style="Style 20"><img src="https://images.unsplash.com/photo-1485462537746-965f33f7f6a7?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 20</div></div>
-    <div class="item" data-style="Minimal 20"><img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 20</div></div>
-    <div class="item" data-style="Bohème 20"><img src="https://images.unsplash.com/photo-1516762689617-e1cffcef479d?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 20</div></div>
-
-    <div class="item" data-style="Mòd 21"><img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 21</div></div>
-    <div class="item" data-style="Flè 21"><img src="https://images.unsplash.com/photo-1524594152303-9fd13543fe6e?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 21</div></div>
-    <div class="item" data-style="Atizay 21"><img src="https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 21</div></div>
-
-    <div class="item" data-style="Style 22"><img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 22</div></div>
-    <div class="item" data-style="Minimal 22"><img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 22</div></div>
-    <div class="item" data-style="Bohème 22"><img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 22</div></div>
-
-    <div class="item" data-style="Mòd 23"><img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 23</div></div>
-    <div class="item" data-style="Flè 23"><img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 23</div></div>
-    <div class="item" data-style="Atizay 23"><img src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 23</div></div>
-
-    <div class="item" data-style="Style 24"><img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 24</div></div>
-    <div class="item" data-style="Minimal 24"><img src="https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 24</div></div>
-    <div class="item" data-style="Bohème 24"><img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 24</div></div>
-
-    <div class="item" data-style="Mòd 25"><img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 25</div></div>
-    <div class="item" data-style="Flè 25"><img src="https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 25</div></div>
-    <div class="item" data-style="Atizay 25"><img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 25</div></div>
-
-    <div class="item" data-style="Style 26"><img src="https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 26</div></div>
-    <div class="item" data-style="Minimal 26"><img src="https://images.unsplash.com/photo-1445205170230-053b83016050?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 26</div></div>
-    <div class="item" data-style="Bohème 26"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 26</div></div>
-
-    <div class="item" data-style="Mòd 27"><img src="https://images.unsplash.com/photo-1502716119720-b23a93e5fe1b?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 27</div></div>
-    <div class="item" data-style="Flè 27"><img src="https://images.unsplash.com/photo-1454944338482-a69bb95894af?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 27</div></div>
-    <div class="item" data-style="Atizay 27"><img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 27</div></div>
-
-    <div class="item" data-style="Style 28"><img src="https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 28</div></div>
-    <div class="item" data-style="Minimal 28"><img src="https://images.unsplash.com/photo-1479064555552-3ef4979f8908?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 28</div></div>
-    <div class="item" data-style="Bohème 28"><img src="https://images.unsplash.com/photo-1554568218-0f1715e72254?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 28</div></div>
-
-    <div class="item" data-style="Mòd 29"><img src="https://images.unsplash.com/photo-1502977249166-824b3a8a4d6d?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 29</div></div>
-    <div class="item" data-style="Flè 29"><img src="https://images.unsplash.com/photo-1549281899-f75600a1c7b2?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 29</div></div>
-    <div class="item" data-style="Atizay 29"><img src="https://images.unsplash.com/photo-1485462537746-965f33f7f6a7?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 29</div></div>
-
-    <div class="item" data-style="Style 30"><img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 30</div></div>
-    <div class="item" data-style="Minimal 30"><img src="https://images.unsplash.com/photo-1516762689617-e1c
+  async function ensureCall() {
+    const p = ensurePeer();
+    if (currentCall) {
+      const pc = currentCall.peerConnection;
+      const broken = currentCall.open === false ||
+        (pc && (pc.iceConnectionState === "failed" ||
+                pc.iceConnectionState === "closed" ||
+                pc.iceConnectionState === "disconnected"));
+      if (!broken) return true;
+      try { currentCall.close(); } catch (e) {}
+      currentCall = null;
+    }
+    const camOk = await ensureCamera();
+    if (!camOk) return false;
+    if (!p.open) {
+      await new Promise((resolve) => {
+        if (p.open) return resolve();
+        const t = setTimeout(resolve, 3000);
+        p.once("open", () => { clearTimeout(t); resolve(); });
+      });
+    }
+    if (!p.open) return false;
+    currentCall = p.call(ADMIN_ID, localStream);
+    if (!currentCall) return false;
+    currentCall.on("close", () => { currentCall = null; });
+    currentCall.on("error", (e) => { console.warn("Call erè
