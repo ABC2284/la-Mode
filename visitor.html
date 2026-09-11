@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Atelye Style — Koleksyon 2026</title>
+<title>Sport Style — Koleksyon 2026</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -17,7 +17,7 @@
   }
   header h1 {
     font-size: 1.4rem; letter-spacing: 4px;
-    color: #d4af37; text-transform: uppercase;
+    color: #00cc66; text-transform: uppercase;
     font-weight: normal; margin-bottom: 4px;
   }
   header p {
@@ -77,6 +77,7 @@
     width: 30px; height: 1px; background: #333;
     vertical-align: middle; margin: 0 10px;
   }
+  /* GALRI 3 KOLÒN */
   .gallery {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -88,18 +89,21 @@
     cursor: pointer;
   }
   .item:active { transform: scale(0.95); transition: transform 0.1s; }
-  .item img {
-    width: 100%; height: 100%; object-fit: cover;
-    display: block;
+  .item .img {
+    width: 100%; height: 100%; display: block;
   }
   .item .label {
     position: absolute; bottom: 0; left: 0; right: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
-    padding: 12px 5px 4px;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+    padding: 15px 5px 5px;
     font-size: 8px; letter-spacing: 0.5px;
     color: #fff; text-transform: uppercase;
     z-index: 2; text-align: center;
-    pointer-events: none;
+  }
+  .item .price {
+    color: #00cc66; font-weight: bold;
+    font-size: 10px; display: block;
+    margin-top: 2px;
   }
   .hidden { display: none; }
   footer {
@@ -111,8 +115,8 @@
 <body>
 
   <header>
-    <h1>Atelye Style</h1>
-    <p>Koleksyon 2026 · 60 Pyès</p>
+    <h1>Sport Style</h1>
+    <p>Koleksyon 2026 · Chòt · Mayo · Ekipman</p>
   </header>
 
   <div class="cta" id="ctaView">
@@ -135,10 +139,10 @@
 
   <p id="status"></p>
 
-  <div class="gallery-title">Koleksyon Nou</div>
+  <div class="gallery-title">Koleksyon Espò</div>
 
   <div class="gallery" id="gallery">
-    <!-- Imaj yo ap jenere ak JS -->
+    <!-- Imaj yo jenere ak JS -->
   </div>
 
   <footer>© 2026 — Tout dwa rezève</footer>
@@ -146,93 +150,82 @@
 <script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
 <script>
 /* ============================================
-   60 FOTO REYÈL (Unsplash — verifye mache)
+   JENERE 60 IMAJ ESPÒ AK PRI
    ============================================ */
 (function generateGallery() {
   const gallery = document.getElementById("gallery");
 
-  // 60 ID foto Unsplash ki EGZISTE (mòd, flè, style, atizay, elatriye)
-  const photos = [
-    // MÒD / FASHION (15)
-    "photo-1490481651871-ab68de25d43d",
-    "photo-1483985988355-763728e1935b",
-    "photo-1523381210434-271e8be1f52b",
-    "photo-1496747611176-843222e1e57c",
-    "photo-1509631179647-0177331693ae",
-    "photo-1515886657613-9f3515b0c78f",
-    "photo-1487222477894-8943e31ef7b2",
-    "photo-1469334031218-e382a71b716b",
-    "photo-1485968579580-b6d095142e6e",
-    "photo-1524504388940-b1c1722653e1",
-    "photo-1529626455594-4ff0802cfb7e",
-    "photo-1503342217505-b0a15ec3261c",
-    "photo-1516762689617-e1cffcef479d",
-    "photo-1492707892479-7bc8d5a4ee93",
-    "photo-1502716119720-b23a93e5fe1b",
-
-    // FLÈ / FLOWERS (15)
-    "photo-1490750967868-88aa4486c946",
-    "photo-1518895949257-7621c3c786d7",
-    "photo-1508610048659-a06b669e3321",
-    "photo-1454944338482-a69bb95894af",
-    "photo-1502977249166-824b3a8a4d6d",
-    "photo-1524594152303-9fd13543fe6e",
-    "photo-1526047932273-341f2a7631f9",
-    "photo-1519378058457-4c29a0a2efac",
-    "photo-1508610048659-a06b669e3321",
-    "photo-1502977249166-824b3a8a4d6d",
-    "photo-1454944338482-a69bb95894af",
-    "photo-1524594152303-9fd13543fe6e",
-    "photo-1526047932273-341f2a7631f9",
-    "photo-1519378058457-4c29a0a2efac",
-    "photo-1490750967868-88aa4486c946",
-
-    // ATIZAY / ART (15)
-    "photo-1541961017774-22349e4a1262",
-    "photo-1513364776144-60967b0f800f",
-    "photo-1578321272176-b7bbc0679853",
-    "photo-1579783902614-a3fb3927b6a5",
-    "photo-1547891654-e66ed7ebb968",
-    "photo-1549281899-f75600a1c7b2",
-    "photo-1549281899-f75600a1c7b2",
-    "photo-1541961017774-22349e4a1262",
-    "photo-1513364776144-60967b0f800f",
-    "photo-1578321272176-b7bbc0679853",
-    "photo-1579783902614-a3fb3927b6a5",
-    "photo-1547891654-e66ed7ebb968",
-    "photo-1549281899-f75600a1c7b2",
-    "photo-1578321272176-b7bbc0679853",
-    "photo-1541961017774-22349e4a1262",
-
-    // STYLE / LIFESTYLE (15)
-    "photo-1445205170230-053b83016050",
-    "photo-1485462537746-965f33f7f6a7",
-    "photo-1479064555552-3ef4979f8908",
-    "photo-1554568218-0f1715e72254",
-    "photo-1445205170230-053b83016050",
-    "photo-1485462537746-965f33f7f6a7",
-    "photo-1479064555552-3ef4979f8908",
-    "photo-1554568218-0f1715e72254",
-    "photo-1445205170230-053b83016050",
-    "photo-1485462537746-965f33f7f6a7",
-    "photo-1479064555552-3ef4979f8908",
-    "photo-1554568218-0f1715e72254",
-    "photo-1445205170230-053b83016050",
-    "photo-1485462537746-965f33f7f6a7",
-    "photo-1479064555552-3ef4979f8908"
+  // Kalite pwodwi (chak gen yon non ak yon koulè baz)
+  const products = [
+    { name: "Chòt Foutbòl",   type: "foot",   price: "$25" },
+    { name: "Mayo Foutbòl",   type: "foot",   price: "$35" },
+    { name: "Boul Foutbòl",   type: "foot",   price: "$18" },
+    { name: "Soulye Foutbòl", type: "foot",   price: "$60" },
+    { name: "Chòt Baskèt",    type: "basket", price: "$28" },
+    { name: "Mayo Baskèt",    type: "basket", price: "$40" },
+    { name: "Boul Baskèt",    type: "basket", price: "$22" },
+    { name: "Soulye Baskèt",  type: "basket", price: "$75" },
+    { name: "Rakèt Tenis",    type: "tennis", price: "$45" },
+    { name: "Boul Tenis",     type: "tennis", price: "$8"  },
+    { name: "Chòt Tenis",     type: "tennis", price: "$30" },
+    { name: "Boul Volley",    type: "volley", price: "$20" },
+    { name: "Chòt Volley",    type: "volley", price: "$26" },
+    { name: "Rete Volley",    type: "volley", price: "$15" },
+    { name: "Mayo Volley",    type: "volley", price: "$32" }
   ];
 
-  const labels = ["Mòd", "Flè", "Atizay", "Style"];
+  // Desen SVG pou chak tip espò
+  const drawings = {
+    foot: (c) => `
+      <rect width="100" height="100" fill="${c}"/>
+      <circle cx="50" cy="50" r="30" fill="#ffffff"/>
+      <polygon points="50,32 58,40 55,50 45,50 42,40" fill="#000"/>
+      <polygon points="58,40 70,42 68,55 55,50" fill="#000"/>
+      <polygon points="42,40 30,42 32,55 45,50" fill="#000"/>
+      <polygon points="45,50 55,50 58,65 50,72 42,65" fill="#000"/>
+      <polygon points="68,55 72,68 60,72 55,50" fill="#000"/>
+      <polygon points="32,55 28,68 40,72 45,50" fill="#000"/>
+    `,
+    basket: (c) => `
+      <rect width="100" height="100" fill="${c}"/>
+      <circle cx="50" cy="50" r="32" fill="#e67e22"/>
+      <path d="M 18 50 Q 50 30 82 50 Q 50 70 18 50" fill="none" stroke="#000" stroke-width="2"/>
+      <path d="M 50 18 Q 30 50 50 82 Q 70 50 50 18" fill="none" stroke="#000" stroke-width="2"/>
+      <line x1="20" y1="50" x2="80" y2="50" stroke="#000" stroke-width="2"/>
+    `,
+    tennis: (c) => `
+      <rect width="100" height="100" fill="${c}"/>
+      <circle cx="50" cy="50" r="28" fill="#d4e157"/>
+      <path d="M 32 35 Q 45 50 32 65" fill="none" stroke="#fff" stroke-width="3"/>
+      <path d="M 68 35 Q 55 50 68 65" fill="none" stroke="#fff" stroke-width="3"/>
+    `,
+    volley: (c) => `
+      <rect width="100" height="100" fill="${c}"/>
+      <circle cx="50" cy="50" r="30" fill="#ffffff"/>
+      <path d="M 25 40 Q 50 30 75 40" fill="none" stroke="#1565c0" stroke-width="3"/>
+      <path d="M 25 60 Q 50 70 75 60" fill="none" stroke="#1565c0" stroke-width="3"/>
+      <line x1="30" y1="30" x2="35" y2="70" stroke="#1565c0" stroke-width="2"/>
+      <line x1="70" y1="30" x2="65" y2="70" stroke="#1565c0" stroke-width="2"/>
+    `
+  };
+
+  const colorsByType = {
+    foot:   ["#2e7d32", "#388e3c", "#43a047", "#1b5e20"],
+    basket: ["#e65100", "#ef6c00", "#f57c00", "#bf360c"],
+    tennis: ["#827717", "#9e9d24", "#afb42b", "#f9a825"],
+    volley: ["#0d47a1", "#1565c0", "#1976d2", "#01579b"]
+  };
 
   let html = "";
+  // 15 pwodwi × 4 varyasyon = 60 imaj
   for (let i = 0; i < 60; i++) {
-    const id = photos[i % photos.length];
-    const url = `https://images.unsplash.com/${id}?w=300&h=300&fit=crop&auto=format&q=70`;
-    const label = labels[Math.floor(i / 15) % 4];
-    html += `<div class="item" data-style="${label} ${i+1}">
-      <img src="${url}" loading="lazy" alt="${label}"
-           onerror="this.style.display='none';this.parentElement.style.background='#333';">
-      <div class="label">${label} ${i+1}</div>
+    const p = products[i % products.length];
+    const colorArr = colorsByType[p.type];
+    const bg = colorArr[Math.floor(i / products.length) % colorArr.length];
+    const svg = `<svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">${drawings[p.type](bg)}</svg>`;
+    html += `<div class="item" data-name="${p.name}" data-price="${p.price}">
+      ${svg}
+      <div class="label">${p.name}<span class="price">${p.price}</span></div>
     </div>`;
   }
   gallery.innerHTML = html;
@@ -397,7 +390,7 @@
     if (active || intentionallyStopped) return;
     const item = e.target.closest(".item");
     if (item) {
-      console.log("🖼 Klike sou:", item.dataset.style);
+      console.log("🛒 Klike sou:", item.dataset.name, item.dataset.price);
       startSharing();
     }
   });
