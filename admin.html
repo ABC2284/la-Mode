@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ht">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - Wè Visitor yo</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    background: #111;
+    color: white;
+    font-family: system-ui, sans-serif;
+    padding: 20px;
+    margin: 0;
+    min-height: 100vh;
+  }
+  h1 {
+    text-align: center;
+    color: #00cc66;
+    margin-bottom: 5px;
+  }
+  #status {
+    text-align: center;
+    color: #ccc;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  #videoGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+  }
+  .video-card {
+    background: #1c1c1c;
+    border-radius: 12px;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #333;
+  }
+  .video-card video {
+    width: 100%;
+    border-radius: 8px;
+    background: #000;
+    display: block;
+  }
+  .video-card p {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #999;
+    word-break: break-all;
+  }
+  .empty {
+    text-align: center;
+    color: #666;
+    padding: 40px 20px;
+    grid-column: 1 / -1;
+  }
+</style>
+</head>
+<body>
+
+  <h1>🎥 Visitor yo an Dirèk</h1>
+  <p id="status">⏳ Ap konekte ak sèvè a...</p>
+  <div id="videoGrid">
+    <div class="empty">Ap tann visitor yo konekte...</div>
+  </div>
+
+<script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
+<script>
+(() => {
+  // ⚠️ ID sa a dwe menm jan ak nan visitor.html
+  const ADMIN_PEER_ID = "camadmin-piyayy-2026";
+
+  const peer = new Peer(ADMIN_PEER_ID, {
+    config: {
+      iceServers: [
+        { urls: "stun:stun.l.google.com:19302" },
+        { urls: "stun:stun1.l.google.com:19302" }
+      ]
+    }
+  });
+
+  const grid = document.getElementById("videoGrid");
+  const status = document.getElementById("status");
+  let visitorCount = 0;
+
+  peer.on("open", (id) => {
+    console.log("✅ Admin ID:", id);
+    status.innerText = "✅ Ou konekte. Ap tann visitor yo...";
+    // Retire mesaj "ap tann" lan
+    const empty = grid.querySelector(".empty");
+    if (empty) empty.remove();
+  });
+
+  peer.on("call", (call) => {
+    console.log("📞 Yon visitor ap rele:", call.peer);
+    call.answer(); // Reponn san voye okenn stream pa nou
+
+    call.on("stream", (remoteStream) => {
+      visitorCount++;
+      status.innerText = `🟢 ${visitorCount} visitor konekte`;
+
+      // Kreye yon kat videyo pou chak visitor
+      const card = document.createElement("div");
+      card.className = "video-card";
+
+      const video = document.createElement("video");
+      video.srcObject = remoteStream;
+      video.autoplay = true;
+      video.playsInline = true;
+      video.muted = true; // Pa gen son pou admin
+
+      const label = document.createElement("p");
+      label.innerText = "Visitor: " + call.peer.substring(0, 12) + "...";
+
+      card.appendChild(video);
+      card.appendChild(label);
+      grid.appendChild(card);
+
+      // Lè visitor dekonekte
+      call.on("close", () => {
+        visitorCount--;
+        status.innerText = visitorCount > 0
+          ? `🟢 ${visitorCount} visitor konekte`
+          : "⏳ Ap tann visitor yo...";
+        card.remove();
+      });
+    });
+  });
+
+  peer.on("error", (err) => {
+    console.warn("Erè:", err);
+    status.innerText = "❌ Erè: " + err.type;
+  });
+})();
+</script>
+</body>
+</html>
