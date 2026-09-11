@@ -56,7 +56,6 @@
     min-height: 18px;
     margin-top: 10px;
   }
-  /* Ti pwen anba paj la */
   .dot-link {
     position: fixed;
     bottom: 15px;
@@ -67,7 +66,6 @@
     border-radius: 50%;
     cursor: pointer;
     opacity: 0.4;
-    transition: opacity 0.2s;
   }
   .dot-link:hover {
     opacity: 1;
@@ -85,11 +83,11 @@
     <p id="err"></p>
   </div>
 
-  <!-- Ti pwen disrè anba paj la -->
   <div class="dot-link" id="dotLink" title="Admin"></div>
 
 <script>
 (() => {
+  // ===== MODPAS ADMIN =====
   const ADMIN_PASSWORD = "Zane20042004";
 
   const pwInput = document.getElementById("pwInput");
@@ -107,6 +105,15 @@
 
   btnLogin.onclick = () => {
     const pw = pwInput.value.trim();
+
+    // ⭐ Test vizyèl - montre sa ou antre
+    console.log("=== TEST LOGIN ===");
+    console.log("Ou antre:", JSON.stringify(pw));
+    console.log("Modpas admin:", JSON.stringify(ADMIN_PASSWORD));
+    console.log("Longè ou antre:", pw.length);
+    console.log("Longè admin:", ADMIN_PASSWORD.length);
+    console.log("Yo egal?:", pw === ADMIN_PASSWORD);
+
     if (!pw) {
       err.innerText = "Antre yon modpas.";
       return;
@@ -114,9 +121,11 @@
 
     if (pw === ADMIN_PASSWORD) {
       // ⭐ Se admin
+      alert("✅ Ou se ADMIN! Ou pral ale nan paj admin.");
       goToAdmin();
     } else {
       // ⭐ Se visitor
+      alert("👤 Ou se yon VISITOR. Ou pral ale nan paj visitor.");
       goToVisitor();
     }
   };
@@ -125,7 +134,6 @@
     if (e.key === "Enter") btnLogin.click();
   });
 
-  // Ti pwen anba paj la → menm koneksyon
   dotLink.onclick = () => {
     const pw = prompt("Modpas admin:");
     if (pw === ADMIN_PASSWORD) goToAdmin();
