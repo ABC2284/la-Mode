@@ -6,27 +6,53 @@
 <title>Admin - Wè Visitor yo</title>
 <style>
   * { box-sizing: border-box; }
-  body { background: #111; color: white; font-family: system-ui, sans-serif; padding: 20px; margin: 0; min-height: 100vh; }
+  body {
+    background: #111; color: white; font-family: system-ui, sans-serif;
+    padding: 20px; margin: 0; min-height: 100vh;
+  }
   h1 { text-align: center; color: #00cc66; margin-bottom: 5px; }
   #status { text-align: center; color: #ccc; font-size: 14px; margin-bottom: 20px; }
-  .visitor-list { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 20px; }
+  .visitor-list {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    justify-content: center; margin-bottom: 20px;
+  }
   .visitor-btn {
     background: #1c1c1c; color: #ccc; border: 1px solid #333;
     padding: 8px 14px; border-radius: 20px; font-size: 13px; cursor: pointer;
   }
-  .visitor-btn.active { background: #00cc66; color: white; border-color: #00cc66; }
+  .visitor-btn.active {
+    background: #00cc66; color: white; border-color: #00cc66;
+  }
   #videoGrid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 15px; margin-top: 20px;
   }
   .video-card {
     background: #1c1c1c; border-radius: 12px; padding: 10px;
-    text-align: center; border: 1px solid #333;
+    text-align: center; border: 1px solid #333; position: relative;
   }
-  .video-card.focused { border-color: #00cc66; box-shadow: 0 0 20px rgba(0, 204, 102, 0.4); }
-  .video-card video { width: 100%; border-radius: 8px; background: #000; display: block; }
-  .video-card p { margin-top: 8px; font-size: 12px; color: #999; word-break: break-all; }
-  .empty { text-align: center; color: #666; padding: 40px 20px; grid-column: 1 / -1; }
+  .video-card.focused {
+    border-color: #00cc66;
+    box-shadow: 0 0 20px rgba(0, 204, 102, 0.4);
+  }
+  .video-card video {
+    width: 100%; border-radius: 8px; background: #000; display: block;
+    min-height: 180px;
+  }
+  .video-card p {
+    margin-top: 8px; font-size: 12px; color: #999; word-break: break-all;
+  }
+  .live-dot {
+    position: absolute; top: 18px; left: 18px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #ff3333; animation: pulse 1s infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .empty {
+    text-align: center; color: #666; padding: 40px 20px;
+    grid-column: 1 / -1;
+  }
 </style>
 </head>
 <body>
@@ -43,15 +69,15 @@
 (() => {
   const ADMIN_PEER_ID = "admin-piyayy-2026-v2";
 
-  const grid = document.getElementById("videoGrid");
-  const status = document.getElementById("status");
+  const grid        = document.getElementById("videoGrid");
+  const status      = document.getElementById("status");
   const visitorList = document.getElementById("visitorList");
-  const visitors = {};
+  const visitors    = {};
 
   let peer = null;
   let reconnectTimer = null;
 
-  // ✅ ICE servers + TURN gratuit (OpenRelay)
+  // ✅ STUN + TURN gratis (OpenRelay) — esansyèl pou 4G/WiFi diferan
   const ICE_CONFIG = {
     iceServers: [
       { urls: "stun:stun.l.google.com:19302" },
@@ -74,6 +100,9 @@
     ]
   };
 
+  /* ==============================
+     KONEKSYON PEER
+     ============================== */
   function connectPeer() {
     if (peer && !peer.destroyed) {
       try { peer.destroy(); } catch (e) {}
@@ -92,9 +121,8 @@
 
     peer.on("error", (err) => {
       console.warn("Erè PeerJS:", err);
-      // Si ID la deja itilize, eseye yon lòt ID
       if (err.type === "unavailable-id") {
-        status.innerText = "❌ ID admin deja itilize. Ap eseye ankò...";
+        status.innerText = "❌ ID admin deja itilize. Ap eseye ankò nan 3s...";
         setTimeout(connectPeer, 3000);
         return;
       }
@@ -117,55 +145,70 @@
     }, 3000);
   }
 
+  /* ==============================
+     APÈL ANTRE (visitor → admin)
+     ============================== */
   function handleIncomingCall(call) {
     const visitorId = call.peer;
     console.log("📞 Visitor konekte:", visitorId);
 
-    // Si visitor deja egziste, fèmen ansyen an
-    if (visitors[visitorId] && visitors[visitorId].call) {
+    // Si menm visitor deja egziste, netwaye ansyen an
+    if (visitors[visitorId]) {
       try { visitors[visitorId].call.close(); } catch (e) {}
       if (visitors[visitorId].card) visitors[visitorId].card.remove();
-      if (visitors[visitorId].btn) visitors[visitorId].btn.remove();
+      if (visitors[visitorId].btn)  visitors[visitorId].btn.remove();
       delete visitors[visitorId];
     }
 
-    call.answer(); // ✅ reponn san stream (admin pa voye videyo)
+    // ✅ Reponn san voye okenn stream (visitor pa wè admin)
+    call.answer();
 
+    /* --- Kreye kat videyo a --- */
     const card = document.createElement("div");
     card.className = "video-card";
     card.dataset.visitorId = visitorId;
 
+    const dot = document.createElement("div");
+    dot.className = "live-dot";
+
     const video = document.createElement("video");
-    video.autoplay = true;
+    video.autoplay    = true;
     video.playsInline = true;
-    video.muted = true;
+    video.muted       = true;
 
     const label = document.createElement("p");
-    label.innerText = "Visitor: " + visitorId;
+    label.innerText = "👤 " + visitorId;
 
+    card.appendChild(dot);
     card.appendChild(video);
     card.appendChild(label);
     grid.appendChild(card);
 
+    /* --- Bouton nan lis anwo a --- */
     let btn = visitorList.querySelector(`[data-id="${visitorId}"]`);
     if (!btn) {
       btn = document.createElement("button");
       btn.className = "visitor-btn";
       btn.dataset.id = visitorId;
-      btn.innerText = "👤 " + visitorId.substring(0, 12) + "...";
+      btn.innerText = "👤 " + visitorId.substring(0, 10) + "…";
       visitorList.appendChild(btn);
 
       btn.addEventListener("click", () => {
-        visitorList.querySelectorAll(".visitor-btn").forEach(b => b.classList.remove("active"));
+        visitorList.querySelectorAll(".visitor-btn")
+          .forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
+
         card.scrollIntoView({ behavior: "smooth", block: "center" });
-        grid.querySelectorAll(".video-card").forEach(c => c.classList.remove("focused"));
+
+        grid.querySelectorAll(".video-card")
+          .forEach(c => c.classList.remove("focused"));
         card.classList.add("focused");
       });
     }
 
     visitors[visitorId] = { call, video, card, btn, stream: null };
 
+    /* --- Stream rive --- */
     call.on("stream", (remoteStream) => {
       console.log("🎬 Stream rive pou:", visitorId);
       video.srcObject = remoteStream;
@@ -175,20 +218,29 @@
     });
 
     call.on("close", () => cleanupVisitor(visitorId));
-    call.on("error", (e) => { console.warn("call err:", e); cleanupVisitor(visitorId); });
+    call.on("error", (e) => {
+      console.warn("call err:", e);
+      cleanupVisitor(visitorId);
+    });
 
     updateStatus();
   }
 
+  /* ==============================
+     NETWAYE YON VISITOR
+     ============================== */
   function cleanupVisitor(visitorId) {
     if (visitors[visitorId]) {
       if (visitors[visitorId].card) visitors[visitorId].card.remove();
-      if (visitors[visitorId].btn) visitors[visitorId].btn.remove();
+      if (visitors[visitorId].btn)  visitors[visitorId].btn.remove();
       delete visitors[visitorId];
     }
     updateStatus();
   }
 
+  /* ==============================
+     MIZAJOU ESTATI
+     ============================== */
   function updateStatus() {
     const count = Object.keys(visitors).length;
     status.innerText = count > 0
@@ -206,6 +258,9 @@
     }
   }
 
+  /* ==============================
+     EVÈNMAN SISTÈM
+     ============================== */
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") {
       if (!peer || peer.disconnected || peer.destroyed) scheduleReconnect();
