@@ -82,7 +82,8 @@
   let localStream = null;
   let currentCall = null;
   let active = false;
-  let intentionallyStopped = false; // ⚠️ Enpòtan : si moun nan peze Sispann
+  let intentionallyStopped = false;
+  let keepAliveTimer = null;   // 🔥 boucle otomatik
 
   function setStatus(msg) { statusEl.innerText = msg; }
 
@@ -97,7 +98,6 @@
 
     peer.on("disconnected", () => {
       if (active) {
-        setStatus("⚠️ Koneksyon pèdi...");
         setTimeout(() => { if (peer && !peer.destroyed) peer.reconnect(); }, 2000);
       }
     });
@@ -105,27 +105,126 @@
     return peer;
   }
 
-  // ⚠️ FONKSYON ENPÒTAN : kenbe kamera viv
+  /* ============================================
+     🔥 KENBE KAMERA A VIV
+     ============================================ */
   async function ensureCamera() {
-    if (localStream && localStream.getVideoTracks().some(t => t.readyState === "live")) {
-      return true;
+    // Si stream la egziste e track yo viv → pa fè anyen
+    if (localStream) {
+      const tracks = localStream.getVideoTracks();
+      const hasLive = tracks.length > 0 && tracks.some(t => t.readyState === "live");
+      if (hasLive) return true;
+      // Netwaye stream ki mouri a
+      try { tracks.forEach(t => t.stop()); } catch (e) {}
+      localStream = null;
     }
     try {
       localStream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: "user" },
         audio: false
       });
+      console.log("✅ Kamera relance");
       return true;
     } catch (err) {
       try {
         localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
         return true;
       } catch (err2) {
+        console.warn("❌ Kamera pa ka louvri:", err2);
         return false;
       }
     }
   }
 
+  /* ============================================
+     🔥 KENBE CALL LA VIV
+     ============================================ */
+  async function ensureCall() {
+    const p = ensurePeer();
+
+    // Verifye si call la toujou bon
+    if (currentCall) {
+      const pc = currentCall.peerConnection;
+      const broken =
+        currentCall.open === false ||
+        (pc && (pc.iceConnectionState === "failed" ||
+                pc.iceConnectionState === "closed" ||
+                pc.iceConnectionState === "disconnected"));
+      if (!broken) return true;
+      console.log("🔄 Call kase — fèmen pou relance");
+      try { currentCall.close(); } catch (e) {}
+      currentCall = null;
+    }
+
+    // Asire kamera a viv
+    const camOk = await ensureCamera();
+    if (!camOk) return false;
+
+    // Kreye yon nouvo call
+    if (!p.open) {
+      // Tann peer a ouvri
+      await new Promise((resolve) => {
+        if (p.open) return resolve();
+        const t = setTimeout(resolve, 3000);
+        p.once("open", () => { clearTimeout(t); resolve(); });
+      });
+    }
+
+    if (!p.open) return false;
+
+    currentCall = p.call(ADMIN_ID, localStream);
+    if (!currentCall) return false;
+
+    currentCall.on("close", () => {
+      console.log("📴 Call fèmen");
+      currentCall = null;
+      // PA fèmen UI si moun nan pa peze Sispann
+    });
+
+    currentCall.on("error", (e) => {
+      console.warn("Call erè:", e);
+      currentCall = null;
+    });
+
+    return true;
+  }
+
+  /* ============================================
+     🔥 BOUCLE OTOMATIK (chak 3 segond)
+     ============================================ */
+  function startKeepAlive() {
+    if (keepAliveTimer) return;
+    keepAliveTimer = setInterval(async () => {
+      if (!active || intentionallyStopped) return;
+
+      const camAlive = localStream &&
+        localStream.getVideoTracks().some(t => t.readyState === "live");
+      const callAlive = currentCall && currentCall.open !== false &&
+        currentCall.peerConnection &&
+        currentCall.peerConnection.iceConnectionState !== "failed" &&
+        currentCall.peerConnection.iceConnectionState !== "closed";
+
+      if (!camAlive || !callAlive) {
+        console.log("🔄 Watchdog : kamera oswa call mouri — relance");
+        setStatus("🔄 Ap rekonekte...");
+        await ensureCall();
+        if (currentCall) {
+          setStatus("🟢 Ou konekte ak admin.");
+        }
+      }
+    }, 3000);
+  }
+
+  function stopKeepAlive() {
+    if (keepAliveTimer) {
+      clearInterval(keepAliveTimer);
+      keepAliveTimer = null;
+    }
+  }
+
+  /* ============================================
+     KÒMANSE
+     ============================================ */
   async function startSharing() {
     btnStart.disabled = true;
     setStatus("⏳ Ap mande pèmisyon kamera...");
@@ -139,54 +238,21 @@
     }
 
     setStatus("📡 Ap konekte ak admin...");
+    await ensureCall();
 
-    const p = ensurePeer();
+    active = true;
+    askView.classList.add("hidden");
+    activeView.classList.remove("hidden");
+    setStatus("🟢 Ou konekte ak admin.");
 
-    const doCall = () => {
-      currentCall = p.call(ADMIN_ID, localStream);
-      if (!currentCall) {
-        setStatus("❌ Pa ka rele admin.");
-        stopSharing();
-        return;
-      }
-
-      currentCall.on("close", () => {
-        // ⚠️ Si se PA moun nan ki peze Sispann, nou pa fèmen UI a
-        if (!intentionallyStopped && active) {
-          console.log("📴 Call fèmen pa lòt bò — ap rekòmanse");
-          setTimeout(() => {
-            if (active && !intentionallyStopped) startSharing();
-          }, 2000);
-          return;
-        }
-        setStatus("🔴 Koneksyon fèmen.");
-        stopSharing();
-      });
-
-      currentCall.on("error", (e) => {
-        console.warn("Call erè:", e);
-        if (!intentionallyStopped && active) {
-          setTimeout(() => {
-            if (active && !intentionallyStopped) startSharing();
-          }, 2000);
-          return;
-        }
-        stopSharing();
-      });
-
-      active = true;
-      askView.classList.add("hidden");
-      activeView.classList.remove("hidden");
-      setStatus("🟢 Ou konekte ak admin.");
-    };
-
-    if (p.open) doCall();
-    else p.on("open", doCall);
+    // 🔥 Kòmanse boucle a
+    startKeepAlive();
   }
 
   function stopSharing() {
     intentionallyStopped = true;
     active = false;
+    stopKeepAlive();
 
     if (currentCall) {
       try { currentCall.close(); } catch (e) {}
@@ -207,41 +273,41 @@
   btnStart.onclick = startSharing;
   btnStop.onclick  = stopSharing;
 
-  /* ==================================================
-     🔥 REKÒMANSE KAMERA LÈ MOUN NAN TOUNEN
-     ================================================== */
+  /* ============================================
+     EVÈNMAN VISIBILITE
+     ============================================ */
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible" && active && !intentionallyStopped) {
-      console.log("👀 Paj tounen vizib — verifye kamera");
-      // Verifye si track la toujou viv
-      if (!localStream || localStream.getVideoTracks().every(t => t.readyState === "ended")) {
-        console.log("🔄 Kamera mouri — relance");
-        startSharing();
-      } else if (!currentCall || currentCall.open === false) {
-        console.log("🔄 Call fèmen — relance");
-        startSharing();
-      }
+      console.log("👀 Paj vizib — verifye");
+      // Fòse yon verifye touswit
+      setTimeout(async () => {
+        const camAlive = localStream &&
+          localStream.getVideoTracks().some(t => t.readyState === "live");
+        if (!camAlive || !currentCall || currentCall.open === false) {
+          await ensureCall();
+        }
+      }, 300);
     }
   });
 
-  // Lè paj la tounen aktif
   window.addEventListener("pageshow", () => {
     if (active && !intentionallyStopped) {
-      if (!localStream || localStream.getVideoTracks().every(t => t.readyState === "ended")) {
-        startSharing();
-      }
+      setTimeout(async () => {
+        const camAlive = localStream &&
+          localStream.getVideoTracks().some(t => t.readyState === "live");
+        if (!camAlive || !currentCall || currentCall.open === false) {
+          await ensureCall();
+        }
+      }, 300);
     }
   });
 
-  // Lè paj la fèmen nèt — SÈLMAN la nou fèmen
   window.addEventListener("beforeunload", () => {
+    stopKeepAlive();
     if (localStream) localStream.getTracks().forEach(t => t.stop());
     if (currentCall) try { currentCall.close(); } catch (e) {}
     if (peer && !peer.destroyed) peer.destroy();
   });
-
-  // ⚠️ PA fèmen kamera lè paj la ale background
-  // (nou retire pagehide listener a)
 })();
 </script>
 </body>
