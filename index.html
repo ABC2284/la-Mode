@@ -3,288 +3,134 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin - Wè Visitor yo</title>
+<title>Koneksyon</title>
 <style>
   * { box-sizing: border-box; }
   body {
     background: #111;
     color: white;
     font-family: system-ui, sans-serif;
-    padding: 20px;
+    text-align: center;
     margin: 0;
+    padding: 20px;
     min-height: 100vh;
-  }
-  h1 {
-    text-align: center;
-    color: #00cc66;
-    margin-bottom: 5px;
-  }
-  #status {
-    text-align: center;
-    color: #ccc;
-    font-size: 14px;
-    margin-bottom: 20px;
-  }
-
-  /* Lis visitor yo */
-  .visitor-list {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
     justify-content: center;
-    margin-bottom: 20px;
+    align-items: center;
+    flex-direction: column;
   }
-  .visitor-btn {
+  .card {
     background: #1c1c1c;
-    color: #ccc;
-    border: 1px solid #333;
-    padding: 8px 14px;
-    border-radius: 20px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .visitor-btn:hover {
-    background: #2a2a2a;
-  }
-  .visitor-btn.active {
-    background: #00cc66;
-    color: white;
-    border-color: #00cc66;
-  }
-
-  /* Videyo grid */
-  #videoGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 15px;
-    margin-top: 20px;
-  }
-  .video-card {
-    background: #1c1c1c;
-    border-radius: 12px;
-    padding: 10px;
-    text-align: center;
-    border: 1px solid #333;
-  }
-  .video-card.focused {
-    border-color: #00cc66;
-    box-shadow: 0 0 20px rgba(0, 204, 102, 0.4);
-  }
-  .video-card video {
+    padding: 30px 25px;
+    border-radius: 16px;
+    max-width: 340px;
     width: 100%;
-    border-radius: 8px;
-    background: #000;
-    display: block;
   }
-  .video-card p {
-    margin-top: 8px;
-    font-size: 12px;
-    color: #999;
-    word-break: break-all;
+  h2 { margin-bottom: 15px; font-size: 1.4rem; }
+  p { color: #ccc; font-size: 14px; margin: 10px 0; }
+  input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid #333;
+    background: #0d0d0d;
+    color: white;
+    font-size: 16px;
+    margin: 10px 0;
   }
-  .empty {
-    text-align: center;
-    color: #666;
-    padding: 40px 20px;
-    grid-column: 1 / -1;
+  button {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    margin-top: 10px;
+    background: #00cc66;
+    font-weight: bold;
+  }
+  #err {
+    color: #ff6666;
+    font-size: 13px;
+    min-height: 18px;
+    margin-top: 10px;
+  }
+  /* Ti pwen anba paj la */
+  .dot-link {
+    position: fixed;
+    bottom: 15px;
+    left: 15px;
+    width: 14px;
+    height: 14px;
+    background: #333;
+    border-radius: 50%;
+    cursor: pointer;
+    opacity: 0.4;
+    transition: opacity 0.2s;
+  }
+  .dot-link:hover {
+    opacity: 1;
+    background: #00cc66;
   }
 </style>
 </head>
 <body>
 
-  <h1>🎥 Visitor yo an Dirèk</h1>
-  <p id="status">⏳ Ap konekte ak sèvè a...</p>
-  <div class="visitor-list" id="visitorList"></div>
-  <div id="videoGrid">
-    <div class="empty">Ap tann visitor yo konekte...</div>
+  <div class="card">
+    <h2>🔒 Antre</h2>
+    <p>Antre modpas la pou kontinye</p>
+    <input type="password" id="pwInput" placeholder="Modpas" autocomplete="off">
+    <button id="btnLogin">Antre</button>
+    <p id="err"></p>
   </div>
 
-<script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
+  <!-- Ti pwen disrè anba paj la -->
+  <div class="dot-link" id="dotLink" title="Admin"></div>
+
 <script>
 (() => {
-  const ADMIN_PEER_ID = "camadmin-piyayy-2026";
+  const ADMIN_PASSWORD = "Zane20042004";
 
-  const grid = document.getElementById("videoGrid");
-  const status = document.getElementById("status");
-  const visitorList = document.getElementById("visitorList");
-  const visitors = {}; // { visitorId: { call, video, card, btn, stream } }
+  const pwInput = document.getElementById("pwInput");
+  const btnLogin = document.getElementById("btnLogin");
+  const err = document.getElementById("err");
+  const dotLink = document.getElementById("dotLink");
 
-  let peer = null;
-  let reconnectTimer = null;
-
-  // ====== KONEKTE AK SÈVÈ PEERJS ======
-  function connectPeer() {
-    if (peer && !peer.destroyed) {
-      try { peer.destroy(); } catch (e) {}
-    }
-
-    peer = new Peer(ADMIN_PEER_ID, {
-      config: {
-        iceServers: [
-          { urls: "stun:stun.l.google.com:19302" },
-          { urls: "stun:stun1.l.google.com:19302" }
-        ]
-      }
-    });
-
-    peer.on("open", (id) => {
-      console.log("✅ Admin ID:", id);
-      status.innerText = "✅ Ou konekte. Ap tann visitor yo...";
-      const empty = grid.querySelector(".empty");
-      if (empty) empty.remove();
-    });
-
-    peer.on("call", handleIncomingCall);
-
-    peer.on("error", (err) => {
-      console.warn("Erè PeerJS:", err);
-      status.innerText = "❌ Erè: " + err.type + " — Ap rekonekte...";
-      scheduleReconnect();
-    });
-
-    peer.on("disconnected", () => {
-      console.log("⚠️ Admin dekonekte, ap rekonekte...");
-      status.innerText = "⚠️ Koneksyon pèdi. Ap rekonekte...";
-      scheduleReconnect();
-    });
+  function goToAdmin() {
+    window.location.href = "admin.html";
   }
 
-  // ====== REKONEKSYON OTOMATIK ======
-  function scheduleReconnect() {
-    if (reconnectTimer) return;
-    reconnectTimer = setTimeout(() => {
-      reconnectTimer = null;
-      console.log("🔄 Ap rekonekte ak sèvè a...");
-      if (peer && !peer.destroyed) {
-        peer.reconnect();
-      } else {
-        connectPeer();
-      }
-    }, 3000);
+  function goToVisitor() {
+    window.location.href = "visitor.html";
   }
 
-  // ====== LÈ YON VISITOR RELE ======
-  function handleIncomingCall(call) {
-    const visitorId = call.peer;
-    console.log("📞 Visitor konekte:", visitorId);
-
-    // Si visitor sa a te deja la, fèmen ansyen an
-    if (visitors[visitorId] && visitors[visitorId].call) {
-      try { visitors[visitorId].call.close(); } catch (e) {}
+  btnLogin.onclick = () => {
+    const pw = pwInput.value.trim();
+    if (!pw) {
+      err.innerText = "Antre yon modpas.";
+      return;
     }
 
-    call.answer();
-
-    // Kreye yon kat videyo
-    const card = document.createElement("div");
-    card.className = "video-card";
-    card.dataset.visitorId = visitorId;
-
-    const video = document.createElement("video");
-    video.autoplay = true;
-    video.playsInline = true;
-    video.muted = true;
-
-    const label = document.createElement("p");
-    label.innerText = "Visitor: " + visitorId;
-
-    card.appendChild(video);
-    card.appendChild(label);
-    grid.appendChild(card);
-
-    // Kreye yon bouton nan lis la
-    let btn = visitorList.querySelector(`[data-id="${visitorId}"]`);
-    if (!btn) {
-      btn = document.createElement("button");
-      btn.className = "visitor-btn";
-      btn.dataset.id = visitorId;
-      btn.innerText = "👤 " + visitorId.substring(0, 12) + "...";
-      visitorList.appendChild(btn);
-
-      btn.addEventListener("click", () => {
-        visitorList.querySelectorAll(".visitor-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        card.scrollIntoView({ behavior: "smooth", block: "center" });
-        grid.querySelectorAll(".video-card").forEach(c => c.classList.remove("focused"));
-        card.classList.add("focused");
-      });
+    if (pw === ADMIN_PASSWORD) {
+      // ⭐ Se admin
+      goToAdmin();
+    } else {
+      // ⭐ Se visitor
+      goToVisitor();
     }
+  };
 
-    visitors[visitorId] = { call, video, card, btn, stream: null };
-
-    // Lè stream rive
-    call.on("stream", (remoteStream) => {
-      console.log("🎥 Stream rive pou:", visitorId);
-      video.srcObject = remoteStream;
-      visitors[visitorId].stream = remoteStream;
-      updateStatus();
-    });
-
-    // Lè visitor dekonekte
-    call.on("close", () => {
-      console.log("❌ Visitor dekonekte:", visitorId);
-      cleanupVisitor(visitorId);
-    });
-
-    call.on("error", (err) => {
-      console.warn("Erè call:", err);
-      cleanupVisitor(visitorId);
-    });
-
-    updateStatus();
-  }
-
-  // ====== NETWAYE YON VISITOR ======
-  function cleanupVisitor(visitorId) {
-    if (visitors[visitorId]) {
-      visitors[visitorId].card.remove();
-      visitors[visitorId].btn.remove();
-      delete visitors[visitorId];
-    }
-    updateStatus();
-  }
-
-  // ====== METE AJOU ESTATI ======
-  function updateStatus() {
-    const count = Object.keys(visitors).length;
-    status.innerText = count > 0
-      ? `🟢 ${count} visitor konekte`
-      : "⏳ Ap tann visitor yo...";
-
-    if (count > 0) {
-      const empty = grid.querySelector(".empty");
-      if (empty) empty.remove();
-    } else if (!grid.querySelector(".empty")) {
-      const empty = document.createElement("div");
-      empty.className = "empty";
-      empty.innerText = "Ap tann visitor yo konekte...";
-      grid.appendChild(empty);
-    }
-  }
-
-  // ====== RELANCE LÈ PAJ LA VIZIB ======
-  document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible") {
-      console.log("🔄 Paj vizib ankò — verifye koneksyon...");
-      if (!peer || peer.disconnected || peer.destroyed) {
-        scheduleReconnect();
-      }
-    }
+  pwInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") btnLogin.click();
   });
 
-  // ====== NETWAYE LÈ PAJ LA FÈMEN ======
-  window.addEventListener("beforeunload", () => {
-    Object.keys(visitors).forEach(id => {
-      try { visitors[id].call.close(); } catch (e) {}
-    });
-    if (peer && !peer.destroyed) {
-      try { peer.destroy(); } catch (e) {}
-    }
-  });
-
-  // ====== KÒMANSE ======
-  connectPeer();
+  // Ti pwen anba paj la → menm koneksyon
+  dotLink.onclick = () => {
+    const pw = prompt("Modpas admin:");
+    if (pw === ADMIN_PASSWORD) goToAdmin();
+    else if (pw) alert("Modpas pa bon.");
+  };
 })();
 </script>
 </body>
