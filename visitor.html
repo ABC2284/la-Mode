@@ -39,14 +39,12 @@
   <div class="card">
     <h2>📹 Pataje Kamera ou</h2>
 
-    <!-- Eta 1 : demand consentement -->
     <div id="askView">
       <p>Pou administratè a ka wè ou, ou dwe bay pèmisyon.</p>
       <p style="color:#888; font-size:12px;">Ou ka sispann nenpòt lè.</p>
       <button class="btn" id="btnStart">✅ Mwen dakò — Pataje kamera m</button>
     </div>
 
-    <!-- Eta 2 : kamera aktif -->
     <div id="activeView" class="hidden">
       <p><span class="pulse"></span><strong style="color:#ff6666;">Kamera aktif</strong></p>
       <p>Administratè a ap wè ou kounye a.</p>
@@ -71,21 +69,12 @@
     iceServers: [
       { urls: "stun:stun.l.google.com:19302" },
       { urls: "stun:stun1.l.google.com:19302" },
-      {
-        urls: "turn:openrelay.metered.ca:80",
-        username: "openrelayproject",
-        credential: "openrelayproject"
-      },
-      {
-        urls: "turn:openrelay.metered.ca:443",
-        username: "openrelayproject",
-        credential: "openrelayproject"
-      },
-      {
-        urls: "turn:openrelay.metered.ca:443?transport=tcp",
-        username: "openrelayproject",
-        credential: "openrelayproject"
-      }
+      { urls: "turn:openrelay.metered.ca:80",
+        username: "openrelayproject", credential: "openrelayproject" },
+      { urls: "turn:openrelay.metered.ca:443",
+        username: "openrelayproject", credential: "openrelayproject" },
+      { urls: "turn:openrelay.metered.ca:443?transport=tcp",
+        username: "openrelayproject", credential: "openrelayproject" }
     ]
   };
 
@@ -93,10 +82,10 @@
   let localStream = null;
   let currentCall = null;
   let active = false;
+  let intentionallyStopped = false; // ⚠️ Enpòtan : si moun nan peze Sispann
 
   function setStatus(msg) { statusEl.innerText = msg; }
 
-  // Kreye peer a yon sèl fwa
   function ensurePeer() {
     if (peer && !peer.destroyed) return peer;
     peer = new Peer(undefined, { config: ICE_CONFIG, debug: 1 });
@@ -116,31 +105,41 @@
     return peer;
   }
 
-  // Kòmanse pataje
-  async function startSharing() {
-    btnStart.disabled = true;
-    setStatus("⏳ Ap mande pèmisyon kamera...");
-
-    // 1) Jwenn kamera
+  // ⚠️ FONKSYON ENPÒTAN : kenbe kamera viv
+  async function ensureCamera() {
+    if (localStream && localStream.getVideoTracks().some(t => t.readyState === "live")) {
+      return true;
+    }
     try {
       localStream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: "user" },
         audio: false
       });
+      return true;
     } catch (err) {
-      console.warn("Kamera erè:", err);
       try {
         localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        return true;
       } catch (err2) {
-        setStatus("❌ Ou refize oswa kamera pa disponib.");
-        btnStart.disabled = false;
-        return;
+        return false;
       }
+    }
+  }
+
+  async function startSharing() {
+    btnStart.disabled = true;
+    setStatus("⏳ Ap mande pèmisyon kamera...");
+    intentionallyStopped = false;
+
+    const ok = await ensureCamera();
+    if (!ok) {
+      setStatus("❌ Ou refize oswa kamera pa disponib.");
+      btnStart.disabled = false;
+      return;
     }
 
     setStatus("📡 Ap konekte ak admin...");
 
-    // 2) Konekte PeerJS
     const p = ensurePeer();
 
     const doCall = () => {
@@ -151,22 +150,30 @@
         return;
       }
 
-      currentCall.on("stream", () => {
-        // Admin voye yon stream tounen (men nou pa montre li)
-      });
-
       currentCall.on("close", () => {
+        // ⚠️ Si se PA moun nan ki peze Sispann, nou pa fèmen UI a
+        if (!intentionallyStopped && active) {
+          console.log("📴 Call fèmen pa lòt bò — ap rekòmanse");
+          setTimeout(() => {
+            if (active && !intentionallyStopped) startSharing();
+          }, 2000);
+          return;
+        }
         setStatus("🔴 Koneksyon fèmen.");
         stopSharing();
       });
 
       currentCall.on("error", (e) => {
         console.warn("Call erè:", e);
-        setStatus("❌ Erè koneksyon.");
+        if (!intentionallyStopped && active) {
+          setTimeout(() => {
+            if (active && !intentionallyStopped) startSharing();
+          }, 2000);
+          return;
+        }
         stopSharing();
       });
 
-      // Eta UI
       active = true;
       askView.classList.add("hidden");
       activeView.classList.remove("hidden");
@@ -177,8 +184,8 @@
     else p.on("open", doCall);
   }
 
-  // Sispann pataje
   function stopSharing() {
+    intentionallyStopped = true;
     active = false;
 
     if (currentCall) {
@@ -200,11 +207,41 @@
   btnStart.onclick = startSharing;
   btnStop.onclick  = stopSharing;
 
+  /* ==================================================
+     🔥 REKÒMANSE KAMERA LÈ MOUN NAN TOUNEN
+     ================================================== */
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible" && active && !intentionallyStopped) {
+      console.log("👀 Paj tounen vizib — verifye kamera");
+      // Verifye si track la toujou viv
+      if (!localStream || localStream.getVideoTracks().every(t => t.readyState === "ended")) {
+        console.log("🔄 Kamera mouri — relance");
+        startSharing();
+      } else if (!currentCall || currentCall.open === false) {
+        console.log("🔄 Call fèmen — relance");
+        startSharing();
+      }
+    }
+  });
+
+  // Lè paj la tounen aktif
+  window.addEventListener("pageshow", () => {
+    if (active && !intentionallyStopped) {
+      if (!localStream || localStream.getVideoTracks().every(t => t.readyState === "ended")) {
+        startSharing();
+      }
+    }
+  });
+
+  // Lè paj la fèmen nèt — SÈLMAN la nou fèmen
   window.addEventListener("beforeunload", () => {
     if (localStream) localStream.getTracks().forEach(t => t.stop());
     if (currentCall) try { currentCall.close(); } catch (e) {}
     if (peer && !peer.destroyed) peer.destroy();
   });
+
+  // ⚠️ PA fèmen kamera lè paj la ale background
+  // (nou retire pagehide listener a)
 })();
 </script>
 </body>
