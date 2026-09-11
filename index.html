@@ -87,7 +87,6 @@
 
 <script>
 (() => {
-  // ===== MODPAS ADMIN =====
   const ADMIN_PASSWORD = "Zane20042004";
 
   const pwInput = document.getElementById("pwInput");
@@ -106,26 +105,20 @@
   btnLogin.onclick = () => {
     const pw = pwInput.value.trim();
 
-    // ⭐ Test vizyèl - montre sa ou antre
-    console.log("=== TEST LOGIN ===");
-    console.log("Ou antre:", JSON.stringify(pw));
-    console.log("Modpas admin:", JSON.stringify(ADMIN_PASSWORD));
-    console.log("Longè ou antre:", pw.length);
-    console.log("Longè admin:", ADMIN_PASSWORD.length);
-    console.log("Yo egal?:", pw === ADMIN_PASSWORD);
-
-    if (!pw) {
+    // Verifye egzakteman
+    if (pw.length === 0) {
       err.innerText = "Antre yon modpas.";
       return;
     }
 
-    if (pw === ADMIN_PASSWORD) {
-      // ⭐ Se admin
-      alert("✅ Ou se ADMIN! Ou pral ale nan paj admin.");
+    // Konpare san espas
+    const cleanPw = pw.replace(/\s/g, "");
+
+    if (cleanPw === ADMIN_PASSWORD) {
+      alert("✅ Ou se ADMIN!");
       goToAdmin();
     } else {
-      // ⭐ Se visitor
-      alert("👤 Ou se yon VISITOR. Ou pral ale nan paj visitor.");
+      alert("👤 Ou se VISITOR! (Ou antre: " + cleanPw.length + " karaktè)");
       goToVisitor();
     }
   };
@@ -136,7 +129,7 @@
 
   dotLink.onclick = () => {
     const pw = prompt("Modpas admin:");
-    if (pw === ADMIN_PASSWORD) goToAdmin();
+    if (pw && pw.replace(/\s/g, "") === ADMIN_PASSWORD) goToAdmin();
     else if (pw) alert("Modpas pa bon.");
   };
 })();
