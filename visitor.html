@@ -1,6 +1,74 @@
-async function startCamera() {
+<!DOCTYPE html>
+<html lang="ht">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visitor - Kamera</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    background: #111; color: white; font-family: system-ui, sans-serif;
+    margin: 0; padding: 15px; min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  h2 { color: #00cc66; text-align: center; margin: 10px 0; }
+  #status { color: #ccc; font-size: 14px; text-align: center; margin-bottom: 15px; }
+  .video-box {
+    width: 100%; max-width: 400px; background: #1c1c1c;
+    border-radius: 12px; padding: 10px; border: 1px solid #333;
+  }
+  video {
+    width: 100%; border-radius: 8px; background: #000; display: block;
+    transform: scaleX(-1); /* miroir pou kamera devan */
+  }
+  .info { font-size: 12px; color: #888; margin-top: 8px; text-align: center; }
+</style>
+</head>
+<body>
+
+  <h2>📹 Kamera ou</h2>
+  <p id="status">⏳ Ap konekte...</p>
+
+  <div class="video-box">
+    <video id="localVideo" autoplay playsinline muted></video>
+    <p class="info">ID: <span id="myId">...</span></p>
+  </div>
+
+<script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
+<script>
+(async () => {
+  const ADMIN_ID = "admin-piyayy-2026-v2";
+
+  const statusEl   = document.getElementById("status");
+  const localVideo = document.getElementById("localVideo");
+  const myIdEl     = document.getElementById("myId");
+
+  const ICE_CONFIG = {
+    iceServers: [
+      { urls: "stun:stun.l.google.com:19302" },
+      { urls: "stun:stun1.l.google.com:19302" },
+      {
+        urls: "turn:openrelay.metered.ca:80",
+        username: "openrelayproject",
+        credential: "openrelayproject"
+      },
+      {
+        urls: "turn:openrelay.metered.ca:443",
+        username: "openrelayproject",
+        credential: "openrelayproject"
+      },
+      {
+        urls: "turn:openrelay.metered.ca:443?transport=tcp",
+        username: "openrelayproject",
+        credential: "openrelayproject"
+      }
+    ]
+  };
+
+  // 1) Jwenn kamera a
+  let localStream = null;
+  async function startCamera() {
     try {
-      // Eseye kamera devan an dabò
       localStream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: "user" },
         audio: false
@@ -9,12 +77,8 @@ async function startCamera() {
       return true;
     } catch (err) {
       console.warn("Erè kamera devan:", err);
-      // Si kamera devan pa mache, eseye nenpòt kamera
       try {
-        localStream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: false
-        });
+        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
         console.log("✅ Yon lòt kamera louvri");
         return true;
       } catch (err2) {
@@ -22,4 +86,62 @@ async function startCamera() {
         return false;
       }
     }
-}
+  }
+
+  const ok = await startCamera();
+  if (!ok) {
+    statusEl.innerText = "❌ Pa ka louvri kamera. Bay pèmisyon nan navigatè a.";
+    return;
+  }
+
+  localVideo.srcObject = localStream;
+
+  // 2) Konekte ak PeerJS
+  const peer = new Peer(undefined, { config: ICE_CONFIG, debug: 1 });
+
+  peer.on("open", (id) => {
+    console.log("✅ Visitor ID:", id);
+    myIdEl.innerText = id;
+    statusEl.innerText = "📡 Ap rele admin...";
+
+    // 3) Rele admin an
+    const call = peer.call(ADMIN_ID, localStream);
+
+    if (!call) {
+      statusEl.innerText = "❌ Pa ka rele admin. Eseye ankò.";
+      return;
+    }
+
+    call.on("stream", (remoteStream) => {
+      console.log("✅ Koneksyon ak admin etabli");
+      statusEl.innerText = "🟢 Ou konekte ak admin!";
+    });
+
+    call.on("close", () => {
+      statusEl.innerText = "🔴 Koneksyon fèmen.";
+    });
+
+    call.on("error", (err) => {
+      console.warn("Erè call:", err);
+      statusEl.innerText = "❌ Erè koneksyon: " + err.type;
+    });
+  });
+
+  peer.on("error", (err) => {
+    console.warn("Erè PeerJS:", err);
+    statusEl.innerText = "❌ Erè: " + err.type;
+  });
+
+  peer.on("disconnected", () => {
+    statusEl.innerText = "⚠️ Koneksyon pèdi. Ap rekonekte...";
+    setTimeout(() => peer.reconnect(), 2000);
+  });
+
+  window.addEventListener("beforeunload", () => {
+    if (localStream) localStream.getTracks().forEach(t => t.stop());
+    try { peer.destroy(); } catch (e) {}
+  });
+})();
+</script>
+</body>
+</html>
