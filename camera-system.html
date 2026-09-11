@@ -1,361 +1,61 @@
 <!DOCTYPE html>
-<html lang="ht">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mwen - Kamera mwen</title>
-<style>
-  * { box-sizing: border-box; }
-  body {
-    background:#111; color:white; font-family:sans-serif; text-align:center;
-    margin:0; padding:20px 10px; min-height:100vh;
-  }
-  h2 { margin-bottom:5px; }
-  #loginScreen {
-    max-width:340px; margin:60px auto 0; background:#1c1c1c; padding:25px 20px;
-    border-radius:14px;
-  }
-  #loginScreen p.hint { font-size:13px; color:#999; margin-top:14px; line-height:1.4; }
-  #pwInput {
-    width:100%; padding:12px; border-radius:8px; border:1px solid #333;
-    background:#0d0d0d; color:white; font-size:16px; margin-bottom:12px;
-  }
-  #rememberRow { display:flex; align-items:center; gap:8px; font-size:13px; color:#ccc; margin-bottom:14px; justify-content:center; }
-  #loginErr { color:#ff6666; font-size:13px; min-height:18px; }
-  #app { display:none; }
-  .btn-row { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:10px; }
-  button {
-    padding:14px 22px; font-size:16px; border-radius:10px; border:none;
-    cursor:pointer; transition:opacity .2s; color:white;
-  }
-  button:disabled { opacity:.5; cursor:not-allowed; }
-  button:active:not(:disabled) { opacity:.7; }
-  #btnLogin { background:#00cc66; width:100%; }
-  #btnTel { background:#00cc66; }
-  #btnPc { background:#0088ff; }
-  #btnSwitch { background:#666; display:none; }
-  #btnMute { background:#666; display:none; }
-  #btnStop { background:#cc3333; display:none; }
-  #btnLogout { background:#333; font-size:13px; padding:8px 14px; margin-top:20px; }
-  video {
-    width:90%; max-width:500px; border-radius:15px; background:#000;
-    margin-top:15px; display:block; margin-left:auto; margin-right:auto;
-  }
-  #live {
-    color:#ff4444; font-weight:bold; font-size:18px; display:none; margin-top:10px;
-  }
-  #live::before { content:"● "; animation: blink 1.2s infinite; }
-  @keyframes blink { 50% { opacity:0.2; } }
-  #info { min-height:20px; font-size:14px; color:#ccc; margin-top:8px; }
-  #status-dot {
-    display:inline-block; width:10px; height:10px; border-radius:50%;
-    background:#555; margin-right:6px; vertical-align:middle;
-  }
-  #status-dot.ok { background:#00cc66; }
-  #status-dot.bad { background:#cc3333; }
-</style>
+  <title>Mwen - Kamera mwen</title>
+  <style>
+    body { background:#111; color:white; font-family:sans-serif; text-align:center; }
+    video { width:90%; max-width:500px; border-radius:15px; background:black; margin-top:15px; }
+    button { padding:15px 25px; font-size:18px; border-radius:10px; border:none; margin:10px; }
+    #live { color:red; font-weight:bold; font-size:20px; display:none; }
+  </style>
 </head>
 <body>
+  <h2>Sistèm Kamera Pa Mwen</h2>
+  <p>ID ou pou konekte: <b>zane2004</b></p>
 
-  <!-- ===== EKRAN KONEKSYON ===== -->
-  <div id="loginScreen">
-    <h2>🔒 Kamera Pa Mwen</h2>
-    <p style="color:#999; font-size:14px;">Antre modpas la pou aksede</p>
-    <input type="password" id="pwInput" placeholder="Modpas" autocomplete="off">
-    <div id="rememberRow">
-      <input type="checkbox" id="rememberChk">
-      <label for="rememberChk">Sonje sou aparèy sa a</label>
-    </div>
-    <button id="btnLogin">Antre</button>
-    <p id="loginErr"></p>
-    <p class="hint">⚠️ Modpas sa a se sèl bagay ki pwoteje aksè a kamera a. Chwazi yon modpas ki long e diferan, epi pa mete l nan yon paj piblik.</p>
-  </div>
+  <button id="btnTel" style="background:#00cc66; color:white;">1. Mwen sou TELEFÒN - Pataje kamera mwen</button><br>
+  <button id="btnPc" style="background:#0088ff; color:white;">2. Mwen sou PC - Gade telefòn mwen</button>
 
-  <!-- ===== APLIKASYON PRENSIPAL ===== -->
-  <div id="app">
-    <h2>Sistèm Kamera Pa Mwen</h2>
-
-    <div class="btn-row">
-      <button id="btnTel">📱 Mwen sou TELEFÒN - Pataje kamera mwen</button>
-      <button id="btnPc">💻 Mwen sou PC - Gade telefòn mwen (Admin)</button>
-    </div>
-
-    <div class="btn-row">
-      <button id="btnSwitch">🔄 Chanje kamera</button>
-      <button id="btnMute">🔇 Silans mikwo</button>
-      <button id="btnStop">⏹ Kanpe</button>
-    </div>
-
-    <p id="live">AN DIRÈK</p>
-    <video id="video" autoplay playsinline muted></video>
-    <p id="info"><span id="status-dot"></span><span id="statusText">Poze</span></p>
-
-    <div>
-      <button id="btnLogout">🔓 Dekonekte / Chanje modpas</button>
-    </div>
-  </div>
+  <p id="live">🔴 AN DIRÈK - Telefòn sa a ap voye video bay PC a - Pwen vèt la limen</p>
+  <video id="video" autoplay playsinline muted></video>
+  <p id="info"></p>
 
 <script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
 <script>
-(() => {
-  const STORAGE_KEY = "camsys_pw_v1";
-  const RECONNECT_DELAY_MS = 3000;
-  const ICE_SERVERS = {
-    iceServers: [
-      { urls: "stun:stun.l.google.com:19302" },
-      { urls: "stun:stun1.l.google.com:19302" }
-    ]
-  };
+  const MON_ID = "zane2004"; // ID fiks ou
+  let localStream;
 
-  // Kalkile yon ID PeerJS ki soti nan modpas la (sa a ranplase ansyen "zane2004" fiks la).
-  // Sèlman moun ki konnen menm modpas la ka jwenn menm ID a pou konekte.
-  async function deriveIdFromPassword(password) {
-    const enc = new TextEncoder().encode("camsys-salt-v1::" + password);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', enc);
-    const hex = Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
-    return "cam" + hex.substring(0, 24);
-  }
-
-  const loginScreen = document.getElementById('loginScreen');
-  const appScreen = document.getElementById('app');
-  const pwInput = document.getElementById('pwInput');
-  const rememberChk = document.getElementById('rememberChk');
-  const loginErr = document.getElementById('loginErr');
-
-  let MON_ID = null; // ranpli apre login
-
-  async function tryLogin(password) {
-    if (!password || password.length < 4) {
-      loginErr.innerText = "Antre yon modpas (omwen 4 karaktè).";
-      return;
-    }
-    MON_ID = await deriveIdFromPassword(password);
-    if (rememberChk.checked) {
-      localStorage.setItem(STORAGE_KEY, password);
-    } else {
-      localStorage.removeItem(STORAGE_KEY);
-    }
-    loginScreen.style.display = "none";
-    appScreen.style.display = "block";
-  }
-
-  document.getElementById('btnLogin').onclick = () => tryLogin(pwInput.value);
-  pwInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') tryLogin(pwInput.value); });
-
-  document.getElementById('btnLogout').onclick = () => {
-    cleanupPeer();
-    localStorage.removeItem(STORAGE_KEY);
-    MON_ID = null;
-    pwInput.value = "";
-    rememberChk.checked = false;
-    appScreen.style.display = "none";
-    loginScreen.style.display = "block";
-    setStatus("Poze", undefined);
-  };
-
-  // Ranpli otomatikman si yon modpas te anrejistre sou aparèy sa a
-  window.addEventListener('DOMContentLoaded', () => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      pwInput.value = saved;
-      rememberChk.checked = true;
-    }
-  });
-
-  // ================= REZ TOU KAMERA A (menm jan ak anvan) =================
-
-  const els = {
-    btnTel: document.getElementById('btnTel'),
-    btnPc: document.getElementById('btnPc'),
-    btnSwitch: document.getElementById('btnSwitch'),
-    btnMute: document.getElementById('btnMute'),
-    btnStop: document.getElementById('btnStop'),
-    live: document.getElementById('live'),
-    video: document.getElementById('video'),
-    info: document.getElementById('statusText'),
-    dot: document.getElementById('status-dot')
-  };
-
-  let peer = null;
-  let localStream = null;
-  let currentCall = null;
-  let currentFacingMode = "environment";
-  let role = null;
-  let reconnectTimer = null;
-  let wakeLock = null;
-  let micMuted = false;
-
-  function setStatus(text, ok) {
-    els.info.innerText = text;
-    els.dot.className = ok === undefined ? '' : (ok ? 'ok' : 'bad');
-  }
-
-  function setBusy(busy) {
-    els.btnTel.disabled = busy;
-    els.btnPc.disabled = busy;
-  }
-
-  async function requestWakeLock() {
-    try {
-      if ('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen');
-    } catch (e) {}
-  }
-  function releaseWakeLock() {
-    if (wakeLock) { wakeLock.release().catch(() => {}); wakeLock = null; }
-  }
-
-  async function getCameraStream(facingMode) {
-    if (localStream) localStream.getTracks().forEach(t => t.stop());
-    return navigator.mediaDevices.getUserMedia({
-      video: { facingMode: { ideal: facingMode } },
-      audio: true
-    });
-  }
-
-  function attachReplaceTrackOnCall(stream) {
-    if (currentCall && currentCall.peerConnection) {
-      const videoTrack = stream.getVideoTracks()[0];
-      const sender = currentCall.peerConnection.getSenders().find(s => s.track && s.track.kind === 'video');
-      if (sender && videoTrack) sender.replaceTrack(videoTrack);
-    }
-  }
-
-  function cleanupPeer() {
-    if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
-    if (currentCall) { currentCall.close(); currentCall = null; }
-    if (peer) { peer.destroy(); peer = null; }
-    if (localStream) { localStream.getTracks().forEach(t => t.stop()); localStream = null; }
-    releaseWakeLock();
-    els.video.srcObject = null;
-    els.live.style.display = "none";
-    els.btnSwitch.style.display = "none";
-    els.btnMute.style.display = "none";
-    els.btnStop.style.display = "none";
-    setBusy(false);
-    role = null;
-  }
-
-  function scheduleReconnect(startFn) {
-    if (reconnectTimer) return;
-    setStatus("Rekonèksyon otomatik nan " + (RECONNECT_DELAY_MS / 1000) + "s...", false);
-    reconnectTimer = setTimeout(() => { reconnectTimer = null; startFn(); }, RECONNECT_DELAY_MS);
-  }
-
-  async function startPhone() {
-    setBusy(true);
-    role = 'phone';
-    setStatus("Ap konekte...", undefined);
-
-    try {
-      localStream = await getCameraStream(currentFacingMode);
-    } catch (err) {
-      setStatus("Erè kamera: " + (err.message || "pa gen aksè"), false);
-      setBusy(false);
-      return;
-    }
-
-    els.video.srcObject = localStream;
-    els.live.style.display = "block";
-    els.btnSwitch.style.display = "inline-block";
-    els.btnMute.style.display = "inline-block";
-    els.btnStop.style.display = "inline-block";
-    requestWakeLock();
-
-    peer = new Peer(MON_ID, { config: ICE_SERVERS });
-
-    peer.on('open', () => setStatus("Ap tann admin konekte... Kite paj sa a ouvè", undefined));
+  // --- SI OU SOU TELEFÒN ---
+  document.getElementById('btnTel').onclick = async () => {
+    const peer = new Peer(MON_ID);
+    document.getElementById('info').innerText = "Ap tann PC... Kite paj sa a ouvè";
+    
+    localStream = await navigator.mediaDevices.getUserMedia({video:true});
+    document.getElementById('video').srcObject = localStream;
+    document.getElementById('live').style.display = "block";
 
     peer.on('call', call => {
-      currentCall = call;
-      call.answer(localStream);
-      setStatus("Admin konekte! W ap difize kounya", true);
-      call.on('close', () => setStatus("Admin dekonekte. Ap tann rekonèksyon...", false));
-      call.on('error', () => setStatus("Erè nan koneksyon an", false));
+      call.answer(localStream); // voye video telefòn nan bay PC a
+      document.getElementById('info').innerText = "PC konekte! W ap difize kounya";
     });
-
-    peer.on('disconnected', () => {
-      setStatus("Koneksyon pèdi ak sèvè a. Rekonekte...", false);
-      if (peer && !peer.destroyed) peer.reconnect();
-    });
-
-    peer.on('error', (err) => {
-      if (err.type === 'unavailable-id') {
-        setStatus("Yon lòt sesyon deja aktif ak menm modpas la. Tann yon moman...", false);
-      } else {
-        setStatus("Erè: " + err.type, false);
-      }
-      scheduleReconnect(startPhone);
-    });
-
-    peer.on('close', () => setStatus("Koneksyon fèmen", false));
-  }
-
-  els.btnSwitch.onclick = async () => {
-    currentFacingMode = currentFacingMode === "environment" ? "user" : "environment";
-    try {
-      const newStream = await getCameraStream(currentFacingMode);
-      els.video.srcObject = newStream;
-      localStream = newStream;
-      attachReplaceTrackOnCall(newStream);
-    } catch (e) {
-      setStatus("Pa t kapab chanje kamera", false);
-    }
   };
 
-  els.btnMute.onclick = () => {
-    if (!localStream) return;
-    micMuted = !micMuted;
-    localStream.getAudioTracks().forEach(t => t.enabled = !micMuted);
-    els.btnMute.innerText = micMuted ? "🔊 Reaktive mikwo" : "🔇 Silans mikwo";
-  };
-
-  function startPc() {
-    setBusy(true);
-    role = 'pc';
-    setStatus("Ap chèche telefòn nan...", undefined);
-
-    peer = new Peer({ config: ICE_SERVERS });
-
+  // --- SI OU SOU PC ---
+  document.getElementById('btnPc').onclick = () => {
+    const peer = new Peer();
+    document.getElementById('info').innerText = "Ap chèche telefòn nan...";
+    
     peer.on('open', () => {
-      const call = peer.call(MON_ID, new MediaStream());
-      currentCall = call;
-
+      const call = peer.call(MON_ID, new MediaStream()); // rele telefòn nan
       call.on('stream', remoteStream => {
-        els.video.srcObject = remoteStream;
-        els.live.style.display = "block";
-        els.btnStop.style.display = "inline-block";
-        setStatus("Ou wè kamera telefòn ou an dirèk!", true);
-      });
-      call.on('close', () => {
-        setStatus("Telefòn dekonekte.", false);
-        scheduleReconnect(startPc);
+        document.getElementById('video').srcObject = remoteStream;
+        document.getElementById('info').innerText = "Ou wè kamera telefòn ou an dirèk!";
       });
       call.on('error', () => {
-        setStatus("Telefòn nan pa limen oswa modpas la pa menm jan", false);
-        scheduleReconnect(startPc);
+        document.getElementById('info').innerText = "Telefòn nan pa limen oswa li pa klike sou 'Pataje'";
       });
     });
-
-    peer.on('disconnected', () => {
-      setStatus("Koneksyon pèdi ak sèvè a. Rekonekte...", false);
-      if (peer && !peer.destroyed) peer.reconnect();
-    });
-
-    peer.on('error', (err) => {
-      setStatus("Erè: " + err.type, false);
-      scheduleReconnect(startPc);
-    });
-  }
-
-  els.btnStop.onclick = () => { cleanupPeer(); setStatus("Poze", undefined); };
-  els.btnTel.onclick = startPhone;
-  els.btnPc.onclick = startPc;
-
-  window.addEventListener('beforeunload', cleanupPeer);
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && role === 'phone' && !wakeLock) requestWakeLock();
-  });
-})();
+  };
 </script>
 </body>
 </html>
