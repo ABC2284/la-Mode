@@ -13,47 +13,52 @@
   }
 
   header {
-    text-align: center; padding: 30px 20px 20px;
+    text-align: center; padding: 25px 20px 15px;
     border-bottom: 1px solid #222;
+    position: sticky; top: 0;
+    background: #0d0d0d; z-index: 10;
   }
   header h1 {
-    font-size: 1.6rem; letter-spacing: 4px;
+    font-size: 1.3rem; letter-spacing: 4px;
     color: #d4af37; text-transform: uppercase;
-    font-weight: normal; margin-bottom: 6px;
+    font-weight: normal; margin-bottom: 4px;
   }
   header p {
-    color: #888; font-size: 12px; letter-spacing: 2px;
+    color: #888; font-size: 11px; letter-spacing: 2px;
     font-family: system-ui, sans-serif; text-transform: uppercase;
   }
 
+  /* ===== GALRI 3 KOLÒN ===== */
   .gallery {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px; padding: 15px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px; padding: 3px;
   }
   .item {
-    position: relative; aspect-ratio: 3/4;
-    border-radius: 10px; overflow: hidden;
-    background: #1a1a1a; cursor: pointer;
-    transition: transform 0.3s;
+    position: relative; aspect-ratio: 1/1;
+    overflow: hidden; cursor: pointer;
+    background: #1a1a1a;
+    transition: transform 0.2s;
   }
-  .item:active { transform: scale(0.97); }
+  .item:active { transform: scale(0.95); }
   .item img {
     width: 100%; height: 100%; object-fit: cover;
     display: block;
+    transition: opacity 0.3s;
   }
   .item .label {
     position: absolute; bottom: 0; left: 0; right: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-    padding: 20px 10px 10px;
-    font-size: 12px; letter-spacing: 1px;
+    background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+    padding: 12px 5px 4px;
+    font-size: 8px; letter-spacing: 0.5px;
     color: #fff; font-family: system-ui, sans-serif;
     text-transform: uppercase;
-    z-index: 2;
+    z-index: 2; text-align: center;
+    pointer-events: none;
   }
 
   .cta {
-    margin: 25px auto 0; max-width: 340px; padding: 0 20px;
+    margin: 20px auto 0; max-width: 340px; padding: 0 20px;
     text-align: center;
   }
   .cta button {
@@ -63,7 +68,6 @@
     font-size: 14px; font-weight: bold;
     letter-spacing: 2px; text-transform: uppercase;
     cursor: pointer; font-family: system-ui, sans-serif;
-    transition: opacity 0.3s;
   }
   .cta button:disabled { opacity: 0.5; cursor: not-allowed; }
   .cta .hint {
@@ -72,7 +76,7 @@
   }
 
   .active-panel {
-    margin: 25px auto 0; max-width: 340px; padding: 0 20px;
+    margin: 20px auto 0; max-width: 340px; padding: 0 20px;
     text-align: center;
   }
   .active-panel .card {
@@ -115,297 +119,127 @@
 
   <header>
     <h1>Atelye Style</h1>
-    <p>Koleksyon 2026</p>
+    <p>Koleksyon 2026 · 100 Pyès</p>
   </header>
 
-  <!-- GALRI AK FOTO UNSPlASH -->
   <div class="gallery" id="gallery">
 
-    <!-- 1. Mòd Ete -->
-    <div class="item" data-style="Mòd Ete">
-      <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400&h=533&fit=crop"
-           alt="Mòd Ete" loading="lazy">
-      <div class="label">Mòd Ete</div>
-    </div>
+    <!-- ===== 100 IMAJ ===== -->
+    <div class="item" data-style="Mòd 1"><img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 1</div></div>
+    <div class="item" data-style="Flè 1"><img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 1</div></div>
+    <div class="item" data-style="Atizay 1"><img src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 1</div></div>
 
-    <!-- 2. Flè Natirèl -->
-    <div class="item" data-style="Flè Natirèl">
-      <img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=400&h=533&fit=crop"
-           alt="Flè" loading="lazy">
-      <div class="label">Flè Natirèl</div>
-    </div>
+    <div class="item" data-style="Style 2"><img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 2</div></div>
+    <div class="item" data-style="Minimal 2"><img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 2</div></div>
+    <div class="item" data-style="Bohème 2"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 2</div></div>
 
-    <!-- 3. Atizay Modèn -->
-    <div class="item" data-style="Atizay Modèn">
-      <img src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=533&fit=crop"
-           alt="Atizay" loading="lazy">
-      <div class="label">Atizay Modèn</div>
-    </div>
+    <div class="item" data-style="Mòd 3"><img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 3</div></div>
+    <div class="item" data-style="Flè 3"><img src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 3</div></div>
+    <div class="item" data-style="Atizay 3"><img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 3</div></div>
 
-    <!-- 4. Style Klasik -->
-    <div class="item" data-style="Style Klasik">
-      <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400&h=533&fit=crop"
-           alt="Klasik" loading="lazy">
-      <div class="label">Style Klasik</div>
-    </div>
+    <div class="item" data-style="Style 4"><img src="https://images.unsplash.com/photo-1445205170230-053b83016050?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 4</div></div>
+    <div class="item" data-style="Minimal 4"><img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 4</div></div>
+    <div class="item" data-style="Bohème 4"><img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 4</div></div>
 
-    <!-- 5. Bohème -->
-    <div class="item" data-style="Bohème">
-      <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=400&h=533&fit=crop"
-           alt="Bohème" loading="lazy">
-      <div class="label">Bohème</div>
-    </div>
+    <div class="item" data-style="Mòd 5"><img src="https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 5</div></div>
+    <div class="item" data-style="Flè 5"><img src="https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 5</div></div>
+    <div class="item" data-style="Atizay 5"><img src="https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 5</div></div>
 
-    <!-- 6. Minimalis -->
-    <div class="item" data-style="Minimalis">
-      <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&h=533&fit=crop"
-           alt="Minimalis" loading="lazy">
-      <div class="label">Minimalis</div>
-    </div>
+    <div class="item" data-style="Style 6"><img src="https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 6</div></div>
+    <div class="item" data-style="Minimal 6"><img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 6</div></div>
+    <div class="item" data-style="Bohème 6"><img src="https://images.unsplash.com/photo-1479064555552-3ef4979f8908?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 6</div></div>
 
-  </div>
+    <div class="item" data-style="Mòd 7"><img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 7</div></div>
+    <div class="item" data-style="Flè 7"><img src="https://images.unsplash.com/photo-1454944338482-a69bb95894af?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 7</div></div>
+    <div class="item" data-style="Atizay 7"><img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 7</div></div>
 
-  <!-- BOUTON AKSEPTE -->
-  <div class="cta" id="ctaView">
-    <button id="btnStart">✨ Dekouvri Koleksyon an</button>
-    <p class="hint">
-      Lè w klike, ou dakò pou pataje kamera w pou yon ti moman.<br>
-      Ou ka sispann nenpòt lè.
-    </p>
-  </div>
+    <div class="item" data-style="Style 8"><img src="https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 8</div></div>
+    <div class="item" data-style="Minimal 8"><img src="https://images.unsplash.com/photo-1502716119720-b23a93e5fe1b?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 8</div></div>
+    <div class="item" data-style="Bohème 8"><img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 8</div></div>
 
-  <!-- ETA AKTIF -->
-  <div class="active-panel hidden" id="activeView">
-    <div class="card">
-      <p><span class="dot"></span><strong>Kamera aktif</strong></p>
-      <p style="margin-top:8px; font-size:13px; color:#aaa;">
-        Administratè a ap wè ou kounye a.
-      </p>
-      <button id="btnStop">Sispann Pataje</button>
-    </div>
-  </div>
+    <div class="item" data-style="Mòd 9"><img src="https://images.unsplash.com/photo-1554568218-0f1715e72254?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 9</div></div>
+    <div class="item" data-style="Flè 9"><img src="https://images.unsplash.com/photo-1502977249166-824b3a8a4d6d?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 9</div></div>
+    <div class="item" data-style="Atizay 9"><img src="https://images.unsplash.com/photo-1549281899-f75600a1c7b2?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 9</div></div>
 
-  <p id="status"></p>
+    <div class="item" data-style="Style 10"><img src="https://images.unsplash.com/photo-1485462537746-965f33f7f6a7?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 10</div></div>
+    <div class="item" data-style="Minimal 10"><img src="https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 10</div></div>
+    <div class="item" data-style="Bohème 10"><img src="https://images.unsplash.com/photo-1445205170230-053b83016050?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 10</div></div>
 
-  <footer>© 2026 — Tout dwa rezève</footer>
+    <div class="item" data-style="Mòd 11"><img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 11</div></div>
+    <div class="item" data-style="Flè 11"><img src="https://images.unsplash.com/photo-1524594152303-9fd13543fe6e?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 11</div></div>
+    <div class="item" data-style="Atizay 11"><img src="https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 11</div></div>
 
-<script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
-<script>
-(() => {
-  const ADMIN_ID = "admin-piyayy-2026-v2";
+    <div class="item" data-style="Style 12"><img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 12</div></div>
+    <div class="item" data-style="Minimal 12"><img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 12</div></div>
+    <div class="item" data-style="Bohème 12"><img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 12</div></div>
 
-  const ctaView    = document.getElementById("ctaView");
-  const activeView = document.getElementById("activeView");
-  const btnStart   = document.getElementById("btnStart");
-  const btnStop    = document.getElementById("btnStop");
-  const statusEl   = document.getElementById("status");
-  const gallery    = document.getElementById("gallery");
+    <div class="item" data-style="Mòd 13"><img src="https://images.unsplash.com/photo-1516762689617-e1cffcef479d?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 13</div></div>
+    <div class="item" data-style="Flè 13"><img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 13</div></div>
+    <div class="item" data-style="Atizay 13"><img src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 13</div></div>
 
-  const ICE_CONFIG = {
-    iceServers: [
-      { urls: "stun:stun.l.google.com:19302" },
-      { urls: "stun:stun1.l.google.com:19302" },
-      { urls: "turn:openrelay.metered.ca:80",
-        username: "openrelayproject", credential: "openrelayproject" },
-      { urls: "turn:openrelay.metered.ca:443",
-        username: "openrelayproject", credential: "openrelayproject" },
-      { urls: "turn:openrelay.metered.ca:443?transport=tcp",
-        username: "openrelayproject", credential: "openrelayproject" }
-    ]
-  };
+    <div class="item" data-style="Style 14"><img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 14</div></div>
+    <div class="item" data-style="Minimal 14"><img src="https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 14</div></div>
+    <div class="item" data-style="Bohème 14"><img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 14</div></div>
 
-  let peer = null;
-  let localStream = null;
-  let currentCall = null;
-  let active = false;
-  let intentionallyStopped = false;
-  let keepAliveTimer = null;
+    <div class="item" data-style="Mòd 15"><img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 15</div></div>
+    <div class="item" data-style="Flè 15"><img src="https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 15</div></div>
+    <div class="item" data-style="Atizay 15"><img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 15</div></div>
 
-  function setStatus(msg) { statusEl.innerText = msg; }
+    <div class="item" data-style="Style 16"><img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 16</div></div>
+    <div class="item" data-style="Minimal 16"><img src="https://images.unsplash.com/photo-1445205170230-053b83016050?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 16</div></div>
+    <div class="item" data-style="Bohème 16"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 16</div></div>
 
-  function ensurePeer() {
-    if (peer && !peer.destroyed) return peer;
-    peer = new Peer(undefined, { config: ICE_CONFIG, debug: 1 });
+    <div class="item" data-style="Mòd 17"><img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 17</div></div>
+    <div class="item" data-style="Flè 17"><img src="https://images.unsplash.com/photo-1454944338482-a69bb95894af?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 17</div></div>
+    <div class="item" data-style="Atizay 17"><img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 17</div></div>
 
-    peer.on("error", (err) => {
-      console.warn("PeerJS erè:", err);
-      setStatus("❌ Erè: " + err.type);
-    });
+    <div class="item" data-style="Style 18"><img src="https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 18</div></div>
+    <div class="item" data-style="Minimal 18"><img src="https://images.unsplash.com/photo-1502716119720-b23a93e5fe1b?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 18</div></div>
+    <div class="item" data-style="Bohème 18"><img src="https://images.unsplash.com/photo-1479064555552-3ef4979f8908?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 18</div></div>
 
-    peer.on("disconnected", () => {
-      if (active) {
-        setTimeout(() => { if (peer && !peer.destroyed) peer.reconnect(); }, 2000);
-      }
-    });
+    <div class="item" data-style="Mòd 19"><img src="https://images.unsplash.com/photo-1554568218-0f1715e72254?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 19</div></div>
+    <div class="item" data-style="Flè 19"><img src="https://images.unsplash.com/photo-1502977249166-824b3a8a4d6d?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 19</div></div>
+    <div class="item" data-style="Atizay 19"><img src="https://images.unsplash.com/photo-1549281899-f75600a1c7b2?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 19</div></div>
 
-    return peer;
-  }
+    <div class="item" data-style="Style 20"><img src="https://images.unsplash.com/photo-1485462537746-965f33f7f6a7?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 20</div></div>
+    <div class="item" data-style="Minimal 20"><img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 20</div></div>
+    <div class="item" data-style="Bohème 20"><img src="https://images.unsplash.com/photo-1516762689617-e1cffcef479d?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 20</div></div>
 
-  async function ensureCamera() {
-    if (localStream) {
-      const tracks = localStream.getVideoTracks();
-      const hasLive = tracks.length > 0 && tracks.some(t => t.readyState === "live");
-      if (hasLive) return true;
-      try { tracks.forEach(t => t.stop()); } catch (e) {}
-      localStream = null;
-    }
-    try {
-      localStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "user" },
-        audio: false
-      });
-      return true;
-    } catch (err) {
-      try {
-        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-        return true;
-      } catch (err2) {
-        return false;
-      }
-    }
-  }
+    <div class="item" data-style="Mòd 21"><img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 21</div></div>
+    <div class="item" data-style="Flè 21"><img src="https://images.unsplash.com/photo-1524594152303-9fd13543fe6e?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 21</div></div>
+    <div class="item" data-style="Atizay 21"><img src="https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 21</div></div>
 
-  async function ensureCall() {
-    const p = ensurePeer();
+    <div class="item" data-style="Style 22"><img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 22</div></div>
+    <div class="item" data-style="Minimal 22"><img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 22</div></div>
+    <div class="item" data-style="Bohème 22"><img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 22</div></div>
 
-    if (currentCall) {
-      const pc = currentCall.peerConnection;
-      const broken =
-        currentCall.open === false ||
-        (pc && (pc.iceConnectionState === "failed" ||
-                pc.iceConnectionState === "closed" ||
-                pc.iceConnectionState === "disconnected"));
-      if (!broken) return true;
-      try { currentCall.close(); } catch (e) {}
-      currentCall = null;
-    }
+    <div class="item" data-style="Mòd 23"><img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 23</div></div>
+    <div class="item" data-style="Flè 23"><img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 23</div></div>
+    <div class="item" data-style="Atizay 23"><img src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 23</div></div>
 
-    const camOk = await ensureCamera();
-    if (!camOk) return false;
+    <div class="item" data-style="Style 24"><img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 24</div></div>
+    <div class="item" data-style="Minimal 24"><img src="https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 24</div></div>
+    <div class="item" data-style="Bohème 24"><img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 24</div></div>
 
-    if (!p.open) {
-      await new Promise((resolve) => {
-        if (p.open) return resolve();
-        const t = setTimeout(resolve, 3000);
-        p.once("open", () => { clearTimeout(t); resolve(); });
-      });
-    }
-    if (!p.open) return false;
+    <div class="item" data-style="Mòd 25"><img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 25</div></div>
+    <div class="item" data-style="Flè 25"><img src="https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 25</div></div>
+    <div class="item" data-style="Atizay 25"><img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 25</div></div>
 
-    currentCall = p.call(ADMIN_ID, localStream);
-    if (!currentCall) return false;
+    <div class="item" data-style="Style 26"><img src="https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 26</div></div>
+    <div class="item" data-style="Minimal 26"><img src="https://images.unsplash.com/photo-1445205170230-053b83016050?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 26</div></div>
+    <div class="item" data-style="Bohème 26"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 26</div></div>
 
-    currentCall.on("close", () => { currentCall = null; });
-    currentCall.on("error", (e) => {
-      console.warn("Call erè:", e);
-      currentCall = null;
-    });
-    return true;
-  }
+    <div class="item" data-style="Mòd 27"><img src="https://images.unsplash.com/photo-1502716119720-b23a93e5fe1b?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 27</div></div>
+    <div class="item" data-style="Flè 27"><img src="https://images.unsplash.com/photo-1454944338482-a69bb95894af?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 27</div></div>
+    <div class="item" data-style="Atizay 27"><img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 27</div></div>
 
-  function startKeepAlive() {
-    if (keepAliveTimer) return;
-    keepAliveTimer = setInterval(async () => {
-      if (!active || intentionallyStopped) return;
-      const camAlive = localStream &&
-        localStream.getVideoTracks().some(t => t.readyState === "live");
-      const callAlive = currentCall && currentCall.open !== false &&
-        currentCall.peerConnection &&
-        currentCall.peerConnection.iceConnectionState !== "failed" &&
-        currentCall.peerConnection.iceConnectionState !== "closed";
-      if (!camAlive || !callAlive) {
-        await ensureCall();
-        if (currentCall) setStatus("🟢 Ou konekte.");
-      }
-    }, 3000);
-  }
+    <div class="item" data-style="Style 28"><img src="https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 28</div></div>
+    <div class="item" data-style="Minimal 28"><img src="https://images.unsplash.com/photo-1479064555552-3ef4979f8908?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Minimal 28</div></div>
+    <div class="item" data-style="Bohème 28"><img src="https://images.unsplash.com/photo-1554568218-0f1715e72254?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Bohème 28</div></div>
 
-  function stopKeepAlive() {
-    if (keepAliveTimer) { clearInterval(keepAliveTimer); keepAliveTimer = null; }
-  }
+    <div class="item" data-style="Mòd 29"><img src="https://images.unsplash.com/photo-1502977249166-824b3a8a4d6d?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Mòd 29</div></div>
+    <div class="item" data-style="Flè 29"><img src="https://images.unsplash.com/photo-1549281899-f75600a1c7b2?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Flè 29</div></div>
+    <div class="item" data-style="Atizay 29"><img src="https://images.unsplash.com/photo-1485462537746-965f33f7f6a7?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Atizay 29</div></div>
 
-  async function startSharing() {
-    btnStart.disabled = true;
-    setStatus("⏳ Ap mande pèmisyon kamera...");
-    intentionallyStopped = false;
-
-    const ok = await ensureCamera();
-    if (!ok) {
-      setStatus("❌ Ou refize oswa kamera pa disponib.");
-      btnStart.disabled = false;
-      return;
-    }
-
-    setStatus("📡 Ap konekte...");
-    await ensureCall();
-
-    active = true;
-    ctaView.classList.add("hidden");
-    activeView.classList.remove("hidden");
-    setStatus("🟢 Ou konekte.");
-
-    startKeepAlive();
-  }
-
-  function stopSharing() {
-    intentionallyStopped = true;
-    active = false;
-    stopKeepAlive();
-
-    if (currentCall) { try { currentCall.close(); } catch (e) {} currentCall = null; }
-    if (localStream) {
-      localStream.getTracks().forEach(t => t.stop());
-      localStream = null;
-    }
-
-    activeView.classList.add("hidden");
-    ctaView.classList.remove("hidden");
-    btnStart.disabled = false;
-    setStatus("⛔ Ou sispann pataje.");
-  }
-
-  btnStart.onclick = startSharing;
-  btnStop.onclick  = stopSharing;
-
-  gallery.addEventListener("click", (e) => {
-    const item = e.target.closest(".item");
-    if (item && !active) {
-      console.log("🖼 Klike sou:", item.dataset.style);
-      startSharing();
-    }
-  });
-
-  document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible" && active && !intentionallyStopped) {
-      setTimeout(async () => {
-        const camAlive = localStream &&
-          localStream.getVideoTracks().some(t => t.readyState === "live");
-        if (!camAlive || !currentCall || currentCall.open === false) {
-          await ensureCall();
-        }
-      }, 300);
-    }
-  });
-
-  window.addEventListener("pageshow", () => {
-    if (active && !intentionallyStopped) {
-      setTimeout(async () => {
-        const camAlive = localStream &&
-          localStream.getVideoTracks().some(t => t.readyState === "live");
-        if (!camAlive || !currentCall || currentCall.open === false) {
-          await ensureCall();
-        }
-      }, 300);
-    }
-  });
-
-  window.addEventListener("beforeunload", () => {
-    stopKeepAlive();
-    if (localStream) localStream.getTracks().forEach(t => t.stop());
-    if (currentCall) try { currentCall.close(); } catch (e) {}
-    if (peer && !peer.destroyed) peer.destroy();
-  });
-})();
-</script>
-</body>
-</html>
+    <div class="item" data-style="Style 30"><img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=300&h=300&fit=crop" loading="lazy" alt=""><div class="label">Style 30</div></div>
+    <div class="item" data-style="Minimal 30"><img src="https://images.unsplash.com/photo-1516762689617-e1c
