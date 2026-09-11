@@ -47,6 +47,7 @@
     position: absolute; top: 18px; left: 18px;
     width: 10px; height: 10px; border-radius: 50%;
     background: #ff3333; animation: pulse 1s infinite;
+    z-index: 5;
   }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
   .empty {
@@ -77,32 +78,25 @@
   let peer = null;
   let reconnectTimer = null;
 
-  // ✅ STUN + TURN gratis (OpenRelay) — esansyèl pou 4G/WiFi diferan
+  /* ============================================
+     STUN + TURN (esansyèl pou 4G/WiFi diferan)
+     ============================================ */
   const ICE_CONFIG = {
     iceServers: [
       { urls: "stun:stun.l.google.com:19302" },
       { urls: "stun:stun1.l.google.com:19302" },
-      {
-        urls: "turn:openrelay.metered.ca:80",
-        username: "openrelayproject",
-        credential: "openrelayproject"
-      },
-      {
-        urls: "turn:openrelay.metered.ca:443",
-        username: "openrelayproject",
-        credential: "openrelayproject"
-      },
-      {
-        urls: "turn:openrelay.metered.ca:443?transport=tcp",
-        username: "openrelayproject",
-        credential: "openrelayproject"
-      }
+      { urls: "turn:openrelay.metered.ca:80",
+        username: "openrelayproject", credential: "openrelayproject" },
+      { urls: "turn:openrelay.metered.ca:443",
+        username: "openrelayproject", credential: "openrelayproject" },
+      { urls: "turn:openrelay.metered.ca:443?transport=tcp",
+        username: "openrelayproject", credential: "openrelayproject" }
     ]
   };
 
-  /* ==============================
+  /* ============================================
      KONEKSYON PEER
-     ============================== */
+     ============================================ */
   function connectPeer() {
     if (peer && !peer.destroyed) {
       try { peer.destroy(); } catch (e) {}
@@ -118,6 +112,16 @@
     });
 
     peer.on("call", handleIncomingCall);
+
+    // Resevwa mesaj "bye" nan men visitor
+    peer.on("connection", (conn) => {
+      conn.on("data", (data) => {
+        if (data && data.type === "bye") {
+          console.log("👋 Visitor voye bye:", conn.peer);
+          cleanupVisitor(conn.peer);
+        }
+      });
+    });
 
     peer.on("error", (err) => {
       console.warn("Erè PeerJS:", err);
@@ -145,9 +149,9 @@
     }, 3000);
   }
 
-  /* ==============================
+  /* ============================================
      APÈL ANTRE (visitor → admin)
-     ============================== */
+     ============================================ */
   function handleIncomingCall(call) {
     const visitorId = call.peer;
     console.log("📞 Visitor konekte:", visitorId);
@@ -197,16 +201,21 @@
         visitorList.querySelectorAll(".visitor-btn")
           .forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
-
         card.scrollIntoView({ behavior: "smooth", block: "center" });
-
         grid.querySelectorAll(".video-card")
           .forEach(c => c.classList.remove("focused"));
         card.classList.add("focused");
       });
     }
 
-    visitors[visitorId] = { call, video, card, btn, stream: null };
+    // Objè visitor ak done pou watchdog
+    visitors[visitorId] = {
+      call, video, card, btn, stream: null,
+      lastTime: 0,
+      lastChange: Date.now(),
+      watchdog: null,
+      iceCheck: null
+    };
 
     /* --- Stream rive --- */
     call.on("stream", (remoteStream) => {
@@ -214,33 +223,105 @@
       video.srcObject = remoteStream;
       video.play().catch(e => console.warn("play err:", e));
       visitors[visitorId].stream = remoteStream;
+      visitors[visitorId].lastChange = Date.now();
+
+      // ⏱ WATCHDOG 1 : track mute / ended
+      const vTrack = remoteStream.getVideoTracks()[0];
+      if (vTrack) {
+        vTrack.onmute = () => {
+          console.log("🔇 Track mute:", visitorId);
+          // Tann 8 segond anvan retire (pèmèt relance visitor)
+          setTimeout(() => {
+            if (vTrack.muted && visitors[visitorId]) {
+              console.log("💀 Track toujou mute — retire");
+              cleanupVisitor(visitorId);
+            }
+          }, 8000);
+        };
+        vTrack.onended = () => {
+          console.log("⏹ Track ended:", visitorId);
+          // Tann 8 segond (visitor ka relance)
+          setTimeout(() => {
+            if (visitors[visitorId]) cleanupVisitor(visitorId);
+          }, 8000);
+        };
+      }
+
+      // ⏱ WATCHDOG 2 : imaj pa avanse pandan 10 segond
+      visitors[visitorId].watchdog = setInterval(() => {
+        const v = visitors[visitorId];
+        if (!v || !v.video) return;
+
+        const t = v.video.currentTime;
+        if (t === v.lastTime) {
+          const dead = Date.now() - v.lastChange;
+          if (dead > 10000) {
+            console.warn("💀 Imaj bloke depi 10s:", visitorId);
+            cleanupVisitor(visitorId);
+          }
+        } else {
+          v.lastTime = t;
+          v.lastChange = Date.now();
+        }
+      }, 2000);
+
+      // ⏱ WATCHDOG 3 : ICE state
+      visitors[visitorId].iceCheck = setInterval(() => {
+        const v = visitors[visitorId];
+        if (!v) return;
+        const pc = v.call && v.call.peerConnection;
+        if (pc) {
+          const s = pc.iceConnectionState;
+          if (s === "failed" || s === "closed") {
+            console.warn("💀 ICE", s, visitorId);
+            cleanupVisitor(visitorId);
+          }
+        }
+      }, 3000);
+
       updateStatus();
     });
 
-    call.on("close", () => cleanupVisitor(visitorId));
+    call.on("close", () => {
+      console.log("📴 Call close:", visitorId);
+      // Tann 3 segond — petèt visitor ap relance
+      setTimeout(() => {
+        if (visitors[visitorId]) cleanupVisitor(visitorId);
+      }, 3000);
+    });
+
     call.on("error", (e) => {
       console.warn("call err:", e);
-      cleanupVisitor(visitorId);
+      setTimeout(() => {
+        if (visitors[visitorId]) cleanupVisitor(visitorId);
+      }, 3000);
     });
 
     updateStatus();
   }
 
-  /* ==============================
+  /* ============================================
      NETWAYE YON VISITOR
-     ============================== */
+     ============================================ */
   function cleanupVisitor(visitorId) {
-    if (visitors[visitorId]) {
-      if (visitors[visitorId].card) visitors[visitorId].card.remove();
-      if (visitors[visitorId].btn)  visitors[visitorId].btn.remove();
-      delete visitors[visitorId];
-    }
+    if (!visitors[visitorId]) return;
+    const v = visitors[visitorId];
+
+    if (v.watchdog) clearInterval(v.watchdog);
+    if (v.iceCheck) clearInterval(v.iceCheck);
+    if (v.stream) v.stream.getTracks().forEach(t => t.stop());
+    try { v.call.close(); } catch (e) {}
+
+    if (v.card) v.card.remove();
+    if (v.btn)  v.btn.remove();
+
+    delete visitors[visitorId];
     updateStatus();
   }
 
-  /* ==============================
+  /* ============================================
      MIZAJOU ESTATI
-     ============================== */
+     ============================================ */
   function updateStatus() {
     const count = Object.keys(visitors).length;
     status.innerText = count > 0
@@ -258,9 +339,9 @@
     }
   }
 
-  /* ==============================
+  /* ============================================
      EVÈNMAN SISTÈM
-     ============================== */
+     ============================================ */
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") {
       if (!peer || peer.disconnected || peer.destroyed) scheduleReconnect();
