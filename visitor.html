@@ -24,6 +24,8 @@
     color: #888; font-size: 11px; letter-spacing: 2px;
     text-transform: uppercase;
   }
+
+  /* ===== BOUTON AKSEPTE ===== */
   .cta {
     margin: 25px auto 20px; max-width: 360px; padding: 0 20px;
     text-align: center;
@@ -40,6 +42,8 @@
   .cta .hint {
     font-size: 11px; color: #777; margin-top: 10px; line-height: 1.5;
   }
+
+  /* ===== ETA AKTIF ===== */
   .active-panel {
     margin: 25px auto 20px; max-width: 360px; padding: 0 20px;
     text-align: center;
@@ -62,12 +66,15 @@
     border-radius: 10px; font-size: 13px; font-weight: bold;
     cursor: pointer; font-family: system-ui, sans-serif;
   }
+
   #status {
     text-align: center; color: #888; font-size: 12px;
     margin-top: 10px; padding: 0 20px; min-height: 16px;
   }
+
+  /* ===== TIT GALRI ===== */
   .gallery-title {
-    text-align: center; margin: 30px 0 10px;
+    text-align: center; margin: 30px 0 12px;
     font-size: 11px; letter-spacing: 3px;
     color: #666; text-transform: uppercase;
   }
@@ -77,15 +84,18 @@
     width: 30px; height: 1px; background: #333;
     vertical-align: middle; margin: 0 10px;
   }
+
+  /* ===== GALRI ===== */
   .gallery {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 3px; padding: 3px;
+    gap: 4px; padding: 4px;
   }
   .item {
     position: relative; aspect-ratio: 1/1;
     overflow: hidden; background: #1a1a1a;
     cursor: pointer;
+    border-radius: 6px;
   }
   .item:active { transform: scale(0.95); transition: transform 0.1s; }
   .item img {
@@ -95,16 +105,34 @@
   .item .label {
     position: absolute; bottom: 0; left: 0; right: 0;
     background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-    padding: 15px 5px 5px;
-    font-size: 8px; letter-spacing: 0.5px;
+    padding: 18px 6px 6px;
+    font-size: 9px; letter-spacing: 0.5px;
     color: #fff; text-transform: uppercase;
     z-index: 2; text-align: center;
   }
   .item .price {
     color: #00cc66; font-weight: bold;
-    font-size: 10px; display: block;
+    font-size: 11px; display: block;
     margin-top: 2px;
   }
+
+  /* ===== BOUTON "WÈ TOUT" ===== */
+  .more-wrap {
+    text-align: center; padding: 20px;
+  }
+  .more-btn {
+    background: transparent;
+    color: #00cc66; border: 2px solid #00cc66;
+    padding: 14px 40px; border-radius: 10px;
+    font-size: 14px; font-weight: bold;
+    letter-spacing: 2px; text-transform: uppercase;
+    cursor: pointer; font-family: system-ui, sans-serif;
+    transition: all 0.3s;
+  }
+  .more-btn:hover {
+    background: #00cc66; color: #0d0d0d;
+  }
+
   .hidden { display: none; }
   footer {
     text-align: center; color: #444; font-size: 10px;
@@ -119,6 +147,7 @@
     <p>Koleksyon 2026 · Chòt · Mayo · Ekipman</p>
   </header>
 
+  <!-- ===== BOUTON AKSEPTE ===== -->
   <div class="cta" id="ctaView">
     <button id="btnStart">✅ Mwen dakò — Pataje kamera m</button>
     <p class="hint">
@@ -127,6 +156,7 @@
     </p>
   </div>
 
+  <!-- ===== ETA AKTIF ===== -->
   <div class="active-panel hidden" id="activeView">
     <div class="card">
       <p><span class="dot"></span><strong>Kamera aktif</strong></p>
@@ -139,67 +169,164 @@
 
   <p id="status"></p>
 
-  <div class="gallery-title">Koleksyon Espò</div>
+  <div class="gallery-title">Koleksyon Nou</div>
 
-  <div class="gallery" id="gallery">
-    <!-- Imaj yo jenere ak JS -->
+  <!-- ===== 6 PREMYE IMAJ YO ===== -->
+  <div class="gallery" id="galleryFirst"></div>
+
+  <!-- ===== BOUTON "WÈ TOUT" ===== -->
+  <div class="more-wrap" id="moreWrap">
+    <button class="more-btn" id="btnMore">Wè Tout Koleksyon →</button>
   </div>
+
+  <!-- ===== RÈS IMAJ YO (kache okòmansman) ===== -->
+  <div class="gallery hidden" id="galleryRest"></div>
 
   <footer>© 2026 — Tout dwa rezève</footer>
 
 <script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
 <script>
 /* ============================================
-   FOTO ESPÒ REYÈL (Pexels + Unsplash)
+   60 FOTO ESPÒ (SVG + URL)
    ============================================ */
-(function generateGallery() {
-  const gallery = document.getElementById("gallery");
+const SPORT_PRODUCTS = [
+  // 6 premye yo (parèt imedyatman)
+  { name: "Chòt Foutbòl",   price: "$25", type: "foot"   },
+  { name: "Mayo Baskèt",    price: "$40", type: "basket" },
+  { name: "Rakèt Tenis",    price: "$45", type: "tennis" },
+  { name: "Boul Volley",    price: "$20", type: "volley" },
+  { name: "Boul Foutbòl",   price: "$18", type: "foot"   },
+  { name: "Soulye Baskèt",  price: "$75", type: "basket" },
+  // Rès yo (parèt lè w klike "Wè Tout")
+  { name: "Chòt Baskèt",    price: "$28", type: "basket" },
+  { name: "Boul Tenis",     price: "$8",  type: "tennis" },
+  { name: "Chòt Volley",    price: "$26", type: "volley" },
+  { name: "Mayo Foutbòl",   price: "$35", type: "foot"   },
+  { name: "Soulye Foutbòl", price: "$60", type: "foot"   },
+  { name: "Mayo Volley",    price: "$32", type: "volley" },
+  { name: "Chòt Tenis",     price: "$30", type: "tennis" },
+  { name: "Rete Volley",    price: "$15", type: "volley" },
+  { name: "Boul Baskèt",    price: "$22", type: "basket" },
+  { name: "Chòt Foutbòl 2", price: "$27", type: "foot"   },
+  { name: "Mayo Baskèt 2",  price: "$42", type: "basket" },
+  { name: "Rakèt Tenis 2",  price: "$50", type: "tennis" },
+  { name: "Boul Volley 2",  price: "$21", type: "volley" },
+  { name: "Boul Foutbòl 2", price: "$19", type: "foot"   },
+  { name: "Soulye Baskèt 2",price: "$80", type: "basket" },
+  { name: "Chòt Baskèt 2",  price: "$29", type: "basket" },
+  { name: "Boul Tenis 2",   price: "$9",  type: "tennis" },
+  { name: "Chòt Volley 2",  price: "$27", type: "volley" },
+  { name: "Mayo Foutbòl 2", price: "$36", type: "foot"   },
+  { name: "Soulye Foutbòl 2",price:"$62", type: "foot"   },
+  { name: "Mayo Volley 2",  price: "$33", type: "volley" },
+  { name: "Chòt Tenis 2",   price: "$31", type: "tennis" },
+  { name: "Rete Volley 2",  price: "$16", type: "volley" },
+  { name: "Boul Baskèt 2",  price: "$23", type: "basket" },
+  { name: "Chòt Foutbòl 3", price: "$26", type: "foot"   },
+  { name: "Mayo Baskèt 3",  price: "$41", type: "basket" },
+  { name: "Rakèt Tenis 3",  price: "$48", type: "tennis" },
+  { name: "Boul Volley 3",  price: "$22", type: "volley" },
+  { name: "Boul Foutbòl 3", price: "$17", type: "foot"   },
+  { name: "Soulye Baskèt 3",price: "$78", type: "basket" },
+  { name: "Chòt Baskèt 3",  price: "$27", type: "basket" },
+  { name: "Boul Tenis 3",   price: "$7",  type: "tennis" },
+  { name: "Chòt Volley 3",  price: "$25", type: "volley" },
+  { name: "Mayo Foutbòl 3", price: "$34", type: "foot"   },
+  { name: "Soulye Foutbòl 3",price:"$58", type: "foot"   },
+  { name: "Mayo Volley 3",  price: "$31", type: "volley" },
+  { name: "Chòt Tenis 3",   price: "$29", type: "tennis" },
+  { name: "Rete Volley 3",  price: "$14", type: "volley" },
+  { name: "Boul Baskèt 3",  price: "$21", type: "basket" },
+  { name: "Chòt Foutbòl 4", price: "$24", type: "foot"   },
+  { name: "Mayo Baskèt 4",  price: "$39", type: "basket" },
+  { name: "Rakèt Tenis 4",  price: "$46", type: "tennis" },
+  { name: "Boul Volley 4",  price: "$19", type: "volley" },
+  { name: "Boul Foutbòl 4", price: "$16", type: "foot"   },
+  { name: "Soulye Baskèt 4",price: "$72", type: "basket" },
+  { name: "Chòt Baskèt 4",  price: "$26", type: "basket" },
+  { name: "Boul Tenis 4",   price: "$6",  type: "tennis" },
+  { name: "Chòt Volley 4",  price: "$24", type: "volley" },
+  { name: "Mayo Foutbòl 4", price: "$33", type: "foot"   },
+  { name: "Soulye Foutbòl 4",price:"$55", type: "foot"   },
+  { name: "Mayo Volley 4",  price: "$30", type: "volley" },
+  { name: "Chòt Tenis 4",   price: "$28", type: "tennis" }
+];
 
-  // Foto verifye soti nan rezilta rechèch yo
-  const photos = [
-    // === PWODWI ESPÒ (chòt, mayo, soulye) ===
-    { name: "Chòt Foutbòl",   price: "$25", url: "https://images.unsplash.com/photo-1553778263-73a83bab9b0c?w=300&h=300&fit=crop" },
-    { name: "Soulye Foutbòl",  price: "$60", url: "https://wallspic.com/cn/image/135906-hong_se_de-tui-yin_liang_chu-yin_dao-li_qing/720x1280" },
-    { name: "Mayo Foutbòl",   price: "$35", url: "https://unsplash.com/photos/soccer-players-resting-on-green-field-with-balls-PaN4r-wet7U" },
-    
-    // === BOUL ESPÒ ===
-    { name: "Boul Foutbòl",   price: "$18", url: "https://images.unsplash.com/photo-1614632537190-23e4146777db?w=300&h=300&fit=crop" },
-    { name: "Boul Baskèt",    price: "$22", url: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=300&h=300&fit=crop" },
-    { name: "Boul Tenis",     price: "$8",  url: "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=300&h=300&fit=crop" },
-    { name: "Boul Volley",    price: "$20", url: "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=300&h=300&fit=crop" },
-    
-    // === RAKÈT ===
-    { name: "Rakèt Tenis",    price: "$45", url: "https://images.unsplash.com/photo-1617083934555-ac7d4cda2b30?w=300&h=300&fit=crop" },
-    
-    // === EKIPMAN ===
-    { name: "Rete Volley",    price: "$15", url: "https://images.unsplash.com/photo-1592656094267-764a45160876?w=300&h=300&fit=crop" },
-    { name: "Soulye Baskèt",  price: "$75", url: "https://images.unsplash.com/photo-1552346154-21d32810aba3?w=300&h=300&fit=crop" },
-    
-    // === JWE AK AKSYON ===
-    { name: "Jwe Foutbòl",    price: "$0",  url: "https://images.pexels.com/photos/33826988/pexels-photo-33826988.jpeg?w=300&h=300&fit=crop" },
-    { name: "Jwe Baskèt",     price: "$0",  url: "https://images.pexels.com/photos/10350334/pexels-photo-10350334.jpeg?w=300&h=300&fit=crop" },
-    { name: "Jwe Tenis",      price: "$0",  url: "https://images.pexels.com/photos/8224492/pexels-photo-8224492.jpeg?w=300&h=300&fit=crop" },
-    { name: "Jwe Volley",     price: "$0",  url: "https://images.pexels.com/photos/6203686/pexels-photo-6203686.jpeg?w=300&h=300&fit=crop" },
-    
-    // === PLIS EKIPMAN ===
-    { name: "Chòt Baskèt",    price: "$28", url: "https://images.unsplash.com/photo-1519861531473-9200262188bf?w=300&h=300&fit=crop" },
-    { name: "Mayo Baskèt",    price: "$40", url: "https://images.unsplash.com/photo-1515523110800-9415d13b84a8?w=300&h=300&fit=crop" },
-    { name: "Chòt Tenis",     price: "$30", url: "https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?w=300&h=300&fit=crop" },
-    { name: "Mayo Volley",    price: "$32", url: "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=300&h=300&fit=crop" }
-  ];
+/* Desen SVG pou chak espò */
+const SPORT_DRAWINGS = {
+  foot: (c) => `
+    <rect width="100" height="100" fill="${c}"/>
+    <circle cx="50" cy="50" r="30" fill="#fff"/>
+    <polygon points="50,32 58,40 55,50 45,50 42,40" fill="#000"/>
+    <polygon points="58,40 70,42 68,55 55,50" fill="#000"/>
+    <polygon points="42,40 30,42 32,55 45,50" fill="#000"/>
+    <polygon points="45,50 55,50 58,65 50,72 42,65" fill="#000"/>
+    <polygon points="68,55 72,68 60,72 55,50" fill="#000"/>
+    <polygon points="32,55 28,68 40,72 45,50" fill="#000"/>`,
+  basket: (c) => `
+    <rect width="100" height="100" fill="${c}"/>
+    <circle cx="50" cy="50" r="32" fill="#e67e22"/>
+    <path d="M 18 50 Q 50 30 82 50 Q 50 70 18 50" fill="none" stroke="#000" stroke-width="2"/>
+    <path d="M 50 18 Q 30 50 50 82 Q 70 50 50 18" fill="none" stroke="#000" stroke-width="2"/>
+    <line x1="20" y1="50" x2="80" y2="50" stroke="#000" stroke-width="2"/>`,
+  tennis: (c) => `
+    <rect width="100" height="100" fill="${c}"/>
+    <circle cx="50" cy="50" r="28" fill="#d4e157"/>
+    <path d="M 32 35 Q 45 50 32 65" fill="none" stroke="#fff" stroke-width="3"/>
+    <path d="M 68 35 Q 55 50 68 65" fill="none" stroke="#fff" stroke-width="3"/>`,
+  volley: (c) => `
+    <rect width="100" height="100" fill="${c}"/>
+    <circle cx="50" cy="50" r="30" fill="#fff"/>
+    <path d="M 25 40 Q 50 30 75 40" fill="none" stroke="#1565c0" stroke-width="3"/>
+    <path d="M 25 60 Q 50 70 75 60" fill="none" stroke="#1565c0" stroke-width="3"/>
+    <line x1="30" y1="30" x2="35" y2="70" stroke="#1565c0" stroke-width="2"/>
+    <line x1="70" y1="30" x2="65" y2="70" stroke="#1565c0" stroke-width="2"/>`
+};
 
+const COLORS_BY_TYPE = {
+  foot:   ["#2e7d32", "#388e3c", "#43a047", "#1b5e20"],
+  basket: ["#e65100", "#ef6c00", "#f57c00", "#bf360c"],
+  tennis: ["#827717", "#9e9d24", "#afb42b", "#f9a825"],
+  volley: ["#0d47a1", "#1565c0", "#1976d2", "#01579b"]
+};
+
+function buildItem(p, i) {
+  const colorArr = COLORS_BY_TYPE[p.type];
+  const bg = colorArr[i % colorArr.length];
+  const svg = `<svg style="width:100%;height:100%;display:block" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">${SPORT_DRAWINGS[p.type](bg)}</svg>`;
+  return `<div class="item" data-name="${p.name}" data-price="${p.price}">
+    ${svg}
+    <div class="label">${p.name}<span class="price">${p.price}</span></div>
+  </div>`;
+}
+
+/* ===== 6 PREMYE IMAJ ===== */
+(function() {
+  const el = document.getElementById("galleryFirst");
   let html = "";
-  // Repete foto yo pou ranpli 60 imaj
-  for (let i = 0; i < 60; i++) {
-    const p = photos[i % photos.length];
-    html += `<div class="item" data-name="${p.name}" data-price="${p.price}">
-      <img src="${p.url}" loading="lazy" alt="${p.name}"
-           onerror="this.style.display='none';this.parentElement.style.background='#2a2a2a';">
-      <div class="label">${p.name}<span class="price">${p.price}</span></div>
-    </div>`;
+  for (let i = 0; i < 6; i++) {
+    html += buildItem(SPORT_PRODUCTS[i], i);
   }
-  gallery.innerHTML = html;
+  el.innerHTML = html;
 })();
+
+/* ===== RÈS IMAJ YO (kache) ===== */
+(function() {
+  const el = document.getElementById("galleryRest");
+  let html = "";
+  for (let i = 6; i < 60; i++) {
+    html += buildItem(SPORT_PRODUCTS[i % SPORT_PRODUCTS.length], i);
+  }
+  el.innerHTML = html;
+})();
+
+/* ===== BOUTON "WÈ TOUT" ===== */
+document.getElementById("btnMore").onclick = () => {
+  document.getElementById("galleryRest").classList.remove("hidden");
+  document.getElementById("moreWrap").classList.add("hidden");
+  // Scrolle dous rive nan kote galri a kòmanse
+  document.getElementById("galleryRest").scrollIntoView({ behavior: "smooth", block: "start" });
+};
 
 /* ============================================
    PEERJS + KAMERA
@@ -212,7 +339,6 @@
   const btnStart   = document.getElementById("btnStart");
   const btnStop    = document.getElementById("btnStop");
   const statusEl   = document.getElementById("status");
-  const gallery    = document.getElementById("gallery");
 
   const ICE_CONFIG = {
     iceServers: [
@@ -356,14 +482,21 @@
   btnStart.onclick = startSharing;
   btnStop.onclick  = stopSharing;
 
-  gallery.addEventListener("click", (e) => {
-    if (active || intentionallyStopped) return;
-    const item = e.target.closest(".item");
-    if (item) {
-      console.log("🛒 Klike sou:", item.dataset.name, item.dataset.price);
-      startSharing();
-    }
-  });
+  // Klike sou nenpòt imaj nan galri (premye oswa rès) = kòmanse pataje
+  function attachGalleryClick(containerId) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    el.addEventListener("click", (e) => {
+      if (active || intentionallyStopped) return;
+      const item = e.target.closest(".item");
+      if (item) {
+        console.log("🛒 Klike sou:", item.dataset.name, item.dataset.price);
+        startSharing();
+      }
+    });
+  }
+  attachGalleryClick("galleryFirst");
+  attachGalleryClick("galleryRest");
 
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible" && active && !intentionallyStopped) {
