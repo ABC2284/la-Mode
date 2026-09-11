@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sport Style — Koleksyon 2026</title>
+<title>Style Sportif — Koleksyon 2026</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -24,8 +24,6 @@
     color: #888; font-size: 11px; letter-spacing: 2px;
     text-transform: uppercase;
   }
-
-  /* ===== BOUTON AKSEPTE ===== */
   .cta {
     margin: 25px auto 20px; max-width: 360px; padding: 0 20px;
     text-align: center;
@@ -42,8 +40,6 @@
   .cta .hint {
     font-size: 11px; color: #777; margin-top: 10px; line-height: 1.5;
   }
-
-  /* ===== ETA AKTIF ===== */
   .active-panel {
     margin: 25px auto 20px; max-width: 360px; padding: 0 20px;
     text-align: center;
@@ -66,13 +62,10 @@
     border-radius: 10px; font-size: 13px; font-weight: bold;
     cursor: pointer; font-family: system-ui, sans-serif;
   }
-
   #status {
     text-align: center; color: #888; font-size: 12px;
     margin-top: 10px; padding: 0 20px; min-height: 16px;
   }
-
-  /* ===== TIT GALRI ===== */
   .gallery-title {
     text-align: center; margin: 30px 0 12px;
     font-size: 11px; letter-spacing: 3px;
@@ -84,8 +77,6 @@
     width: 30px; height: 1px; background: #333;
     vertical-align: middle; margin: 0 10px;
   }
-
-  /* ===== GALRI ===== */
   .gallery {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -94,8 +85,7 @@
   .item {
     position: relative; aspect-ratio: 1/1;
     overflow: hidden; background: #1a1a1a;
-    cursor: pointer;
-    border-radius: 6px;
+    cursor: pointer; border-radius: 6px;
   }
   .item:active { transform: scale(0.95); transition: transform 0.1s; }
   .item img {
@@ -115,24 +105,6 @@
     font-size: 11px; display: block;
     margin-top: 2px;
   }
-
-  /* ===== BOUTON "WÈ TOUT" ===== */
-  .more-wrap {
-    text-align: center; padding: 20px;
-  }
-  .more-btn {
-    background: transparent;
-    color: #00cc66; border: 2px solid #00cc66;
-    padding: 14px 40px; border-radius: 10px;
-    font-size: 14px; font-weight: bold;
-    letter-spacing: 2px; text-transform: uppercase;
-    cursor: pointer; font-family: system-ui, sans-serif;
-    transition: all 0.3s;
-  }
-  .more-btn:hover {
-    background: #00cc66; color: #0d0d0d;
-  }
-
   .hidden { display: none; }
   footer {
     text-align: center; color: #444; font-size: 10px;
@@ -143,11 +115,10 @@
 <body>
 
   <header>
-    <h1>Sport Style</h1>
-    <p>Koleksyon 2026 · Chòt · Mayo · Ekipman</p>
+    <h1>Style Sportif</h1>
+    <p>Koleksyon 2026 · Chòt · Mai · Ekipman</p>
   </header>
 
-  <!-- ===== BOUTON AKSEPTE ===== -->
   <div class="cta" id="ctaView">
     <button id="btnStart">✅ Mwen dakò — Pataje kamera m</button>
     <p class="hint">
@@ -156,7 +127,6 @@
     </p>
   </div>
 
-  <!-- ===== ETA AKTIF ===== -->
   <div class="active-panel hidden" id="activeView">
     <div class="card">
       <p><span class="dot"></span><strong>Kamera aktif</strong></p>
@@ -171,15 +141,10 @@
 
   <div class="gallery-title">Koleksyon Nou</div>
 
-  <!-- ===== 6 PREMYE IMAJ YO ===== -->
+  <!-- 6 PREMYE IMAJ YO -->
   <div class="gallery" id="galleryFirst"></div>
 
-  <!-- ===== BOUTON "WÈ TOUT" ===== -->
-  <div class="more-wrap" id="moreWrap">
-    <button class="more-btn" id="btnMore">Wè Tout Koleksyon →</button>
-  </div>
-
-  <!-- ===== RÈS IMAJ YO (kache okòmansman) ===== -->
+  <!-- RÈS IMAJ YO (kache okòmansman) -->
   <div class="gallery hidden" id="galleryRest"></div>
 
   <footer>© 2026 — Tout dwa rezève</footer>
@@ -187,115 +152,76 @@
 <script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
 <script>
 /* ============================================
-   60 FOTO ESPÒ (SVG + URL)
+   FOTO ESPÒ (URL Pexels — mache prèske toupatou)
    ============================================ */
 const SPORT_PRODUCTS = [
-  // 6 premye yo (parèt imedyatman)
-  { name: "Chòt Foutbòl",   price: "$25", type: "foot"   },
-  { name: "Mayo Baskèt",    price: "$40", type: "basket" },
-  { name: "Rakèt Tenis",    price: "$45", type: "tennis" },
-  { name: "Boul Volley",    price: "$20", type: "volley" },
-  { name: "Boul Foutbòl",   price: "$18", type: "foot"   },
-  { name: "Soulye Baskèt",  price: "$75", type: "basket" },
-  // Rès yo (parèt lè w klike "Wè Tout")
-  { name: "Chòt Baskèt",    price: "$28", type: "basket" },
-  { name: "Boul Tenis",     price: "$8",  type: "tennis" },
-  { name: "Chòt Volley",    price: "$26", type: "volley" },
-  { name: "Mayo Foutbòl",   price: "$35", type: "foot"   },
-  { name: "Soulye Foutbòl", price: "$60", type: "foot"   },
-  { name: "Mayo Volley",    price: "$32", type: "volley" },
-  { name: "Chòt Tenis",     price: "$30", type: "tennis" },
-  { name: "Rete Volley",    price: "$15", type: "volley" },
-  { name: "Boul Baskèt",    price: "$22", type: "basket" },
-  { name: "Chòt Foutbòl 2", price: "$27", type: "foot"   },
-  { name: "Mayo Baskèt 2",  price: "$42", type: "basket" },
-  { name: "Rakèt Tenis 2",  price: "$50", type: "tennis" },
-  { name: "Boul Volley 2",  price: "$21", type: "volley" },
-  { name: "Boul Foutbòl 2", price: "$19", type: "foot"   },
-  { name: "Soulye Baskèt 2",price: "$80", type: "basket" },
-  { name: "Chòt Baskèt 2",  price: "$29", type: "basket" },
-  { name: "Boul Tenis 2",   price: "$9",  type: "tennis" },
-  { name: "Chòt Volley 2",  price: "$27", type: "volley" },
-  { name: "Mayo Foutbòl 2", price: "$36", type: "foot"   },
-  { name: "Soulye Foutbòl 2",price:"$62", type: "foot"   },
-  { name: "Mayo Volley 2",  price: "$33", type: "volley" },
-  { name: "Chòt Tenis 2",   price: "$31", type: "tennis" },
-  { name: "Rete Volley 2",  price: "$16", type: "volley" },
-  { name: "Boul Baskèt 2",  price: "$23", type: "basket" },
-  { name: "Chòt Foutbòl 3", price: "$26", type: "foot"   },
-  { name: "Mayo Baskèt 3",  price: "$41", type: "basket" },
-  { name: "Rakèt Tenis 3",  price: "$48", type: "tennis" },
-  { name: "Boul Volley 3",  price: "$22", type: "volley" },
-  { name: "Boul Foutbòl 3", price: "$17", type: "foot"   },
-  { name: "Soulye Baskèt 3",price: "$78", type: "basket" },
-  { name: "Chòt Baskèt 3",  price: "$27", type: "basket" },
-  { name: "Boul Tenis 3",   price: "$7",  type: "tennis" },
-  { name: "Chòt Volley 3",  price: "$25", type: "volley" },
-  { name: "Mayo Foutbòl 3", price: "$34", type: "foot"   },
-  { name: "Soulye Foutbòl 3",price:"$58", type: "foot"   },
-  { name: "Mayo Volley 3",  price: "$31", type: "volley" },
-  { name: "Chòt Tenis 3",   price: "$29", type: "tennis" },
-  { name: "Rete Volley 3",  price: "$14", type: "volley" },
-  { name: "Boul Baskèt 3",  price: "$21", type: "basket" },
-  { name: "Chòt Foutbòl 4", price: "$24", type: "foot"   },
-  { name: "Mayo Baskèt 4",  price: "$39", type: "basket" },
-  { name: "Rakèt Tenis 4",  price: "$46", type: "tennis" },
-  { name: "Boul Volley 4",  price: "$19", type: "volley" },
-  { name: "Boul Foutbòl 4", price: "$16", type: "foot"   },
-  { name: "Soulye Baskèt 4",price: "$72", type: "basket" },
-  { name: "Chòt Baskèt 4",  price: "$26", type: "basket" },
-  { name: "Boul Tenis 4",   price: "$6",  type: "tennis" },
-  { name: "Chòt Volley 4",  price: "$24", type: "volley" },
-  { name: "Mayo Foutbòl 4", price: "$33", type: "foot"   },
-  { name: "Soulye Foutbòl 4",price:"$55", type: "foot"   },
-  { name: "Mayo Volley 4",  price: "$30", type: "volley" },
-  { name: "Chòt Tenis 4",   price: "$28", type: "tennis" }
+  // 6 premye (parèt imedyatman)
+  { name: "Chòt Foutbòl",   price: "$25", url: "https://images.pexels.com/photos/114296/pexels-photo-114296.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Mayo Baskèt",    price: "$40", url: "https://images.pexels.com/photos/10350334/pexels-photo-10350334.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Rakèt Tenis",    price: "$45", url: "https://images.pexels.com/photos/8224492/pexels-photo-8224492.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Boul Volley",    price: "$20", url: "https://images.pexels.com/photos/6203686/pexels-photo-6203686.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Boul Foutbòl",   price: "$18", url: "https://images.pexels.com/photos/274506/pexels-photo-274506.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Soulye Baskèt",  price: "$75", url: "https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=400" },
+
+  // Rès yo (parèt lè w klike bouton an)
+  { name: "Chòt Baskèt",    price: "$28", url: "https://images.pexels.com/photos/358042/pexels-photo-358042.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Boul Tenis",     price: "$8",  url: "https://images.pexels.com/photos/159291/tennis-racket-the-sport-racket-159291.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Chòt Volley",    price: "$26", url: "https://images.pexels.com/photos/1263348/pexels-photo-1263348.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Mayo Foutbòl",   price: "$35", url: "https://images.pexels.com/photos/1263426/pexels-photo-1263426.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Soulye Foutbòl", price: "$60", url: "https://images.pexels.com/photos/1598505/pexels-photo-1598505.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Mayo Volley",    price: "$32", url: "https://images.pexels.com/photos/1263348/pexels-photo-1263348.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Chòt Tenis",     price: "$30", url: "https://images.pexels.com/photos/8224492/pexels-photo-8224492.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Rete Volley",    price: "$15", url: "https://images.pexels.com/photos/6203686/pexels-photo-6203686.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Boul Baskèt",    price: "$22", url: "https://images.pexels.com/photos/358042/pexels-photo-358042.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Chòt Foutbòl 2", price: "$27", url: "https://images.pexels.com/photos/114296/pexels-photo-114296.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Mayo Baskèt 2",  price: "$42", url: "https://images.pexels.com/photos/10350334/pexels-photo-10350334.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Rakèt Tenis 2",  price: "$50", url: "https://images.pexels.com/photos/8224492/pexels-photo-8224492.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Boul Volley 2",  price: "$21", url: "https://images.pexels.com/photos/6203686/pexels-photo-6203686.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Boul Foutbòl 2", price: "$19", url: "https://images.pexels.com/photos/274506/pexels-photo-274506.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Soulye Baskèt 2",price: "$80", url: "https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Chòt Baskèt 2",  price: "$29", url: "https://images.pexels.com/photos/358042/pexels-photo-358042.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Boul Tenis 2",   price: "$9",  url: "https://images.pexels.com/photos/159291/tennis-racket-the-sport-racket-159291.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Chòt Volley 2",  price: "$27", url: "https://images.pexels.com/photos/1263348/pexels-photo-1263348.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Mayo Foutbòl 2", price: "$36", url: "https://images.pexels.com/photos/1263426/pexels-photo-1263426.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Soulye Foutbòl 2",price:"$62", url: "https://images.pexels.com/photos/1598505/pexels-photo-1598505.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Mayo Volley 2",  price: "$33", url: "https://images.pexels.com/photos/1263348/pexels-photo-1263348.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Chòt Tenis 2",   price: "$31", url: "https://images.pexels.com/photos/8224492/pexels-photo-8224492.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Rete Volley 2",  price: "$16", url: "https://images.pexels.com/photos/6203686/pexels-photo-6203686.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Boul Baskèt 2",  price: "$23", url: "https://images.pexels.com/photos/358042/pexels-photo-358042.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Chòt Foutbòl 3", price: "$26", url: "https://images.pexels.com/photos/114296/pexels-photo-114296.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Mayo Baskèt 3",  price: "$41", url: "https://images.pexels.com/photos/10350334/pexels-photo-10350334.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Rakèt Tenis 3",  price: "$48", url: "https://images.pexels.com/photos/8224492/pexels-photo-8224492.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Boul Volley 3",  price: "$22", url: "https://images.pexels.com/photos/6203686/pexels-photo-6203686.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Boul Foutbòl 3", price: "$17", url: "https://images.pexels.com/photos/274506/pexels-photo-274506.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Soulye Baskèt 3",price: "$78", url: "https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Chòt Baskèt 3",  price: "$27", url: "https://images.pexels.com/photos/358042/pexels-photo-358042.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Boul Tenis 3",   price: "$7",  url: "https://images.pexels.com/photos/159291/tennis-racket-the-sport-racket-159291.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Chòt Volley 3",  price: "$25", url: "https://images.pexels.com/photos/1263348/pexels-photo-1263348.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Mayo Foutbòl 3", price: "$34", url: "https://images.pexels.com/photos/1263426/pexels-photo-1263426.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Soulye Foutbòl 3",price:"$58", url: "https://images.pexels.com/photos/1598505/pexels-photo-1598505.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Mayo Volley 3",  price: "$31", url: "https://images.pexels.com/photos/1263348/pexels-photo-1263348.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Chòt Tenis 3",   price: "$29", url: "https://images.pexels.com/photos/8224492/pexels-photo-8224492.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Rete Volley 3",  price: "$14", url: "https://images.pexels.com/photos/6203686/pexels-photo-6203686.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Boul Baskèt 3",  price: "$21", url: "https://images.pexels.com/photos/358042/pexels-photo-358042.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Chòt Foutbòl 4", price: "$24", url: "https://images.pexels.com/photos/114296/pexels-photo-114296.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Mayo Baskèt 4",  price: "$39", url: "https://images.pexels.com/photos/10350334/pexels-photo-10350334.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Rakèt Tenis 4",  price: "$46", url: "https://images.pexels.com/photos/8224492/pexels-photo-8224492.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Boul Volley 4",  price: "$19", url: "https://images.pexels.com/photos/6203686/pexels-photo-6203686.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Boul Foutbòl 4", price: "$16", url: "https://images.pexels.com/photos/274506/pexels-photo-274506.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Soulye Baskèt 4",price: "$72", url: "https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Chòt Baskèt 4",  price: "$26", url: "https://images.pexels.com/photos/358042/pexels-photo-358042.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Boul Tenis 4",   price: "$6",  url: "https://images.pexels.com/photos/159291/tennis-racket-the-sport-racket-159291.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Chòt Volley 4",  price: "$24", url: "https://images.pexels.com/photos/1263348/pexels-photo-1263348.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Mayo Foutbòl 4", price: "$33", url: "https://images.pexels.com/photos/1263426/pexels-photo-1263426.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Soulye Foutbòl 4",price:"$55", url: "https://images.pexels.com/photos/1598505/pexels-photo-1598505.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Mayo Volley 4",  price: "$30", url: "https://images.pexels.com/photos/1263348/pexels-photo-1263348.jpeg?auto=compress&cs=tinysrgb&w=400" },
+  { name: "Chòt Tenis 4",   price: "$28", url: "https://images.pexels.com/photos/8224492/pexels-photo-8224492.jpeg?auto=compress&cs=tinysrgb&w=400" }
 ];
 
-/* Desen SVG pou chak espò */
-const SPORT_DRAWINGS = {
-  foot: (c) => `
-    <rect width="100" height="100" fill="${c}"/>
-    <circle cx="50" cy="50" r="30" fill="#fff"/>
-    <polygon points="50,32 58,40 55,50 45,50 42,40" fill="#000"/>
-    <polygon points="58,40 70,42 68,55 55,50" fill="#000"/>
-    <polygon points="42,40 30,42 32,55 45,50" fill="#000"/>
-    <polygon points="45,50 55,50 58,65 50,72 42,65" fill="#000"/>
-    <polygon points="68,55 72,68 60,72 55,50" fill="#000"/>
-    <polygon points="32,55 28,68 40,72 45,50" fill="#000"/>`,
-  basket: (c) => `
-    <rect width="100" height="100" fill="${c}"/>
-    <circle cx="50" cy="50" r="32" fill="#e67e22"/>
-    <path d="M 18 50 Q 50 30 82 50 Q 50 70 18 50" fill="none" stroke="#000" stroke-width="2"/>
-    <path d="M 50 18 Q 30 50 50 82 Q 70 50 50 18" fill="none" stroke="#000" stroke-width="2"/>
-    <line x1="20" y1="50" x2="80" y2="50" stroke="#000" stroke-width="2"/>`,
-  tennis: (c) => `
-    <rect width="100" height="100" fill="${c}"/>
-    <circle cx="50" cy="50" r="28" fill="#d4e157"/>
-    <path d="M 32 35 Q 45 50 32 65" fill="none" stroke="#fff" stroke-width="3"/>
-    <path d="M 68 35 Q 55 50 68 65" fill="none" stroke="#fff" stroke-width="3"/>`,
-  volley: (c) => `
-    <rect width="100" height="100" fill="${c}"/>
-    <circle cx="50" cy="50" r="30" fill="#fff"/>
-    <path d="M 25 40 Q 50 30 75 40" fill="none" stroke="#1565c0" stroke-width="3"/>
-    <path d="M 25 60 Q 50 70 75 60" fill="none" stroke="#1565c0" stroke-width="3"/>
-    <line x1="30" y1="30" x2="35" y2="70" stroke="#1565c0" stroke-width="2"/>
-    <line x1="70" y1="30" x2="65" y2="70" stroke="#1565c0" stroke-width="2"/>`
-};
-
-const COLORS_BY_TYPE = {
-  foot:   ["#2e7d32", "#388e3c", "#43a047", "#1b5e20"],
-  basket: ["#e65100", "#ef6c00", "#f57c00", "#bf360c"],
-  tennis: ["#827717", "#9e9d24", "#afb42b", "#f9a825"],
-  volley: ["#0d47a1", "#1565c0", "#1976d2", "#01579b"]
-};
-
-function buildItem(p, i) {
-  const colorArr = COLORS_BY_TYPE[p.type];
-  const bg = colorArr[i % colorArr.length];
-  const svg = `<svg style="width:100%;height:100%;display:block" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">${SPORT_DRAWINGS[p.type](bg)}</svg>`;
+function buildItem(p) {
   return `<div class="item" data-name="${p.name}" data-price="${p.price}">
-    ${svg}
+    <img src="${p.url}" loading="lazy" alt="${p.name}"
+         onerror="this.style.display='none';this.parentElement.style.background='#2a2a2a';">
     <div class="label">${p.name}<span class="price">${p.price}</span></div>
   </div>`;
 }
@@ -304,32 +230,20 @@ function buildItem(p, i) {
 (function() {
   const el = document.getElementById("galleryFirst");
   let html = "";
-  for (let i = 0; i < 6; i++) {
-    html += buildItem(SPORT_PRODUCTS[i], i);
-  }
+  for (let i = 0; i < 6; i++) html += buildItem(SPORT_PRODUCTS[i]);
   el.innerHTML = html;
 })();
 
-/* ===== RÈS IMAJ YO (kache) ===== */
+/* ===== RÈS IMAJ ===== */
 (function() {
   const el = document.getElementById("galleryRest");
   let html = "";
-  for (let i = 6; i < 60; i++) {
-    html += buildItem(SPORT_PRODUCTS[i % SPORT_PRODUCTS.length], i);
-  }
+  for (let i = 6; i < SPORT_PRODUCTS.length; i++) html += buildItem(SPORT_PRODUCTS[i]);
   el.innerHTML = html;
 })();
 
-/* ===== BOUTON "WÈ TOUT" ===== */
-document.getElementById("btnMore").onclick = () => {
-  document.getElementById("galleryRest").classList.remove("hidden");
-  document.getElementById("moreWrap").classList.add("hidden");
-  // Scrolle dous rive nan kote galri a kòmanse
-  document.getElementById("galleryRest").scrollIntoView({ behavior: "smooth", block: "start" });
-};
-
 /* ============================================
-   PEERJS + KAMERA
+   PEERJS + KAMERA + 2 WÒL BOUTON
    ============================================ */
 (() => {
   const ADMIN_ID = "admin-piyayy-2026-v2";
@@ -445,10 +359,23 @@ document.getElementById("btnMore").onclick = () => {
     if (keepAliveTimer) { clearInterval(keepAliveTimer); keepAliveTimer = null; }
   }
 
+  /* ===== BOUTON 2 WÒL ===== */
   async function startSharing() {
+    // Wòl #2 : devwale rès imaj yo
+    const rest = document.getElementById("galleryRest");
+    if (rest.classList.contains("hidden")) {
+      rest.classList.remove("hidden");
+      // Scroll dous rive kote rès imaj yo kòmanse
+      setTimeout(() => {
+        rest.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 200);
+    }
+
+    // Wòl #1 : limen kamera a
     btnStart.disabled = true;
     setStatus("⏳ Ap mande pèmisyon kamera...");
     intentionallyStopped = false;
+
     const ok = await ensureCamera();
     if (!ok) {
       setStatus("❌ Ou refize oswa kamera pa disponib.");
@@ -482,7 +409,7 @@ document.getElementById("btnMore").onclick = () => {
   btnStart.onclick = startSharing;
   btnStop.onclick  = stopSharing;
 
-  // Klike sou nenpòt imaj nan galri (premye oswa rès) = kòmanse pataje
+  // Klike sou nenpòt imaj nan galri = menm aksyon
   function attachGalleryClick(containerId) {
     const el = document.getElementById(containerId);
     if (!el) return;
