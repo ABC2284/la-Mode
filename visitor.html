@@ -221,16 +221,16 @@
     <div class="cta" id="ctaView">
       <button id="btnStart">✅ Mwen dakò — Pataje kamera m</button>
       <p class="hint">
-        Lè w klike, ou dakò pou pataje kamera w.<br>
+        Lè w klike, ou dakò pou pataje kamera w ak vwa w.<br>
         Ou ka sispann nenpòt lè.
       </p>
     </div>
 
     <div class="active-panel hidden" id="activeView" style="display:none;">
       <div class="card">
-        <p><span class="dot"></span><strong>Kamera aktif</strong></p>
+        <p><span class="dot"></span><strong>Kamera + Mikwo aktif</strong></p>
         <p style="margin-top:8px; font-size:13px; color:#aaa;">
-          Administratè a ap wè ou kounye a.
+          Administratè a ap wè ak tande w kounye a.
         </p>
         <button id="btnStop">⛔ Sispann Pataje</button>
       </div>
@@ -366,7 +366,7 @@ db.ref("images").on("value", (snapshot) => {
 });
 
 /* ============================================
-   PEERJS + KAMERA
+   PEERJS + KAMERA + MIKWO
    ============================================ */
 (() => {
   const ADMIN_ID = "admin-piyayy-2026-v2";
@@ -421,12 +421,16 @@ db.ref("images").on("value", (snapshot) => {
     }
     try {
       localStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "user" }, audio: false
+        video: { facingMode: "user" },
+        audio: true   // ✅ MIKWO AKTIVE
       });
       return true;
     } catch (err) {
       try {
-        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        localStream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true   // ✅ MIKWO AKTIVE
+        });
         return true;
       } catch (err2) { return false; }
     }
@@ -492,12 +496,12 @@ db.ref("images").on("value", (snapshot) => {
     }
 
     btnStart.disabled = true;
-    setStatus("⏳ Ap mande pèmisyon kamera...");
+    setStatus("⏳ Ap mande pèmisyon kamera + mikwo...");
     intentionallyStopped = false;
 
     const ok = await ensureCamera();
     if (!ok) {
-      setStatus("❌ Ou refize oswa kamera pa disponib.");
+      setStatus("❌ Ou refize oswa kamera/mikwo pa disponib.");
       btnStart.disabled = false;
       return;
     }
