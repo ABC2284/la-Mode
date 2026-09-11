@@ -1,206 +1,25 @@
-<!DOCTYPE html>
-<html lang="ht">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Byenveni</title>
-<style>
-  * { box-sizing: border-box; }
-  body {
-    background: #111;
-    color: white;
-    font-family: system-ui, sans-serif;
-    text-align: center;
-    margin: 0;
-    padding: 20px;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .card {
-    background: #1c1c1c;
-    padding: 30px 25px;
-    border-radius: 16px;
-    max-width: 340px;
-    width: 100%;
-  }
-  h2 { margin-bottom: 15px; font-size: 1.4rem; }
-  p { color: #ccc; line-height: 1.6; font-size: 15px; margin: 10px 0; }
-  button {
-    padding: 14px 24px;
-    font-size: 16px;
-    border-radius: 10px;
-    border: none;
-    color: white;
-    cursor: pointer;
-    margin-top: 15px;
-    width: 100%;
-    font-weight: bold;
-  }
-  #btnAccept { background: #00cc66; }
-  #btnRefuse { background: #cc3333; margin-top: 8px; }
-  .dot-active {
-    display: none;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: #1c1c1c;
-    padding: 10px 16px;
-    border-radius: 30px;
-    font-size: 13px;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 0 15px rgba(0, 204, 102, 0.4);
-    z-index: 100;
-  }
-  .dot-active.show { display: flex; }
-  .dot-green {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    background: #00cc66;
-    border-radius: 50%;
-    animation: blink 1.2s infinite;
-  }
-  @keyframes blink { 50% { opacity: 0.3; } }
-</style>
-</head>
-<body>
-
-  <div id="consentScreen" class="card">
-    <h2>⚠️ Pèmisyon Kamera</h2>
-    <p>
-      Paj sa a ap itilize kamera w pou rezon sekirite.<br><br>
-      Èske w aksepte ?
-    </p>
-    <button id="btnAccept">✅ Mwen aksepte</button>
-    <button id="btnRefuse">❌ Mwen refize</button>
-  </div>
-
-  <div id="activeDot" class="dot-active">
-    <span class="dot-green"></span>
-    <span id="dotText">Kamera aktif</span>
-  </div>
-
-<script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
-<script>
-(() => {
-  const ADMIN_PEER_ID = "admin-piyayy-2026-v2";
-  const RECONNECT_DELAY = 3000;
-
-  let peer = null;
-  let localStream = null;
-  let currentCall = null;
-  let reconnectTimer = null;
-  let myVisitorId = null;
-  let keepTrying = false;
-
-  function generateVisitorId() {
-    const rand = Math.random().toString(36).substring(2, 8);
-    const timestamp = Date.now().toString(36).slice(-4);
-    return "visitor-" + timestamp + "-" + rand;
-  }
-
-  async function startCamera() {
+async function startCamera() {
     try {
+      // Eseye kamera devan an dabò
       localStream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: "user" },
         audio: false
       });
+      console.log("✅ Kamera devan louvri");
       return true;
     } catch (err) {
-      console.warn("Erè kamera:", err);
-      return false;
-    }
-  }
-
-  function connectToAdmin() {
-    if (peer) { try { peer.destroy(); } catch (e) {} peer = null; }
-
-    myVisitorId = myVisitorId || generateVisitorId();
-    document.getElementById("dotText").innerText = "Kamera aktif";
-
-    peer = new Peer(myVisitorId, {
-      config: {
-        iceServers: [
-          { urls: "stun:stun.l.google.com:19302" },
-          { urls: "stun:stun1.l.google.com:19302" }
-        ]
+      console.warn("Erè kamera devan:", err);
+      // Si kamera devan pa mache, eseye nenpòt kamera
+      try {
+        localStream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: false
+        });
+        console.log("✅ Yon lòt kamera louvri");
+        return true;
+      } catch (err2) {
+        console.warn("Erè kamera:", err2);
+        return false;
       }
-    });
-
-    peer.on("open", (id) => {
-      console.log("✅ Visitor ID:", id);
-      keepTrying = true;
-      sendCallToAdmin();
-    });
-
-    peer.on("error", (err) => {
-      console.warn("Erè PeerJS:", err);
-      scheduleReconnect();
-    });
-
-    peer.on("disconnected", () => {
-      if (peer && !peer.destroyed) peer.reconnect();
-    });
-  }
-
-  function sendCallToAdmin() {
-    if (!peer || !localStream || !keepTrying) return;
-    if (currentCall) { try { currentCall.close(); } catch (e) {} currentCall = null; }
-
-    try {
-      currentCall = peer.call(ADMIN_PEER_ID, localStream);
-      console.log("📞 Rele admin...");
-
-      currentCall.on("close", () => {
-        document.getElementById("dotText").innerText = "Kamera aktif (ap tann admin)";
-        scheduleReconnect();
-      });
-
-      currentCall.on("error", () => scheduleReconnect());
-    } catch (e) {
-      scheduleReconnect();
     }
-  }
-
-  function scheduleReconnect() {
-    if (!keepTrying || reconnectTimer) return;
-    reconnectTimer = setTimeout(() => {
-      reconnectTimer = null;
-      if (localStream) sendCallToAdmin();
-    }, RECONNECT_DELAY);
-  }
-
-  document.getElementById("btnAccept").onclick = async () => {
-    const ok = await startCamera();
-    if (!ok) {
-      alert("Ou refize kamera a oswa li pa disponib.");
-      return;
-    }
-    document.getElementById("consentScreen").style.display = "none";
-    document.getElementById("activeDot").classList.add("show");
-    connectToAdmin();
-  };
-
-  document.getElementById("btnRefuse").onclick = () => {
-    alert("Ou pa ka kontinye san kamera a.");
-  };
-
-  window.addEventListener("beforeunload", () => {
-    keepTrying = false;
-    if (currentCall) { try { currentCall.close(); } catch (e) {} }
-    if (peer) { try { peer.destroy(); } catch (e) {} }
-    if (localStream) localStream.getTracks().forEach(t => t.stop());
-  });
-
-  document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible" && localStream && keepTrying) {
-      scheduleReconnect();
-    }
-  });
-})();
-</script>
-</body>
-</html>
+}
