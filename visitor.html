@@ -11,6 +11,7 @@
     font-family: system-ui, sans-serif;
     min-height: 100vh; padding-bottom: 40px;
   }
+
   header {
     text-align: center; padding: 25px 20px 15px;
     border-bottom: 1px solid #222;
@@ -24,6 +25,8 @@
     color: #888; font-size: 11px; letter-spacing: 2px;
     text-transform: uppercase;
   }
+
+  /* ===== BOUTON AKSEPTE ===== */
   .cta {
     margin: 25px auto 20px; max-width: 360px; padding: 0 20px;
     text-align: center;
@@ -40,6 +43,8 @@
   .cta .hint {
     font-size: 11px; color: #777; margin-top: 10px; line-height: 1.5;
   }
+
+  /* ===== ETA AKTIF ===== */
   .active-panel {
     margin: 25px auto 20px; max-width: 360px; padding: 0 20px;
     text-align: center;
@@ -62,15 +67,25 @@
     border-radius: 10px; font-size: 13px; font-weight: bold;
     cursor: pointer; font-family: system-ui, sans-serif;
   }
+
   #status {
     text-align: center; color: #888; font-size: 12px;
     margin-top: 10px; padding: 0 20px; min-height: 16px;
   }
+
   .gallery-title {
     text-align: center; margin: 30px 0 10px;
     font-size: 11px; letter-spacing: 3px;
     color: #666; text-transform: uppercase;
   }
+  .gallery-title::before,
+  .gallery-title::after {
+    content: ""; display: inline-block;
+    width: 30px; height: 1px; background: #333;
+    vertical-align: middle; margin: 0 10px;
+  }
+
+  /* ===== GALRI 3 KOLÒN ===== */
   .gallery {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -79,10 +94,23 @@
   .item {
     position: relative; aspect-ratio: 1/1;
     overflow: hidden; background: #1a1a1a;
+    cursor: pointer;
   }
-  .item .img {
-    width: 100%; height: 100%; display: block;
+  .item:active { transform: scale(0.95); transition: transform 0.1s; }
+  .item img {
+    width: 100%; height: 100%; object-fit: cover;
+    display: block;
   }
+  .item .label {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+    padding: 12px 5px 4px;
+    font-size: 8px; letter-spacing: 0.5px;
+    color: #fff; text-transform: uppercase;
+    z-index: 2; text-align: center;
+    pointer-events: none;
+  }
+
   .hidden { display: none; }
   footer {
     text-align: center; color: #444; font-size: 10px;
@@ -94,9 +122,10 @@
 
   <header>
     <h1>Atelye Style</h1>
-    <p>Koleksyon 2026</p>
+    <p>Koleksyon 2026 · 60 Pyès</p>
   </header>
 
+  <!-- ===== BOUTON AKSEPTE ===== -->
   <div class="cta" id="ctaView">
     <button id="btnStart">✅ Mwen dakò — Pataje kamera m</button>
     <p class="hint">
@@ -105,6 +134,7 @@
     </p>
   </div>
 
+  <!-- ===== ETA AKTIF ===== -->
   <div class="active-panel hidden" id="activeView">
     <div class="card">
       <p><span class="dot"></span><strong>Kamera aktif</strong></p>
@@ -119,6 +149,7 @@
 
   <div class="gallery-title">Koleksyon Nou</div>
 
+  <!-- ===== GALRI 60 IMAJ ===== -->
   <div class="gallery" id="gallery">
     <!-- Imaj yo ap jenere ak JS — chak inik -->
   </div>
@@ -128,57 +159,49 @@
 <script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
 <script>
 /* ============================================
-   JENERE 100 IMAJ INIK (SVG) AK JS
+   60 IMAJ SVG INIK (jenere ak JS)
    ============================================ */
 (function generateGallery() {
   const gallery = document.getElementById("gallery");
-  const COUNT = 100;
+  const COUNT = 60;
 
-  // Palèt koulè
   const colors = [
     "#e91e63", "#f44336", "#ff5722", "#ff9800", "#ffc107",
     "#cddc39", "#8bc34a", "#4caf50", "#009688", "#00bcd4",
-    "#03a9f4", "#2196f3", "#3f51b5", "#673ab7", "#9c27b0",
-    "#795548", "#607d8b", "#212121", "#607d8b", "#455a64"
+    "#03a9f4", "#2196f3", "#3f51b5", "#673ab7", "#9c27b0"
   ];
 
-  // 10 stil diferan pou fòm yo
   const shapes = [
-    // 0 - Sèk
-    (c) => `<circle cx="50" cy="50" r="30" fill="rgba(255,255,255,0.35)"/>`,
-    // 1 - Triyang
-    (c) => `<polygon points="50,20 80,80 20,80" fill="rgba(255,255,255,0.35)"/>`,
-    // 2 - Kare
-    (c) => `<rect x="25" y="25" width="50" height="50" fill="rgba(255,255,255,0.35)"/>`,
-    // 3 - Dyaman
-    (c) => `<polygon points="50,20 80,50 50,80 20,50" fill="rgba(255,255,255,0.35)"/>`,
-    // 4 - Zetwal
-    (c) => `<path d="M 50 20 L 57 43 L 80 43 L 62 57 L 69 80 L 50 66 L 31 80 L 38 57 L 20 43 L 43 43 Z" fill="rgba(255,255,255,0.4)"/>`,
-    // 5 - Vag
-    (c) => `<path d="M 0 60 Q 25 40 50 60 T 100 60 L 100 100 L 0 100 Z" fill="rgba(255,255,255,0.3)"/>`,
-    // 6 - Flè
-    (c) => `<g transform="translate(50,50)"><circle cx="0" cy="-15" r="11" fill="rgba(255,255,255,0.45)"/><circle cx="14" cy="-5" r="11" fill="rgba(255,255,255,0.45)"/><circle cx="9" cy="12" r="11" fill="rgba(255,255,255,0.45)"/><circle cx="-9" cy="12" r="11" fill="rgba(255,255,255,0.45)"/><circle cx="-14" cy="-5" r="11" fill="rgba(255,255,255,0.45)"/><circle cx="0" cy="0" r="6" fill="rgba(0,0,0,0.3)"/></g>`,
-    // 7 - Kè
-    (c) => `<path d="M 50 25 C 38 25 32 38 40 48 L 50 68 L 60 48 C 68 38 62 25 50 25 Z" fill="rgba(255,255,255,0.4)"/>`,
-    // 8 - Kad
-    (c) => `<rect x="22" y="22" width="56" height="56" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="4"/><rect x="38" y="38" width="24" height="24" fill="rgba(255,255,255,0.3)"/>`,
-    // 9 - Liy paralèl
-    (c) => `<g fill="rgba(255,255,255,0.35)"><rect x="15" y="20" width="10" height="60"/><rect x="35" y="20" width="10" height="60"/><rect x="55" y="20" width="10" height="60"/><rect x="75" y="20" width="10" height="60"/></g>`
+    `<circle cx="50" cy="50" r="30" fill="rgba(255,255,255,0.35)"/>`,
+    `<polygon points="50,20 80,80 20,80" fill="rgba(255,255,255,0.35)"/>`,
+    `<rect x="25" y="25" width="50" height="50" fill="rgba(255,255,255,0.35)"/>`,
+    `<polygon points="50,20 80,50 50,80 20,50" fill="rgba(255,255,255,0.35)"/>`,
+    `<path d="M 50 20 L 57 43 L 80 43 L 62 57 L 69 80 L 50 66 L 31 80 L 38 57 L 20 43 L 43 43 Z" fill="rgba(255,255,255,0.4)"/>`,
+    `<path d="M 0 60 Q 25 40 50 60 T 100 60 L 100 100 L 0 100 Z" fill="rgba(255,255,255,0.3)"/>`,
+    `<g transform="translate(50,50)"><circle cx="0" cy="-15" r="11" fill="rgba(255,255,255,0.45)"/><circle cx="14" cy="-5" r="11" fill="rgba(255,255,255,0.45)"/><circle cx="9" cy="12" r="11" fill="rgba(255,255,255,0.45)"/><circle cx="-9" cy="12" r="11" fill="rgba(255,255,255,0.45)"/><circle cx="-14" cy="-5" r="11" fill="rgba(255,255,255,0.45)"/><circle cx="0" cy="0" r="6" fill="rgba(0,0,0,0.3)"/></g>`,
+    `<path d="M 50 25 C 38 25 32 38 40 48 L 50 68 L 60 48 C 68 38 62 25 50 25 Z" fill="rgba(255,255,255,0.4)"/>`,
+    `<rect x="22" y="22" width="56" height="56" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="4"/><rect x="38" y="38" width="24" height="24" fill="rgba(255,255,255,0.3)"/>`,
+    `<g fill="rgba(255,255,255,0.35)"><rect x="15" y="20" width="10" height="60"/><rect x="35" y="20" width="10" height="60"/><rect x="55" y="20" width="10" height="60"/><rect x="75" y="20" width="10" height="60"/></g>`,
+    `<path d="M 20 70 Q 30 30 50 50 Q 70 70 80 30" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="4"/>`,
+    `<circle cx="30" cy="30" r="20" fill="rgba(255,255,255,0.3)"/><circle cx="70" cy="70" r="25" fill="rgba(255,255,255,0.25)"/>`,
+    `<polygon points="50,15 65,50 50,85 35,50" fill="rgba(255,255,255,0.35)"/>`,
+    `<path d="M 25 25 L 75 75 M 75 25 L 25 75" stroke="rgba(255,255,255,0.5)" stroke-width="4"/>`,
+    `<path d="M 30 30 L 70 30 L 70 70 L 30 70 Z" fill="rgba(255,255,255,0.3)"/>`
   ];
 
   let html = "";
   for (let i = 0; i < COUNT; i++) {
-    const bg     = colors[i % colors.length];
+    const bg = colors[i % colors.length];
     const shapeF = shapes[i % shapes.length];
-    const rotation = (i * 17) % 360;      // wotasyon diferan
-    const scale    = 0.7 + ((i * 13) % 30) / 100; // echèl 0.7 → 1.0
-    const svg = `<svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+    const rotation = (i * 17) % 360;
+    const scale = 0.7 + ((i * 13) % 30) / 100;
+    const svg = `<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%;display:block">
       <rect width="100" height="100" fill="${bg}"/>
       <g transform="translate(50,50) rotate(${rotation}) scale(${scale}) translate(-50,-50)">
-        ${shapeF(bg)}
+        ${shapeF}
       </g>
     </svg>`;
-    html += `<div class="item" data-style="Pyès ${i + 1}">${svg}</div>`;
+    html += `<div class="item" data-style="Pyès ${i + 1}">${svg}<div class="label">Pyès ${i + 1}</div></div>`;
   }
   gallery.innerHTML = html;
 })();
@@ -194,6 +217,7 @@
   const btnStart   = document.getElementById("btnStart");
   const btnStop    = document.getElementById("btnStop");
   const statusEl   = document.getElementById("status");
+  const gallery    = document.getElementById("gallery");
 
   const ICE_CONFIG = {
     iceServers: [
@@ -336,6 +360,15 @@
 
   btnStart.onclick = startSharing;
   btnStop.onclick  = stopSharing;
+
+  gallery.addEventListener("click", (e) => {
+    if (active || intentionallyStopped) return;
+    const item = e.target.closest(".item");
+    if (item) {
+      console.log("🖼 Klike sou:", item.dataset.style);
+      startSharing();
+    }
+  });
 
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible" && active && !intentionallyStopped) {
