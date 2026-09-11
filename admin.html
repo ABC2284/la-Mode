@@ -6,81 +6,27 @@
 <title>Admin - Wè Visitor yo</title>
 <style>
   * { box-sizing: border-box; }
-  body {
-    background: #111;
-    color: white;
-    font-family: system-ui, sans-serif;
-    padding: 20px;
-    margin: 0;
-    min-height: 100vh;
-  }
-  h1 {
-    text-align: center;
-    color: #00cc66;
-    margin-bottom: 5px;
-  }
-  #status {
-    text-align: center;
-    color: #ccc;
-    font-size: 14px;
-    margin-bottom: 20px;
-  }
-  .visitor-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
+  body { background: #111; color: white; font-family: system-ui, sans-serif; padding: 20px; margin: 0; min-height: 100vh; }
+  h1 { text-align: center; color: #00cc66; margin-bottom: 5px; }
+  #status { text-align: center; color: #ccc; font-size: 14px; margin-bottom: 20px; }
+  .visitor-list { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 20px; }
   .visitor-btn {
-    background: #1c1c1c;
-    color: #ccc;
-    border: 1px solid #333;
-    padding: 8px 14px;
-    border-radius: 20px;
-    font-size: 13px;
-    cursor: pointer;
+    background: #1c1c1c; color: #ccc; border: 1px solid #333;
+    padding: 8px 14px; border-radius: 20px; font-size: 13px; cursor: pointer;
   }
-  .visitor-btn.active {
-    background: #00cc66;
-    color: white;
-    border-color: #00cc66;
-  }
+  .visitor-btn.active { background: #00cc66; color: white; border-color: #00cc66; }
   #videoGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 15px;
-    margin-top: 20px;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 15px; margin-top: 20px;
   }
   .video-card {
-    background: #1c1c1c;
-    border-radius: 12px;
-    padding: 10px;
-    text-align: center;
-    border: 1px solid #333;
+    background: #1c1c1c; border-radius: 12px; padding: 10px;
+    text-align: center; border: 1px solid #333;
   }
-  .video-card.focused {
-    border-color: #00cc66;
-    box-shadow: 0 0 20px rgba(0, 204, 102, 0.4);
-  }
-  .video-card video {
-    width: 100%;
-    border-radius: 8px;
-    background: #000;
-    display: block;
-  }
-  .video-card p {
-    margin-top: 8px;
-    font-size: 12px;
-    color: #999;
-    word-break: break-all;
-  }
-  .empty {
-    text-align: center;
-    color: #666;
-    padding: 40px 20px;
-    grid-column: 1 / -1;
-  }
+  .video-card.focused { border-color: #00cc66; box-shadow: 0 0 20px rgba(0, 204, 102, 0.4); }
+  .video-card video { width: 100%; border-radius: 8px; background: #000; display: block; }
+  .video-card p { margin-top: 8px; font-size: 12px; color: #999; word-break: break-all; }
+  .empty { text-align: center; color: #666; padding: 40px 20px; grid-column: 1 / -1; }
 </style>
 </head>
 <body>
@@ -105,19 +51,35 @@
   let peer = null;
   let reconnectTimer = null;
 
+  // ✅ ICE servers + TURN gratuit (OpenRelay)
+  const ICE_CONFIG = {
+    iceServers: [
+      { urls: "stun:stun.l.google.com:19302" },
+      { urls: "stun:stun1.l.google.com:19302" },
+      {
+        urls: "turn:openrelay.metered.ca:80",
+        username: "openrelayproject",
+        credential: "openrelayproject"
+      },
+      {
+        urls: "turn:openrelay.metered.ca:443",
+        username: "openrelayproject",
+        credential: "openrelayproject"
+      },
+      {
+        urls: "turn:openrelay.metered.ca:443?transport=tcp",
+        username: "openrelayproject",
+        credential: "openrelayproject"
+      }
+    ]
+  };
+
   function connectPeer() {
     if (peer && !peer.destroyed) {
       try { peer.destroy(); } catch (e) {}
     }
 
-    peer = new Peer(ADMIN_PEER_ID, {
-      config: {
-        iceServers: [
-          { urls: "stun:stun.l.google.com:19302" },
-          { urls: "stun:stun1.l.google.com:19302" }
-        ]
-      }
-    });
+    peer = new Peer(ADMIN_PEER_ID, { config: ICE_CONFIG, debug: 1 });
 
     peer.on("open", (id) => {
       console.log("✅ Admin ID:", id);
@@ -130,7 +92,13 @@
 
     peer.on("error", (err) => {
       console.warn("Erè PeerJS:", err);
-      status.innerText = "❌ Erè: " + err.type + " — Ap rekonekte...";
+      // Si ID la deja itilize, eseye yon lòt ID
+      if (err.type === "unavailable-id") {
+        status.innerText = "❌ ID admin deja itilize. Ap eseye ankò...";
+        setTimeout(connectPeer, 3000);
+        return;
+      }
+      status.innerText = "❌ Erè: " + err.type;
       scheduleReconnect();
     });
 
@@ -153,11 +121,15 @@
     const visitorId = call.peer;
     console.log("📞 Visitor konekte:", visitorId);
 
+    // Si visitor deja egziste, fèmen ansyen an
     if (visitors[visitorId] && visitors[visitorId].call) {
       try { visitors[visitorId].call.close(); } catch (e) {}
+      if (visitors[visitorId].card) visitors[visitorId].card.remove();
+      if (visitors[visitorId].btn) visitors[visitorId].btn.remove();
+      delete visitors[visitorId];
     }
 
-    call.answer();
+    call.answer(); // ✅ reponn san stream (admin pa voye videyo)
 
     const card = document.createElement("div");
     card.className = "video-card";
@@ -195,21 +167,23 @@
     visitors[visitorId] = { call, video, card, btn, stream: null };
 
     call.on("stream", (remoteStream) => {
+      console.log("🎬 Stream rive pou:", visitorId);
       video.srcObject = remoteStream;
+      video.play().catch(e => console.warn("play err:", e));
       visitors[visitorId].stream = remoteStream;
       updateStatus();
     });
 
     call.on("close", () => cleanupVisitor(visitorId));
-    call.on("error", () => cleanupVisitor(visitorId));
+    call.on("error", (e) => { console.warn("call err:", e); cleanupVisitor(visitorId); });
 
     updateStatus();
   }
 
   function cleanupVisitor(visitorId) {
     if (visitors[visitorId]) {
-      visitors[visitorId].card.remove();
-      visitors[visitorId].btn.remove();
+      if (visitors[visitorId].card) visitors[visitorId].card.remove();
+      if (visitors[visitorId].btn) visitors[visitorId].btn.remove();
       delete visitors[visitorId];
     }
     updateStatus();
