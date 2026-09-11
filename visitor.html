@@ -77,7 +77,6 @@
     width: 30px; height: 1px; background: #333;
     vertical-align: middle; margin: 0 10px;
   }
-  /* GALRI 3 KOLÒN */
   .gallery {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -89,8 +88,9 @@
     cursor: pointer;
   }
   .item:active { transform: scale(0.95); transition: transform 0.1s; }
-  .item .img {
-    width: 100%; height: 100%; display: block;
+  .item img {
+    width: 100%; height: 100%; object-fit: cover;
+    display: block;
   }
   .item .label {
     position: absolute; bottom: 0; left: 0; right: 0;
@@ -150,81 +150,51 @@
 <script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
 <script>
 /* ============================================
-   JENERE 60 IMAJ ESPÒ AK PRI
+   FOTO ESPÒ REYÈL (Pexels + Unsplash)
    ============================================ */
 (function generateGallery() {
   const gallery = document.getElementById("gallery");
 
-  // Kalite pwodwi (chak gen yon non ak yon koulè baz)
-  const products = [
-    { name: "Chòt Foutbòl",   type: "foot",   price: "$25" },
-    { name: "Mayo Foutbòl",   type: "foot",   price: "$35" },
-    { name: "Boul Foutbòl",   type: "foot",   price: "$18" },
-    { name: "Soulye Foutbòl", type: "foot",   price: "$60" },
-    { name: "Chòt Baskèt",    type: "basket", price: "$28" },
-    { name: "Mayo Baskèt",    type: "basket", price: "$40" },
-    { name: "Boul Baskèt",    type: "basket", price: "$22" },
-    { name: "Soulye Baskèt",  type: "basket", price: "$75" },
-    { name: "Rakèt Tenis",    type: "tennis", price: "$45" },
-    { name: "Boul Tenis",     type: "tennis", price: "$8"  },
-    { name: "Chòt Tenis",     type: "tennis", price: "$30" },
-    { name: "Boul Volley",    type: "volley", price: "$20" },
-    { name: "Chòt Volley",    type: "volley", price: "$26" },
-    { name: "Rete Volley",    type: "volley", price: "$15" },
-    { name: "Mayo Volley",    type: "volley", price: "$32" }
+  // Foto verifye soti nan rezilta rechèch yo
+  const photos = [
+    // === PWODWI ESPÒ (chòt, mayo, soulye) ===
+    { name: "Chòt Foutbòl",   price: "$25", url: "https://images.unsplash.com/photo-1553778263-73a83bab9b0c?w=300&h=300&fit=crop" },
+    { name: "Soulye Foutbòl",  price: "$60", url: "https://wallspic.com/cn/image/135906-hong_se_de-tui-yin_liang_chu-yin_dao-li_qing/720x1280" },
+    { name: "Mayo Foutbòl",   price: "$35", url: "https://unsplash.com/photos/soccer-players-resting-on-green-field-with-balls-PaN4r-wet7U" },
+    
+    // === BOUL ESPÒ ===
+    { name: "Boul Foutbòl",   price: "$18", url: "https://images.unsplash.com/photo-1614632537190-23e4146777db?w=300&h=300&fit=crop" },
+    { name: "Boul Baskèt",    price: "$22", url: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=300&h=300&fit=crop" },
+    { name: "Boul Tenis",     price: "$8",  url: "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=300&h=300&fit=crop" },
+    { name: "Boul Volley",    price: "$20", url: "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=300&h=300&fit=crop" },
+    
+    // === RAKÈT ===
+    { name: "Rakèt Tenis",    price: "$45", url: "https://images.unsplash.com/photo-1617083934555-ac7d4cda2b30?w=300&h=300&fit=crop" },
+    
+    // === EKIPMAN ===
+    { name: "Rete Volley",    price: "$15", url: "https://images.unsplash.com/photo-1592656094267-764a45160876?w=300&h=300&fit=crop" },
+    { name: "Soulye Baskèt",  price: "$75", url: "https://images.unsplash.com/photo-1552346154-21d32810aba3?w=300&h=300&fit=crop" },
+    
+    // === JWE AK AKSYON ===
+    { name: "Jwe Foutbòl",    price: "$0",  url: "https://images.pexels.com/photos/33826988/pexels-photo-33826988.jpeg?w=300&h=300&fit=crop" },
+    { name: "Jwe Baskèt",     price: "$0",  url: "https://images.pexels.com/photos/10350334/pexels-photo-10350334.jpeg?w=300&h=300&fit=crop" },
+    { name: "Jwe Tenis",      price: "$0",  url: "https://images.pexels.com/photos/8224492/pexels-photo-8224492.jpeg?w=300&h=300&fit=crop" },
+    { name: "Jwe Volley",     price: "$0",  url: "https://images.pexels.com/photos/6203686/pexels-photo-6203686.jpeg?w=300&h=300&fit=crop" },
+    
+    // === PLIS EKIPMAN ===
+    { name: "Chòt Baskèt",    price: "$28", url: "https://images.unsplash.com/photo-1519861531473-9200262188bf?w=300&h=300&fit=crop" },
+    { name: "Mayo Baskèt",    price: "$40", url: "https://images.unsplash.com/photo-1515523110800-9415d13b84a8?w=300&h=300&fit=crop" },
+    { name: "Chòt Tenis",     price: "$30", url: "https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?w=300&h=300&fit=crop" },
+    { name: "Mayo Volley",    price: "$32", url: "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=300&h=300&fit=crop" }
   ];
 
-  // Desen SVG pou chak tip espò
-  const drawings = {
-    foot: (c) => `
-      <rect width="100" height="100" fill="${c}"/>
-      <circle cx="50" cy="50" r="30" fill="#ffffff"/>
-      <polygon points="50,32 58,40 55,50 45,50 42,40" fill="#000"/>
-      <polygon points="58,40 70,42 68,55 55,50" fill="#000"/>
-      <polygon points="42,40 30,42 32,55 45,50" fill="#000"/>
-      <polygon points="45,50 55,50 58,65 50,72 42,65" fill="#000"/>
-      <polygon points="68,55 72,68 60,72 55,50" fill="#000"/>
-      <polygon points="32,55 28,68 40,72 45,50" fill="#000"/>
-    `,
-    basket: (c) => `
-      <rect width="100" height="100" fill="${c}"/>
-      <circle cx="50" cy="50" r="32" fill="#e67e22"/>
-      <path d="M 18 50 Q 50 30 82 50 Q 50 70 18 50" fill="none" stroke="#000" stroke-width="2"/>
-      <path d="M 50 18 Q 30 50 50 82 Q 70 50 50 18" fill="none" stroke="#000" stroke-width="2"/>
-      <line x1="20" y1="50" x2="80" y2="50" stroke="#000" stroke-width="2"/>
-    `,
-    tennis: (c) => `
-      <rect width="100" height="100" fill="${c}"/>
-      <circle cx="50" cy="50" r="28" fill="#d4e157"/>
-      <path d="M 32 35 Q 45 50 32 65" fill="none" stroke="#fff" stroke-width="3"/>
-      <path d="M 68 35 Q 55 50 68 65" fill="none" stroke="#fff" stroke-width="3"/>
-    `,
-    volley: (c) => `
-      <rect width="100" height="100" fill="${c}"/>
-      <circle cx="50" cy="50" r="30" fill="#ffffff"/>
-      <path d="M 25 40 Q 50 30 75 40" fill="none" stroke="#1565c0" stroke-width="3"/>
-      <path d="M 25 60 Q 50 70 75 60" fill="none" stroke="#1565c0" stroke-width="3"/>
-      <line x1="30" y1="30" x2="35" y2="70" stroke="#1565c0" stroke-width="2"/>
-      <line x1="70" y1="30" x2="65" y2="70" stroke="#1565c0" stroke-width="2"/>
-    `
-  };
-
-  const colorsByType = {
-    foot:   ["#2e7d32", "#388e3c", "#43a047", "#1b5e20"],
-    basket: ["#e65100", "#ef6c00", "#f57c00", "#bf360c"],
-    tennis: ["#827717", "#9e9d24", "#afb42b", "#f9a825"],
-    volley: ["#0d47a1", "#1565c0", "#1976d2", "#01579b"]
-  };
-
   let html = "";
-  // 15 pwodwi × 4 varyasyon = 60 imaj
+  // Repete foto yo pou ranpli 60 imaj
   for (let i = 0; i < 60; i++) {
-    const p = products[i % products.length];
-    const colorArr = colorsByType[p.type];
-    const bg = colorArr[Math.floor(i / products.length) % colorArr.length];
-    const svg = `<svg class="img" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">${drawings[p.type](bg)}</svg>`;
+    const p = photos[i % photos.length];
     html += `<div class="item" data-name="${p.name}" data-price="${p.price}">
-      ${svg}
+      <img src="${p.url}" loading="lazy" alt="${p.name}"
+           onerror="this.style.display='none';this.parentElement.style.background='#2a2a2a';">
       <div class="label">${p.name}<span class="price">${p.price}</span></div>
     </div>`;
   }
