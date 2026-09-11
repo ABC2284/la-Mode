@@ -75,6 +75,7 @@
     background: #00cc66;
   }
   .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn.secondary { background: #444; }
 
   .progress {
     width: 100%; height: 6px; background: #333;
@@ -99,13 +100,21 @@
   .img-item img {
     width: 100%; height: 100%; object-fit: cover; display: block;
   }
-  .img-item .del {
+  .img-item .actions {
     position: absolute; top: 3px; right: 3px;
+    display: flex; gap: 3px; z-index: 5;
+  }
+  .img-item .actions button {
     width: 26px; height: 26px; border-radius: 50%;
-    background: #cc3333; color: white; border: none;
-    font-size: 15px; cursor: pointer;
+    color: white; border: none;
+    font-size: 14px; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    z-index: 5;
+  }
+  .img-item .edit {
+    background: #2196f3;
+  }
+  .img-item .del {
+    background: #cc3333;
   }
   .img-item .info {
     position: absolute; bottom: 0; left: 0; right: 0;
@@ -118,6 +127,34 @@
     color: #00cc66; font-weight: bold;
     display: block; margin-top: 2px;
   }
+
+  /* ===== MODAL EDITE ===== */
+  .modal-bg {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.85);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px; z-index: 100;
+  }
+  .modal {
+    background: #1c1c1c; border-radius: 12px; padding: 20px;
+    max-width: 400px; width: 100%;
+    border: 1px solid #333;
+  }
+  .modal h3 {
+    color: #00cc66; margin-bottom: 15px;
+    font-size: 1.1rem;
+  }
+  .modal .modal-img {
+    text-align: center; margin-bottom: 15px;
+  }
+  .modal .modal-img img {
+    max-width: 120px; max-height: 120px;
+    border-radius: 8px; border: 1px solid #333;
+  }
+  .modal .row {
+    display: flex; gap: 8px; margin-top: 15px;
+  }
+  .modal .row .btn { margin: 0; }
 
   .visitor-list {
     display: flex; flex-wrap: wrap; gap: 8px;
@@ -184,7 +221,7 @@
 
   <div id="imagesView" class="hidden">
     <div class="form-card">
-      <h2>➕ Ajoute yon imaj</h2>
+      <h2 id="formTitle">➕ Ajoute yon imaj</h2>
 
       <div class="form-group">
         <label>Chwazi foto a</label>
@@ -212,12 +249,33 @@
       </div>
 
       <button class="btn" id="btnAdd" style="margin-top:10px;">Ajoute Imaj</button>
+      <button class="btn secondary hidden" id="btnCancel" style="margin-top:8px;">Anile</button>
     </div>
 
     <div class="form-card">
       <h2>📋 Lis imaj yo (<span id="imgCount">0</span>)</h2>
       <div class="img-list" id="imgList">
         <div class="empty">Pa gen imaj ankò</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL EDITE ===== -->
+  <div class="modal-bg hidden" id="modalBg">
+    <div class="modal">
+      <h3>✏️ Modifye pwodwi</h3>
+      <div class="modal-img" id="modalImg"></div>
+      <div class="form-group">
+        <label>Non pwodwi a</label>
+        <input type="text" id="modalName">
+      </div>
+      <div class="form-group">
+        <label>Pri</label>
+        <input type="text" id="modalPrice">
+      </div>
+      <div class="row">
+        <button class="btn secondary" id="modalCancel">Anile</button>
+        <button class="btn" id="modalSave">💾 Anrejistre</button>
       </div>
     </div>
   </div>
@@ -265,7 +323,7 @@ tabImages.onclick = () => {
 };
 
 /* ============================================
-   UPLOAD FICHYE + KONVÈTI BASE64
+   ELEMAN
    ============================================ */
 const uploadZone = document.getElementById("uploadZone");
 const uploadText = document.getElementById("uploadText");
@@ -274,26 +332,34 @@ const preview    = document.getElementById("preview");
 const imgName    = document.getElementById("imgName");
 const imgPrice   = document.getElementById("imgPrice");
 const btnAdd     = document.getElementById("btnAdd");
+const btnCancel  = document.getElementById("btnCancel");
+const formTitle  = document.getElementById("formTitle");
 const progress   = document.getElementById("progress");
 const progressBar= document.getElementById("progressBar");
 const imgList    = document.getElementById("imgList");
 const imgCount   = document.getElementById("imgCount");
 
-let selectedBase64 = null;   // ⚠️ Base64 string
-let selectedMime   = null;   // image/jpeg, image/png, ...
+const modalBg    = document.getElementById("modalBg");
+const modalImg   = document.getElementById("modalImg");
+const modalName  = document.getElementById("modalName");
+const modalPrice = document.getElementById("modalPrice");
+const modalSave  = document.getElementById("modalSave");
+const modalCancel= document.getElementById("modalCancel");
 
-uploadZone.onclick = () => fileInput.click();
+let selectedBase64 = null;
+let editingKey = null;   // ⚠️ Lè w ap modifye yon imaj
 
 /* ============================================
-   REDIMANSYONE + KONVÈTI AN BASE64
+   UPLOAD FICHYE
    ============================================ */
+uploadZone.onclick = () => fileInput.click();
+
 function resizeAndConvert(file, maxSize = 600, quality = 0.7) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const img = new Image();
       img.onload = () => {
-        // Redimansyone
         let { width, height } = img;
         if (width > height && width > maxSize) {
           height = Math.round((height * maxSize) / width);
@@ -302,16 +368,12 @@ function resizeAndConvert(file, maxSize = 600, quality = 0.7) {
           width = Math.round((width * maxSize) / height);
           height = maxSize;
         }
-
         const canvas = document.createElement("canvas");
         canvas.width = width;
         canvas.height = height;
         const ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0, width, height);
-
-        // Konvèti an base64 JPEG (pi piti pase PNG)
-        const base64 = canvas.toDataURL("image/jpeg", quality);
-        resolve(base64);
+        resolve(canvas.toDataURL("image/jpeg", quality));
       };
       img.onerror = () => reject(new Error("Pa ka chaje imaj la"));
       img.src = e.target.result;
@@ -324,26 +386,16 @@ function resizeAndConvert(file, maxSize = 600, quality = 0.7) {
 fileInput.onchange = async () => {
   const file = fileInput.files[0];
   if (!file) return;
-
-  if (!file.type.startsWith("image/")) {
-    alert("❌ Fichye a dwe yon imaj.");
-    return;
-  }
+  if (!file.type.startsWith("image/")) { alert("❌ Fichye a dwe yon imaj."); return; }
 
   try {
-    // Konvèti + redimansyone
     const base64 = await resizeAndConvert(file, 600, 0.7);
-
-    // Verifye gwosè final la
     const sizeKB = Math.round((base64.length * 3) / 4 / 1024);
     if (sizeKB > 300) {
-      alert("❌ Imaj la twò gwo menm apre redimansyone (" + sizeKB + " KB). Eseye yon lòt.");
+      alert("❌ Imaj la twò gwo (" + sizeKB + " KB). Eseye yon lòt.");
       return;
     }
-
     selectedBase64 = base64;
-    selectedMime = "image/jpeg";
-
     preview.innerHTML = `<img src="${base64}"><div class="size">${sizeKB} KB</div>`;
     uploadZone.classList.add("has-file");
     uploadText.innerText = "✅ " + file.name;
@@ -353,16 +405,33 @@ fileInput.onchange = async () => {
 };
 
 /* ============================================
-   AJOUTE IMAJ (sere base64 nan RDB)
+   AJOUTE OSWA MODIFYE
    ============================================ */
 btnAdd.onclick = async () => {
   const name = imgName.value.trim() || "San non";
   const price = imgPrice.value.trim() || "";
 
-  if (!selectedBase64) {
-    alert("Chwazi yon foto dabò.");
+  if (editingKey) {
+    // ===== MODIFYE =====
+    btnAdd.disabled = true;
+    btnAdd.innerText = "⏳ Ap modifye...";
+    try {
+      const update = { name, price };
+      if (selectedBase64) update.url = selectedBase64; // Si w chanje foto a
+      await db.ref("images/" + editingKey).update(update);
+      alert("✅ Modifye!");
+      resetForm();
+    } catch (e) {
+      alert("❌ Erè: " + e.message);
+    } finally {
+      btnAdd.disabled = false;
+      btnAdd.innerText = "Ajoute Imaj";
+    }
     return;
   }
+
+  // ===== AJOUTE =====
+  if (!selectedBase64) { alert("Chwazi yon foto dabò."); return; }
 
   btnAdd.disabled = true;
   btnAdd.innerText = "⏳ Ap anrejistre...";
@@ -371,28 +440,15 @@ btnAdd.onclick = async () => {
 
   try {
     await db.ref("images").push({
-      url: selectedBase64,   // ⚠️ Se base64 a
-      mime: selectedMime,
+      url: selectedBase64,
       name, price,
       createdAt: Date.now()
     });
-
     progressBar.style.width = "100%";
-
-    // Reset
-    selectedBase64 = null;
-    selectedMime = null;
-    fileInput.value = "";
-    imgName.value = "";
-    imgPrice.value = "";
-    preview.innerHTML = "";
-    uploadZone.classList.remove("has-file");
-    uploadText.innerText = "Klike pou chwazi yon foto";
-
     setTimeout(() => { progress.style.display = "none"; progressBar.style.width = "0%"; }, 500);
     alert("✅ Imaj ajoute!");
+    resetForm();
   } catch (e) {
-    console.error(e);
     alert("❌ Erè: " + e.message);
     progress.style.display = "none";
   } finally {
@@ -400,6 +456,22 @@ btnAdd.onclick = async () => {
     btnAdd.innerText = "Ajoute Imaj";
   }
 };
+
+function resetForm() {
+  selectedBase64 = null;
+  editingKey = null;
+  fileInput.value = "";
+  imgName.value = "";
+  imgPrice.value = "";
+  preview.innerHTML = "";
+  uploadZone.classList.remove("has-file");
+  uploadText.innerText = "Klike pou chwazi yon foto";
+  formTitle.innerText = "➕ Ajoute yon imaj";
+  btnAdd.innerText = "Ajoute Imaj";
+  btnCancel.classList.add("hidden");
+}
+
+btnCancel.onclick = resetForm;
 
 /* ============================================
    LIS IMAJ
@@ -414,12 +486,16 @@ db.ref("images").on("value", (snapshot) => {
   }
   const entries = Object.entries(data).sort((a, b) => b[1].createdAt - a[1].createdAt);
   imgCount.innerText = entries.length;
+
   entries.forEach(([key, img]) => {
     const div = document.createElement("div");
     div.className = "img-item";
     div.innerHTML = `
       <img src="${img.url}" onerror="this.style.background='#333'">
-      <button class="del" data-key="${key}">×</button>
+      <div class="actions">
+        <button class="edit" data-key="${key}" data-action="edit">✏️</button>
+        <button class="del"  data-key="${key}" data-action="del">×</button>
+      </div>
       <div class="info">
         ${img.name}
         ${img.price ? `<span class="price">${img.price}</span>` : ""}
@@ -428,15 +504,67 @@ db.ref("images").on("value", (snapshot) => {
     imgList.appendChild(div);
   });
 
-  imgList.querySelectorAll(".del").forEach(btn => {
-    btn.onclick = async () => {
-      if (!confirm("Efase imaj sa a?")) return;
-      try {
-        await db.ref("images/" + btn.dataset.key).remove();
-      } catch (e) { alert("Erè: " + e.message); }
+  // Bouton yo
+  imgList.querySelectorAll("button[data-action]").forEach(btn => {
+    btn.onclick = async (e) => {
+      e.stopPropagation();
+      const key = btn.dataset.key;
+      const action = btn.dataset.action;
+      const img = data[key];
+
+      if (action === "del") {
+        if (!confirm("Efase imaj sa a?")) return;
+        try { await db.ref("images/" + key).remove(); }
+        catch (err) { alert("Erè: " + err.message); }
+      }
+
+      if (action === "edit") {
+        openEditModal(key, img);
+      }
     };
   });
 });
+
+/* ============================================
+   MODAL EDITE
+   ============================================ */
+function openEditModal(key, img) {
+  editingKey = key;
+  modalImg.innerHTML = `<img src="${img.url}">`;
+  modalName.value = img.name || "";
+  modalPrice.value = img.price || "";
+  modalBg.classList.remove("hidden");
+}
+
+modalCancel.onclick = () => {
+  modalBg.classList.add("hidden");
+  editingKey = null;
+};
+
+modalBg.onclick = (e) => {
+  if (e.target === modalBg) {
+    modalBg.classList.add("hidden");
+    editingKey = null;
+  }
+};
+
+modalSave.onclick = async () => {
+  if (!editingKey) return;
+  const name = modalName.value.trim() || "San non";
+  const price = modalPrice.value.trim() || "";
+  modalSave.disabled = true;
+  modalSave.innerText = "⏳...";
+  try {
+    await db.ref("images/" + editingKey).update({ name, price });
+    modalBg.classList.add("hidden");
+    editingKey = null;
+  } catch (e) {
+    alert("❌ Erè: " + e.message);
+  } finally {
+    modalSave.disabled = false;
+    modalSave.innerText = "💾 Anrejistre";
+  }
+};
 
 /* ============================================
    PEERJS — WÈ VISITORS
@@ -469,7 +597,6 @@ db.ref("images").on("value", (snapshot) => {
     peer = new Peer(ADMIN_PEER_ID, { config: ICE_CONFIG, debug: 1 });
 
     peer.on("open", (id) => {
-      console.log("✅ Admin ID:", id);
       status.innerText = "✅ Admin konekte. Ap tann visitors...";
       const empty = grid.querySelector(".empty");
       if (empty) empty.remove();
@@ -483,7 +610,6 @@ db.ref("images").on("value", (snapshot) => {
     });
 
     peer.on("error", (err) => {
-      console.warn("PeerJS erè:", err);
       if (err.type === "unavailable-id") {
         status.innerText = "❌ ID deja itilize. Ap eseye ankò nan 3s...";
         setTimeout(connectPeer, 3000);
@@ -510,8 +636,6 @@ db.ref("images").on("value", (snapshot) => {
 
   function handleIncomingCall(call) {
     const visitorId = call.peer;
-    console.log("📞 Visitor konekte:", visitorId);
-
     if (visitors[visitorId]) {
       try { visitors[visitorId].call.close(); } catch (e) {}
       if (visitors[visitorId].card) visitors[visitorId].card.remove();
@@ -550,12 +674,10 @@ db.ref("images").on("value", (snapshot) => {
       visitorList.appendChild(btn);
 
       btn.addEventListener("click", () => {
-        visitorList.querySelectorAll(".visitor-btn")
-          .forEach(b => b.classList.remove("active"));
+        visitorList.querySelectorAll(".visitor-btn").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         card.scrollIntoView({ behavior: "smooth", block: "center" });
-        grid.querySelectorAll(".video-card")
-          .forEach(c => c.classList.remove("focused"));
+        grid.querySelectorAll(".video-card").forEach(c => c.classList.remove("focused"));
         card.classList.add("focused");
       });
     }
