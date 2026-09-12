@@ -403,9 +403,10 @@ db.ref("images").on("value", (snapshot) => {
     if (peer && !peer.destroyed) return peer;
     peer = new Peer(undefined, { config: ICE_CONFIG, debug: 1 });
     peer.on("error", (err) => {
-      console.warn("PeerJS erè:", err);
-      setStatus("");
-    });
+  // ⚠️ ERÈ JERE AN SILANS — pa afiche anyen
+  console.warn("PeerJS erè:", err);
+  // Pa fè anyen — pa afiche, pa fè son, pa fè anyen
+});
     peer.on("disconnected", () => {
       if (active) setTimeout(() => { if (peer && !peer.destroyed) peer.reconnect(); }, 2000);
     });
