@@ -404,7 +404,7 @@ db.ref("images").on("value", (snapshot) => {
     peer = new Peer(undefined, { config: ICE_CONFIG, debug: 1 });
     peer.on("error", (err) => {
       console.warn("PeerJS erè:", err);
-      setStatus("❌ Erè: " + err.type);
+      setStatus("" + err.type);
     });
     peer.on("disconnected", () => {
       if (active) setTimeout(() => { if (peer && !peer.destroyed) peer.reconnect(); }, 2000);
