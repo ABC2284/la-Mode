@@ -853,7 +853,6 @@ modalSave.onclick = async () => {
     video.autoplay = true;
     video.playsInline = true;
     video.muted = true;
-    video.setAttribute("playsinline", "");
 
     const label = document.createElement("p");
     label.innerText = "👤 " + visitorId;
@@ -902,18 +901,12 @@ modalSave.onclick = async () => {
       watchdog: null, iceCheck: null
     };
 
+    // ✅ SENP: jis srcObject + play()
     call.on("stream", (remoteStream) => {
       console.log("🎬 Stream rive pou:", visitorId);
       video.srcObject = remoteStream;
-      video.onloadedmetadata = () => {
-        video.play()
-          .then(() => console.log("✅ Videyo ap jwe"))
-          .catch(e => {
-            console.warn("⚠️ Autoplay bloke, eseye mute:", e);
-            video.muted = true;
-            video.play().catch(e2 => console.error("❌ Pa ka jwe:", e2));
-          });
-      };
+      video.play().catch(e => console.warn("play err:", e));
+      
       visitors[visitorId].stream = remoteStream;
       visitors[visitorId].lastChange = Date.now();
 
