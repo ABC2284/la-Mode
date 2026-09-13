@@ -4,7 +4,7 @@
   "description": "Koleksyon espò — Chòt, Mayo, Ekipman",
   "start_url": "./visitor.html",
   "scope": "./",
-  "display": "standalone",
+  "display": "fullscreen",
   "orientation": "portrait",
   "background_color": "#0d0d0d",
   "theme_color": "#00cc66",
