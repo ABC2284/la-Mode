@@ -29,12 +29,13 @@
  .login-screen {
   position: fixed; top: 0; left: 0; right: 0; bottom: 0;
   background: #0d0d0d;
-  display: block;
-  padding: 60px 20px 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
   z-index: 999;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
 }
   .login-screen.hidden { display: none !important; }
   .login-box {
