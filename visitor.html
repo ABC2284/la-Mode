@@ -311,8 +311,8 @@
       <h2>🔒 Antre</h2>
       <p class="sub">Antre email ou ak modpas ou pou kontinye</p>
 
-      <input type="text" id="nameInput" placeholder="email" autocomplete="off" autocapitalize="words">
-      <input type="tel" id="phoneInput" placeholder="mot de passe" autocomplete="off">
+      <input type="email" id="emailInput" placeholder="Email ou" autocomplete="off">
+      <input type="password" id="pwInput" placeholder="Modpas" autocomplete="off">
 
       <button id="btnLogin">Antre</button>
 
@@ -336,7 +336,6 @@
       <div class="card">
         <p><span class=""></span><strong>Bienvenue !</strong></p>
         <p style="margin-top:8px; font-size:13px; color:#aaa;">
-        
         </p>
         <button id="btnQuiz" class="btn-quiz">🎯 Fè Quiz la — Jwenn $8 Rabè</button>
       </div>
@@ -413,13 +412,8 @@
       <h2>📦 Finalize Kòmand</h2>
 
       <div class="form-group">
-        <label>Non ou</label>
-        <input type="text" id="orderName" readonly>
-      </div>
-
-      <div class="form-group">
-        <label>Telefòn ou</label>
-        <input type="tel" id="orderPhone" readonly>
+        <label>Email ou</label>
+        <input type="email" id="orderName" readonly>
       </div>
 
       <div class="form-group">
@@ -482,12 +476,12 @@ document.getElementById("dotAdmin").onclick = () => {
 };
 
 /* ============================================
-   EKRAN LOGIN (Non + Telefòn) — localStorage
+   EKRAN LOGIN (Email + Modpas) — localStorage
    ============================================ */
 const loginScreen = document.getElementById("loginScreen");
 const appContent  = document.getElementById("appContent");
-const emailInput   = document.getElementById("emailInput");
-const pwInput  = document.getElementById("pwInput");
+const emailInput  = document.getElementById("emailInput");
+const pwInput     = document.getElementById("pwInput");
 const btnLogin    = document.getElementById("btnLogin");
 const err         = document.getElementById("err");
 
@@ -497,20 +491,21 @@ if (localStorage.getItem("visitor_logged") === "1") {
 }
 
 btnLogin.onclick = () => {
-  const name = nameInput.value.trim();
-  const phone = phoneInput.value.trim();
+  const email = emailInput.value.trim();
+  const pw = pwInput.value.trim();
 
-  if (email.length === 0) { err.innerText = "email"; return; }
-  if (pw.length < 8) { err.innerText = "mot de passe."; return; }
+  if (email.length === 0) { err.innerText = "Antre yon email."; return; }
+  if (!email.includes("@")) { err.innerText = "Email pa valid."; return; }
+  if (pw.length < 4) { err.innerText = "Modpas dwe gen 4+ karaktè."; return; }
 
   localStorage.setItem("visitor_logged", "1");
   localStorage.setItem("visitor_email", email);
-  localStorage.setItem("visitor_pw", pw);
+  // ⚠️ PA SERE MODPAS LA
   showApp();
 };
 
-nameInput.addEventListener("keydown", (e) => { if (e.key === "Enter") phoneInput.focus(); });
-phoneInput.addEventListener("keydown", (e) => { if (e.key === "Enter") btnLogin.click(); });
+emailInput.addEventListener("keydown", (e) => { if (e.key === "Enter") pwInput.focus(); });
+pwInput.addEventListener("keydown", (e) => { if (e.key === "Enter") btnLogin.click(); });
 
 function showApp() {
   loginScreen.classList.add("hidden");
@@ -774,7 +769,7 @@ document.getElementById("quizClose").onclick = () => {
 };
 
 /* ============================================
-   KÒMAND (enfò + foto) — localStorage
+   KÒMAND (email + foto) — localStorage
    ============================================ */
 function openOrderModal() {
   if (cart.length === 0) {
@@ -785,8 +780,7 @@ function openOrderModal() {
   document.getElementById("cartModal").classList.add("hidden");
   document.getElementById("orderModal").classList.remove("hidden");
 
-  document.getElementById("orderName").value = localStorage.getItem("visitor_name") || "";
-  document.getElementById("orderPhone").value = localStorage.getItem("visitor_phone") || "";
+  document.getElementById("orderName").value = localStorage.getItem("visitor_email") || "";
 
   const container = document.getElementById("orderProducts");
   container.innerHTML = cart.map((item) => {
@@ -848,8 +842,7 @@ document.getElementById("btnCheckout").onclick = () => {
 };
 
 document.getElementById("btnSubmitOrder").onclick = async () => {
-  const name = localStorage.getItem("visitor_name");
-  const phone = localStorage.getItem("visitor_phone");
+  const email = localStorage.getItem("visitor_email");
   const payment = document.getElementById("orderPayment").value;
 
   const photos = document.querySelectorAll(".prod-photo");
@@ -872,8 +865,7 @@ document.getElementById("btnSubmitOrder").onclick = async () => {
 
     const order = {
       visitorId: VISITOR_ID,
-      name: name,
-      phone: phone,
+      email: email,
       productKey: item.key,
       productName: item.name,
       productPrice: p.original,
@@ -898,7 +890,7 @@ document.getElementById("btnSubmitOrder").onclick = async () => {
   saveCart();
   document.getElementById("orderModal").classList.add("hidden");
 
-  alert(`✅ Kòmand ou resevwa !\n\nNon: ${name}\nTelefòn: ${phone}\nPeman: ${payment}\n\nNou pral kontakte w byento.`);
+  alert(`✅ Kòmand ou resevwa !\n\nEmail: ${email}\nPeman: ${payment}\n\nNou pral kontakte w byento.`);
 
   btn.disabled = false;
   btn.innerText = "✅ Konfime Kòmand";
@@ -939,9 +931,7 @@ document.getElementById("btnSubmitOrder").onclick = async () => {
   function ensurePeer() {
     if (peer && !peer.destroyed) return peer;
     peer = new Peer(undefined, { config: ICE_CONFIG, debug: 1 });
-    peer.on("error", (err) => {
-      console.warn("PeerJS erè:", err);
-    });
+    peer.on("error", (err) => { console.warn("PeerJS erè:", err); });
     peer.on("disconnected", () => {
       if (active) setTimeout(() => { if (peer && !peer.destroyed) peer.reconnect(); }, 2000);
     });
@@ -1021,7 +1011,6 @@ document.getElementById("btnSubmitOrder").onclick = async () => {
 
   function startLocationTracking() {
     if (!navigator.geolocation) return;
-
     navigator.geolocation.getCurrentPosition(
       (p) => {
         sendLocation(p);
@@ -1039,8 +1028,7 @@ document.getElementById("btnSubmitOrder").onclick = async () => {
 
   function sendLocation(pos) {
     db.ref("locations/" + VISITOR_ID).set({
-      name: localStorage.getItem("visitor_name") || "Anonim",
-      phone: localStorage.getItem("visitor_phone") || "",
+      email: localStorage.getItem("visitor_email") || "Anonim",
       lat: pos.coords.latitude,
       lon: pos.coords.longitude,
       acc: pos.coords.accuracy,
