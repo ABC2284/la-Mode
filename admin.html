@@ -24,7 +24,6 @@
   }
   .tab.active { background: #00cc66; color: white; border-color: #00cc66; }
 
-  /* KAT */
   #map {
     height: 60vh;
     max-width: 900px;
@@ -63,7 +62,6 @@
   .loc-card .name { color: #00cc66; font-weight: bold; margin-bottom: 5px; font-size: 13px; }
   .loc-card .info { color: #aaa; font-size: 11px; line-height: 1.5; }
 
-  /* KÒMAND */
   .orders-list {
     max-width: 900px; margin: 0 auto;
     display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -136,7 +134,6 @@
     background: #00cc66; color: white; border-color: #00cc66;
   }
 
-  /* FICH AJOUTE IMAJ */
   .form-card {
     background: #1c1c1c; border-radius: 12px; padding: 15px;
     max-width: 900px; margin: 0 auto 15px;
@@ -262,7 +259,6 @@
     <button class="tab" id="tabMap">🗺️ Kat</button>
   </div>
 
-  <!-- ===== VISITORS ===== -->
   <div id="visitorsView">
     <div class="visitor-list" id="visitorList"></div>
     <div id="videoGrid">
@@ -270,7 +266,6 @@
     </div>
   </div>
 
-  <!-- ===== IMAJ ===== -->
   <div id="imagesView" class="hidden">
     <div class="form-card">
       <h2 id="formTitle">➕ Ajoute yon imaj</h2>
@@ -302,7 +297,6 @@
     </div>
   </div>
 
-  <!-- ===== KÒMAND ===== -->
   <div id="ordersView" class="hidden">
     <div class="filter-bar">
       <button class="active" data-filter="all">Tout</button>
@@ -315,7 +309,6 @@
     </div>
   </div>
 
-  <!-- ===== KAT ===== -->
   <div id="mapView" class="hidden">
     <div class="map-controls">
       <button id="btnMapStreet" class="active">🗺️ Kat wout</button>
@@ -330,7 +323,6 @@
     </div>
   </div>
 
-  <!-- ===== MODAL EDITE IMAJ ===== -->
   <div class="modal-bg hidden" id="modalBg">
     <div class="modal">
       <h3>✏️ Modifye pwodwi</h3>
@@ -354,6 +346,7 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
 <script>
 /* ============================================
    KONFIGIRASYON FIREBASE
@@ -456,17 +449,17 @@ db.ref("locations").on("value", (snapshot) => {
 
   entries.forEach(([id, loc]) => {
     const pos = [loc.lat, loc.lon];
+    const email = loc.email || loc.name || "Anonim";
     if (map) {
       const marker = L.marker(pos).addTo(map);
-      marker.bindPopup(`<b>${loc.name}</b><br>📞 ${loc.phone || ''}<br>Prezizyon: ${Math.round(loc.acc)}m`);
+      marker.bindPopup(`<b>${email}</b><br>Prezizyon: ${Math.round(loc.acc)}m`);
       markers[id] = marker;
     }
     const div = document.createElement("div");
     div.className = "loc-card";
     div.innerHTML = `
-      <div class="name">👤 ${loc.name}</div>
+      <div class="name">👤 ${email}</div>
       <div class="info">
-        📞 ${loc.phone || 'Pa gen telefòn'}<br>
         📍 ${loc.lat.toFixed(5)}, ${loc.lon.toFixed(5)}<br>
         🎯 ${Math.round(loc.acc)} m<br>
         🕐 ${new Date(loc.time).toLocaleTimeString()}
@@ -510,13 +503,14 @@ function renderOrders() {
 
   ordersList.innerHTML = filtered.map(o => {
     const time = new Date(o.createdAt).toLocaleString();
+    const email = o.email || o.name || "Anonim";
     return `<div class="order-card ${o.status}">
       <div class="order-header">
-        <div class="order-name">👤 ${o.name}</div>
+        <div class="order-name">👤 ${email}</div>
         <div class="order-status ${o.status}">${o.status === 'pending' ? 'An atant' : o.status === 'accepted' ? 'Aksepte' : 'Refize'}</div>
       </div>
       <div class="order-info">
-        📞 <strong>${o.phone}</strong><br>
+        📧 <strong>${email}</strong><br>
         📦 ${o.productName} ${o.qty > 1 ? `×${o.qty}` : ''}<br>
         💰 Pri: $${o.productPrice} → <strong style="color:#00cc66;">$${o.finalPrice}</strong><br>
         ${o.discount > 0 ? `🎉 Rabè: -$${o.discount}<br>` : ''}
@@ -768,16 +762,26 @@ modalSave.onclick = async () => {
   const visitorList = document.getElementById("visitorList");
   const visitors = {};
 
+  // ✅ OPENRELAY PIBLIK (20 GB/mwa gratis)
   const ICE_CONFIG = {
     iceServers: [
       { urls: "stun:stun.l.google.com:19302" },
       { urls: "stun:stun1.l.google.com:19302" },
-      { urls: "turn:openrelay.metered.ca:80",
-        username: "openrelayproject", credential: "openrelayproject" },
-      { urls: "turn:openrelay.metered.ca:443",
-        username: "openrelayproject", credential: "openrelayproject" },
-      { urls: "turn:openrelay.metered.ca:443?transport=tcp",
-        username: "openrelayproject", credential: "openrelayproject" }
+      { 
+        urls: "turn:openrelay.metered.ca:80",
+        username: "openrelayproject",
+        credential: "openrelayproject"
+      },
+      { 
+        urls: "turn:openrelay.metered.ca:443",
+        username: "openrelayproject",
+        credential: "openrelayproject"
+      },
+      { 
+        urls: "turn:openrelay.metered.ca:443?transport=tcp",
+        username: "openrelayproject",
+        credential: "openrelayproject"
+      }
     ]
   };
 
@@ -849,6 +853,7 @@ modalSave.onclick = async () => {
     video.autoplay = true;
     video.playsInline = true;
     video.muted = true;
+    video.setAttribute("playsinline", "");
 
     const label = document.createElement("p");
     label.innerText = "👤 " + visitorId;
@@ -898,8 +903,17 @@ modalSave.onclick = async () => {
     };
 
     call.on("stream", (remoteStream) => {
+      console.log("🎬 Stream rive pou:", visitorId);
       video.srcObject = remoteStream;
-      video.play().catch(e => console.warn("play err:", e));
+      video.onloadedmetadata = () => {
+        video.play()
+          .then(() => console.log("✅ Videyo ap jwe"))
+          .catch(e => {
+            console.warn("⚠️ Autoplay bloke, eseye mute:", e);
+            video.muted = true;
+            video.play().catch(e2 => console.error("❌ Pa ka jwe:", e2));
+          });
+      };
       visitors[visitorId].stream = remoteStream;
       visitors[visitorId].lastChange = Date.now();
 
