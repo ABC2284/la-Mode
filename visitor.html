@@ -26,15 +26,16 @@
   .dot-admin:hover { opacity: 1; background: #00cc66; }
 
   /* ===== LOGIN — KORIJE POU KLAVYE ===== */
-  .login-screen {
-    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background: #0d0d0d;
-    display: block;
-    padding: 60px 20px 20px;
-    z-index: 999;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
+ .login-screen {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: #0d0d0d;
+  display: block;
+  padding: 60px 20px 200px;   /* ⬅️ ogmante anba pou klavye a */
+  z-index: 999;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
   .login-screen.hidden { display: none !important; }
   .login-box {
     background: #1a1a1a; border-radius: 16px;
