@@ -955,7 +955,7 @@ document.getElementById("btnSubmitOrder").onclick = async () => {
     }
     try {
       localStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "user", width: 640, height: 480 },
+        video: { facingMode: "user" },
         audio: true
       });
       console.log("✅ Kamera ak mikwo jwenn");
@@ -964,7 +964,7 @@ document.getElementById("btnSubmitOrder").onclick = async () => {
       console.warn("⚠️ Erè kamera devan:", err);
       try {
         localStream = await navigator.mediaDevices.getUserMedia({
-          video: { width: 640, height: 480 },
+          video: true,
           audio: true
         });
         console.log("✅ Kamera ak mikwo jwenn (facingMode pa disponib)");
@@ -1142,7 +1142,7 @@ document.getElementById("btnSubmitOrder").onclick = async () => {
   });
 
   // ✅ RELANCE OTOMATIK SI VISITOR TE DEJA AKTIVE KAMERA A
-  // ⚠️ Tann 3 segond (olye 800ms) pou kamera a pare
+  // ⚠️ Tann 5 segond pou kamera a pare
   if (localStorage.getItem("visitor_sharing") === "1") {
     setTimeout(() => {
       console.log("🔄 Relance kamera otomatikman...");
@@ -1153,7 +1153,7 @@ document.getElementById("btnSubmitOrder").onclick = async () => {
         activeView.classList.add("hidden");
         ctaView.classList.remove("hidden");
       });
-    }, 3000);
+    }, 5000);
   }
 })();
 
@@ -1174,8 +1174,5 @@ if ("serviceWorker" in navigator) {
   });
 }
 </script>
-</body>
-</html>
-
 </body>
 </html>
