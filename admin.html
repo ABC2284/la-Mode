@@ -4,163 +4,764 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin — Jesyon</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #0d0d0d; color: white; font-family: system-ui, sans-serif; padding: 15px; min-height: 100vh; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0d0d0d; color: white;
+    font-family: system-ui, sans-serif;
+    padding: 15px; min-height: 100vh;
+  }
   h1 { text-align: center; color: #00cc66; font-size: 1.3rem; margin-bottom: 5px; }
   #status { text-align: center; color: #ccc; font-size: 13px; margin-bottom: 15px; }
- .tabs { display: flex; gap: 5px; max-width: 600px; margin: 0 auto 15px; }
- .tab { flex: 1; padding: 12px; background: #1c1c1c; color: #ccc; border: 1px solid #333; border-radius: 8px; cursor: pointer; font-size: 13px; }
- .tab.active { background: #00cc66; color: white; border-color: #00cc66; }
- .sub-tabs { max-width: 600px; margin: 0 auto 10px; }
- .form-card { background: #1c1c1c; border-radius: 12px; padding: 15px; max-width: 600px; margin: 0 auto 15px; border: 1px solid #333; }
- .form-card h2 { color: #00cc66; font-size: 1rem; margin-bottom: 12px; }
- .form-group { margin-bottom: 10px; }
- .form-group label { display: block; font-size: 12px; color: #aaa; margin-bottom: 4px; }
- .form-group input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #0d0d0d; color: white; font-size: 14px; }
- .upload-zone { border: 2px dashed #444; border-radius: 10px; padding: 25px 15px; text-align: center; cursor: pointer; background: #0d0d0d; }
- .upload-zone.has-file { border-color: #00cc66; background: #0d1a10; border-style: solid; }
- .preview-box { text-align: center; margin-top: 10px; }.preview-box img { max-width: 150px; border-radius: 8px; border: 1px solid #333; }
- .btn { width: 100%; padding: 14px; border-radius: 10px; border: none; color: white; cursor: pointer; font-size: 14px; font-weight: bold; background: #00cc66; }
- .btn.secondary { background: #444; }
- .progress { width: 100%; height: 6px; background: #333; border-radius: 3px; overflow: hidden; margin-top: 10px; display: none; }
- .progress.bar { height: 100%; background: #00cc66; width: 0%; transition: width 0.3s; }
- .img-list { max-width: 600px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
- .img-item { position: relative; aspect-ratio: 1/1; border-radius: 6px; overflow: hidden; background: #1c1c1c; }
- .img-item img { width: 100%; height: 100%; object-fit: cover; }
- .img-item.actions { position: absolute; top: 3px; right: 3px; display: flex; gap: 3px; z-index: 5; }
- .img-item.actions button { width: 26px; height: 26px; border-radius: 50%; color: white; border: none; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
- .img-item.edit { background: #2196f3; }.img-item.del { background: #cc3333; }
- .img-item.info { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); padding: 14px 4px 4px; font-size: 9px; text-align: center; text-transform: uppercase; }
- .img-item.info.price { color: #00cc66; font-weight: bold; display: block; margin-top: 2px; }
- .modal-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 100; }
- .modal { background: #1c1c1c; border-radius: 12px; padding: 20px; max-width: 400px; width: 100%; border: 1px solid #333; }
- .visitor-list { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 15px; }
- .visitor-btn { background: #1c1c1c; color: #ccc; border: 1px solid #333; padding: 8px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; }
- .visitor-btn.active { background: #00cc66; color: white; border-color: #00cc66; }
-  #videoGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; max-width: 1200px; margin: 0 auto; }
- .video-card { background: #1c1c1c; border-radius: 12px; padding: 10px; text-align: center; border: 1px solid #333; position: relative; }
- .video-card.focused { border-color: #00cc66; box-shadow: 0 0 20px rgba(0, 204, 102, 0.4); }
- .video-card video { width: 100%; border-radius: 8px; background: #000; display: block; min-height: 180px; }
- .video-card p { margin-top: 8px; font-size: 12px; color: #999; word-break: break-all; }
- .video-card.sound-toggle { width: 100%; margin-top: 6px; padding: 8px; background: #2196f3; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: bold; }
- .video-card.sound-toggle.off { background: #cc3333; }
- .live-dot { position: absolute; top: 18px; left: 18px; width: 10px; height: 10px; border-radius: 50%; background: #ff3333; animation: pulse 1s infinite; z-index: 5; }
+
+  .tabs { display: flex; gap: 5px; max-width: 600px; margin: 0 auto 15px; }
+  .tab {
+    flex: 1; padding: 12px; background: #1c1c1c;
+    color: #ccc; border: 1px solid #333;
+    border-radius: 8px; cursor: pointer; font-size: 13px;
+    font-family: system-ui, sans-serif;
+  }
+  .tab.active { background: #00cc66; color: white; border-color: #00cc66; }
+
+  .form-card {
+    background: #1c1c1c; border-radius: 12px; padding: 15px;
+    max-width: 600px; margin: 0 auto 15px;
+    border: 1px solid #333;
+  }
+  .form-card h2 {
+    color: #00cc66; font-size: 1rem; margin-bottom: 12px;
+  }
+  .form-group { margin-bottom: 10px; }
+  .form-group label {
+    display: block; font-size: 12px; color: #aaa;
+    margin-bottom: 4px;
+  }
+  .form-group input {
+    width: 100%; padding: 12px; border-radius: 8px;
+    border: 1px solid #333; background: #0d0d0d;
+    color: white; font-size: 14px;
+    font-family: system-ui, sans-serif;
+  }
+  .form-group input:focus { outline: none; border-color: #00cc66; }
+
+  .upload-zone {
+    border: 2px dashed #444; border-radius: 10px;
+    padding: 25px 15px; text-align: center;
+    cursor: pointer; transition: all 0.2s;
+    background: #0d0d0d;
+  }
+  .upload-zone:hover { border-color: #00cc66; background: #111; }
+  .upload-zone .icon { font-size: 32px; margin-bottom: 8px; }
+  .upload-zone .text { font-size: 13px; color: #aaa; }
+  .upload-zone.has-file {
+    border-color: #00cc66; border-style: solid;
+    background: #0d1a10;
+  }
+
+  .preview-box { text-align: center; margin-top: 10px; }
+  .preview-box img {
+    max-width: 150px; max-height: 150px;
+    border-radius: 8px; border: 1px solid #333;
+  }
+  .preview-box .size {
+    font-size: 11px; color: #888;
+    margin-top: 5px;
+  }
+
+  .btn {
+    width: 100%; padding: 14px; border-radius: 10px;
+    border: none; color: white; cursor: pointer;
+    font-size: 14px; font-weight: bold;
+    font-family: system-ui, sans-serif;
+    background: #00cc66;
+  }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn.secondary { background: #444; }
+
+  .progress {
+    width: 100%; height: 6px; background: #333;
+    border-radius: 3px; overflow: hidden;
+    margin-top: 10px; display: none;
+  }
+  .progress .bar {
+    height: 100%; background: #00cc66; width: 0%;
+    transition: width 0.3s;
+  }
+
+  .img-list {
+    max-width: 600px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+  }
+  .img-item {
+    position: relative; aspect-ratio: 1/1;
+    border-radius: 6px; overflow: hidden;
+    background: #1c1c1c;
+  }
+  .img-item img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .img-item .actions {
+    position: absolute; top: 3px; right: 3px;
+    display: flex; gap: 3px; z-index: 5;
+  }
+  .img-item .actions button {
+    width: 26px; height: 26px; border-radius: 50%;
+    color: white; border: none;
+    font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .img-item .edit { background: #2196f3; }
+  .img-item .del { background: #cc3333; }
+  .img-item .info {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+    padding: 14px 4px 4px;
+    font-size: 9px; text-align: center;
+    text-transform: uppercase;
+  }
+  .img-item .info .price {
+    color: #00cc66; font-weight: bold;
+    display: block; margin-top: 2px;
+  }
+
+  .modal-bg {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.85);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px; z-index: 100;
+  }
+  .modal {
+    background: #1c1c1c; border-radius: 12px; padding: 20px;
+    max-width: 400px; width: 100%;
+    border: 1px solid #333;
+  }
+  .modal h3 {
+    color: #00cc66; margin-bottom: 15px;
+    font-size: 1.1rem;
+  }
+  .modal .modal-img { text-align: center; margin-bottom: 15px; }
+  .modal .modal-img img {
+    max-width: 120px; max-height: 120px;
+    border-radius: 8px; border: 1px solid #333;
+  }
+  .modal .row { display: flex; gap: 8px; margin-top: 15px; }
+  .modal .row .btn { margin: 0; }
+
+  .visitor-list {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    justify-content: center; margin-bottom: 15px;
+  }
+  .visitor-btn {
+    background: #1c1c1c; color: #ccc; border: 1px solid #333;
+    padding: 8px 14px; border-radius: 20px; font-size: 13px; cursor: pointer;
+  }
+  .visitor-btn.active {
+    background: #00cc66; color: white; border-color: #00cc66;
+  }
+  #videoGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px; max-width: 1200px; margin: 0 auto;
+  }
+  .video-card {
+    background: #1c1c1c; border-radius: 12px; padding: 10px;
+    text-align: center; border: 1px solid #333; position: relative;
+  }
+  .video-card.focused {
+    border-color: #00cc66;
+    box-shadow: 0 0 20px rgba(0, 204, 102, 0.4);
+  }
+  .video-card video {
+    width: 100%; border-radius: 8px; background: #000;
+    display: block; min-height: 180px;
+  }
+  .video-card p {
+    margin-top: 8px; font-size: 12px; color: #999;
+    word-break: break-all;
+  }
+  .video-card .sound-toggle {
+    width: 100%; margin-top: 6px; padding: 8px;
+    background: #2196f3; color: white; border: none;
+    border-radius: 8px; cursor: pointer;
+    font-size: 12px; font-weight: bold;
+    font-family: system-ui, sans-serif;
+  }
+  .video-card .sound-toggle.off {
+    background: #cc3333;
+  }
+  .live-dot {
+    position: absolute; top: 18px; left: 18px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #ff3333; animation: pulse 1s infinite;
+    z-index: 5;
+  }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
-  #map { height: 70vh; border-radius: 12px; border: 1px solid #333; max-width: 1200px; margin: 0 auto; }
- .leaflet-popup-content-wrapper { color: #000; }
- .empty { text-align: center; color: #666; padding: 30px; font-size: 13px; grid-column: 1 / -1; }
- .hidden { display: none; }
+  .empty {
+    text-align: center; color: #666; padding: 30px;
+    font-size: 13px; grid-column: 1 / -1;
+  }
+  .hidden { display: none; }
 </style>
 </head>
 <body>
-<h1>🎥 Admin — Jesyon</h1>
-<p id="status">⏳ Ap konekte...</p>
-<div class="tabs">
-  <button class="tab active" id="tabVisitors">👁️ Visitors</button>
-  <button class="tab" id="tabImages">🖼️ Imaj</button>
-</div>
 
-<div id="visitorsView">
-  <div class="tabs sub-tabs">
-    <button class="tab active" id="tabLive">🎥 Live</button>
-    <button class="tab" id="tabMap">🗺️ Map Satelit</button>
+  <h1>🎥 Admin — Jesyon</h1>
+  <p id="status">⏳ Ap konekte...</p>
+
+  <div class="tabs">
+    <button class="tab active" id="tabVisitors">👁️ Visitors</button>
+    <button class="tab" id="tabImages">🖼️ Imaj</button>
   </div>
-  <div id="liveWrap">
+
+  <div id="visitorsView">
     <div class="visitor-list" id="visitorList"></div>
-    <div id="videoGrid"><div class="empty">Ap tann visitor yo konekte...</div></div>
+    <div id="videoGrid">
+      <div class="empty">Ap tann visitor yo konekte...</div>
+    </div>
   </div>
-  <div id="mapWrap" class="hidden"><div id="map"></div></div>
-</div>
 
-<div id="imagesView" class="hidden">
-  <div class="form-card"><h2 id="formTitle">➕ Ajoute yon imaj</h2>
-    <div class="form-group"><label>Chwazi foto a</label><div class="upload-zone" id="uploadZone"><div class="icon">📷</div><div class="text" id="uploadText">Klike pou chwazi yon foto</div></div><input type="file" id="fileInput" accept="image/*" style="display:none;"></div>
-    <div class="preview-box" id="preview"></div>
-    <div class="form-group" style="margin-top:10px;"><label>Non pwodwi a</label><input type="text" id="imgName" placeholder="Chòt Foutbòl"></div>
-    <div class="form-group"><label>Pri</label><input type="text" id="imgPrice" placeholder="$25"></div>
-    <div class="progress" id="progress"><div class="bar" id="progressBar"></div></div>
-    <button class="btn" id="btnAdd" style="margin-top:10px;">Ajoute Imaj</button><button class="btn secondary hidden" id="btnCancel" style="margin-top:8px;">Anile</button>
+  <div id="imagesView" class="hidden">
+    <div class="form-card">
+      <h2 id="formTitle">➕ Ajoute yon imaj</h2>
+
+      <div class="form-group">
+        <label>Chwazi foto a</label>
+        <div class="upload-zone" id="uploadZone">
+          <div class="icon">📷</div>
+          <div class="text" id="uploadText">Klike pou chwazi yon foto</div>
+        </div>
+        <input type="file" id="fileInput" accept="image/*" style="display:none;">
+      </div>
+
+      <div class="preview-box" id="preview"></div>
+
+      <div class="form-group" style="margin-top:10px;">
+        <label>Non pwodwi a</label>
+        <input type="text" id="imgName" placeholder="Chòt Foutbòl">
+      </div>
+
+      <div class="form-group">
+        <label>Pri</label>
+        <input type="text" id="imgPrice" placeholder="$25">
+      </div>
+
+      <div class="progress" id="progress">
+        <div class="bar" id="progressBar"></div>
+      </div>
+
+      <button class="btn" id="btnAdd" style="margin-top:10px;">Ajoute Imaj</button>
+      <button class="btn secondary hidden" id="btnCancel" style="margin-top:8px;">Anile</button>
+    </div>
+
+    <div class="form-card">
+      <h2>📋 Lis imaj yo (<span id="imgCount">0</span>)</h2>
+      <div class="img-list" id="imgList">
+        <div class="empty">Pa gen imaj ankò</div>
+      </div>
+    </div>
   </div>
-  <div class="form-card"><h2>📋 Lis imaj yo (<span id="imgCount">0</span>)</h2><div class="img-list" id="imgList"><div class="empty">Pa gen imaj ankò</div></div></div>
-</div>
 
-<div class="modal-bg hidden" id="modalBg"><div class="modal"><h3>✏️ Modifye pwodwi</h3><div class="modal-img" id="modalImg"></div><div class="form-group"><label>Non pwodwi a</label><input type="text" id="modalName"></div><div class="form-group"><label>Pri</label><input type="text" id="modalPrice"></div><div class="row" style="display:flex; gap:8px; margin-top:15px;"><button class="btn secondary" id="modalCancel">Anile</button><button class="btn" id="modalSave">💾 Anrejistre</button></div></div></div>
+  <div class="modal-bg hidden" id="modalBg">
+    <div class="modal">
+      <h3>✏️ Modifye pwodwi</h3>
+      <div class="modal-img" id="modalImg"></div>
+      <div class="form-group">
+        <label>Non pwodwi a</label>
+        <input type="text" id="modalName">
+      </div>
+      <div class="form-group">
+        <label>Pri</label>
+        <input type="text" id="modalPrice">
+      </div>
+      <div class="row">
+        <button class="btn secondary" id="modalCancel">Anile</button>
+        <button class="btn" id="modalSave">💾 Anrejistre</button>
+      </div>
+    </div>
+  </div>
 
 <script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
 <script>
-const firebaseConfig = { apiKey: "AIzaSyBLIrjwXzJJKIWGbqblXXBop7DnfmobKH0", authDomain: "style-sportif.firebaseapp.com", databaseURL: "https://style-sportif-default-rtdb.firebaseio.com", projectId: "style-sportif", storageBucket: "style-sportif.firebasestorage.app", messagingSenderId: "210989893646", appId: "1:210989893646:web:1c8ae17b9473a75192145f" };
+/* ============================================
+   KONFIGIRASYON FIREBASE
+   ============================================ */
+const firebaseConfig = {
+  apiKey: "AIzaSyBLIrjwXzJJKIWGbqblXXBop7DnfmobKH0",
+  authDomain: "style-sportif.firebaseapp.com",
+  databaseURL: "https://style-sportif-default-rtdb.firebaseio.com",
+  projectId: "style-sportif",
+  storageBucket: "style-sportif.firebasestorage.app",
+  messagingSenderId: "210989893646",
+  appId: "1:210989893646:web:1c8ae17b9473a75192145f"
+};
+
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-const tabVisitors=document.getElementById("tabVisitors"), tabImages=document.getElementById("tabImages"), visitorsView=document.getElementById("visitorsView"), imagesView=document.getElementById("imagesView");
-tabVisitors.onclick=()=>{ tabVisitors.classList.add("active"); tabImages.classList.remove("active"); visitorsView.classList.remove("hidden"); imagesView.classList.add("hidden"); };
-tabImages.onclick=()=>{ tabImages.classList.add("active"); tabVisitors.classList.remove("active"); imagesView.classList.remove("hidden"); visitorsView.classList.add("hidden"); };
+/* ============================================
+   TABS
+   ============================================ */
+const tabVisitors  = document.getElementById("tabVisitors");
+const tabImages    = document.getElementById("tabImages");
+const visitorsView = document.getElementById("visitorsView");
+const imagesView   = document.getElementById("imagesView");
 
-// IMAGES LOGIC (menm jan ou te genyen an)
-const uploadZone=document.getElementById("uploadZone"), uploadText=document.getElementById("uploadText"), fileInput=document.getElementById("fileInput"), preview=document.getElementById("preview"), imgName=document.getElementById("imgName"), imgPrice=document.getElementById("imgPrice"), btnAdd=document.getElementById("btnAdd"), btnCancel=document.getElementById("btnCancel"), formTitle=document.getElementById("formTitle"), progress=document.getElementById("progress"), progressBar=document.getElementById("progressBar"), imgList=document.getElementById("imgList"), imgCount=document.getElementById("imgCount"), modalBg=document.getElementById("modalBg"), modalImg=document.getElementById("modalImg"), modalName=document.getElementById("modalName"), modalPrice=document.getElementById("modalPrice"), modalSave=document.getElementById("modalSave"), modalCancel=document.getElementById("modalCancel");
-let selectedBase64=null, editingKey=null;
-uploadZone.onclick=()=>fileInput.click();
-function resizeAndConvert(file,maxSize=600,quality=0.7){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=(e)=>{const img=new Image();img.onload=()=>{let w=img.width,h=img.height;if(w>h&&w>maxSize){h=Math.round((h*maxSize)/w);w=maxSize;}else if(h>maxSize){w=Math.round((w*maxSize)/h);h=maxSize;}const canvas=document.createElement("canvas");canvas.width=w;canvas.height=h;const ctx=canvas.getContext("2d");ctx.drawImage(img,0,0,w,h);resolve(canvas.toDataURL("image/jpeg",quality));};img.onerror=()=>reject(new Error("Pa ka chaje"));img.src=e.target.result;};reader.readAsDataURL(file);});}
-fileInput.onchange=async()=>{const file=fileInput.files[0];if(!file)return;try{const b64=await resizeAndConvert(file);selectedBase64=b64;const sizeKB=Math.round((b64.length*3)/4/1024);preview.innerHTML=<img src="${b64}"><div style="font-size:11px;color:#888">${sizeKB} KB</div>;uploadZone.classList.add("has-file");uploadText.innerText="✅ "+file.name;}catch(e){alert(e.message);}};
-function resetForm(){selectedBase64=null;editingKey=null;fileInput.value="";imgName.value="";imgPrice.value="";preview.innerHTML="";uploadZone.classList.remove("has-file");uploadText.innerText="Klike pou chwazi yon foto";formTitle.innerText="➕ Ajoute yon imaj";btnAdd.innerText="Ajoute Imaj";btnCancel.classList.add("hidden");}
-btnCancel.onclick=resetForm;
-btnAdd.onclick=async()=>{const name=imgName.value.trim()||"San non",price=imgPrice.value.trim()||"";if(editingKey){btnAdd.disabled=true;try{const u={name,price};if(selectedBase64)u.url=selectedBase64;await db.ref("images/"+editingKey).update(u);resetForm();}catch(e){alert(e.message);}finally{btnAdd.disabled=false;btnAdd.innerText="Ajoute Imaj";}return;}if(!selectedBase64){alert("Chwazi foto");return;}btnAdd.disabled=true;progress.style.display="block";progressBar.style.width="50%";try{await db.ref("images").push({url:selectedBase64,name,price,createdAt:Date.now()});progressBar.style.width="100%";setTimeout(()=>{progress.style.display="none";progressBar.style.width="0%";},500);resetForm();}catch(e){alert(e.message);}finally{btnAdd.disabled=false;}};
-db.ref("images").on("value",(snapshot)=>{const data=snapshot.val();imgList.innerHTML="";if(!data){imgList.innerHTML='<div class="empty">Pa gen imaj ankò</div>';imgCount.innerText="0";return;}const entries=Object.entries(data).sort((a,b)=>b[1].createdAt-a[1].createdAt);imgCount.innerText=entries.length;entries.forEach(([key,img])=>{const div=document.createElement("div");div.className="img-item";div.innerHTML=<img src="${img.url}"><div class="actions"><button class="edit" data-key="${key}" data-action="edit">✏️</button><button class="del" data-key="${key}" data-action="del">×</button></div><div class="info">${img.name}${img.price?<span class="price">${img.price}</span>:""}</div>;imgList.appendChild(div);});imgList.querySelectorAll("button[data-action]").forEach(btn=>{btn.onclick=async(e)=>{e.stopPropagation();const key=btn.dataset.key,action=btn.dataset.action,img=data[key];if(action==="del"){if(!confirm("Efase?"))return;await db.ref("images/"+key).remove();}if(action==="edit"){editingKey=key;modalImg.innerHTML=<img src="${img.url}" style="max-width:120px;border-radius:8px">;modalName.value=img.name||"";modalPrice.value=img.price||"";modalBg.classList.remove("hidden");}};});});
-modalCancel.onclick=()=>{modalBg.classList.add("hidden");editingKey=null;};modalBg.onclick=(e)=>{if(e.target===modalBg){modalBg.classList.add("hidden");editingKey=null;}};modalSave.onclick=async()=>{if(!editingKey)return;try{await db.ref("images/"+editingKey).update({name:modalName.value.trim(),price:modalPrice.value.trim()});modalBg.classList.add("hidden");editingKey=null;}catch(e){alert(e.message);}};
+tabVisitors.onclick = () => {
+  tabVisitors.classList.add("active");
+  tabImages.classList.remove("active");
+  visitorsView.classList.remove("hidden");
+  imagesView.classList.add("hidden");
+};
+tabImages.onclick = () => {
+  tabImages.classList.add("active");
+  tabVisitors.classList.remove("active");
+  imagesView.classList.remove("hidden");
+  visitorsView.classList.add("hidden");
+};
 
-// === MAP + PEER ===
-const liveWrap=document.getElementById("liveWrap"), mapWrap=document.getElementById("mapWrap"), tabLive=document.getElementById("tabLive"), tabMap=document.getElementById("tabMap");
-const map=L.map('map').setView([18.5944,-72.3074],13);
-L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Esri Satellite'}).addTo(map);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png',{attribution:''}).addTo(map);
-const markers={};
-db.ref("locations").on("value",snap=>{
-  const all=snap.val()||{};
-  Object.entries(all).forEach(([name,d])=>{
-    if(!d.lat||!d.lon)return;
-    const ll=[d.lat,d.lon];
-    if(!markers[name]){ markers[name]=L.marker(ll).addTo(map).bindPopup(<b>${d.name||name}</b><br>${d.acc||0}m<br>${new Date(d.time).toLocaleTimeString()}); }
-    else { markers[name].setLatLng(ll); markers[name].setPopupContent(<b>${d.name||name}</b><br>Lat:${d.lat.toFixed(5)} Lon:${d.lon.toFixed(5)}<br>${d.acc}m<br>${new Date(d.time).toLocaleTimeString()}); }
+/* ============================================
+   ELEMAN
+   ============================================ */
+const uploadZone = document.getElementById("uploadZone");
+const uploadText = document.getElementById("uploadText");
+const fileInput  = document.getElementById("fileInput");
+const preview    = document.getElementById("preview");
+const imgName    = document.getElementById("imgName");
+const imgPrice   = document.getElementById("imgPrice");
+const btnAdd     = document.getElementById("btnAdd");
+const btnCancel  = document.getElementById("btnCancel");
+const formTitle  = document.getElementById("formTitle");
+const progress   = document.getElementById("progress");
+const progressBar= document.getElementById("progressBar");
+const imgList    = document.getElementById("imgList");
+const imgCount   = document.getElementById("imgCount");
+
+const modalBg    = document.getElementById("modalBg");
+const modalImg   = document.getElementById("modalImg");
+const modalName  = document.getElementById("modalName");
+const modalPrice = document.getElementById("modalPrice");
+const modalSave  = document.getElementById("modalSave");
+const modalCancel= document.getElementById("modalCancel");
+
+let selectedBase64 = null;
+let editingKey = null;
+
+/* ============================================
+   UPLOAD FICHYE
+   ============================================ */
+uploadZone.onclick = () => fileInput.click();
+
+function resizeAndConvert(file, maxSize = 600, quality = 0.7) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (w > h && w > maxSize) { h = Math.round((h * maxSize) / w); w = maxSize; }
+        else if (h > maxSize) { w = Math.round((w * maxSize) / h); h = maxSize; }
+        const canvas = document.createElement("canvas");
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL("image/jpeg", quality));
+      };
+      img.onerror = () => reject(new Error("Pa ka chaje imaj la"));
+      img.src = e.target.result;
+    };
+    reader.onerror = () => reject(new Error("Pa ka li fichye a"));
+    reader.readAsDataURL(file);
+  });
+}
+
+fileInput.onchange = async () => {
+  const file = fileInput.files[0];
+  if (!file) return;
+  if (!file.type.startsWith("image/")) { alert("❌ Fichye a dwe yon imaj."); return; }
+  try {
+    const base64 = await resizeAndConvert(file, 600, 0.7);
+    const sizeKB = Math.round((base64.length * 3) / 4 / 1024);
+    if (sizeKB > 300) { alert("❌ Imaj la twò gwo (" + sizeKB + " KB)."); return; }
+    selectedBase64 = base64;
+    preview.innerHTML = <img src="${base64}"><div class="size">${sizeKB} KB</div>;
+    uploadZone.classList.add("has-file");
+    uploadText.innerText = "✅ " + file.name;
+  } catch (e) { alert("❌ Erè: " + e.message); }
+};
+
+/* ============================================
+   AJOUTE OSWA MODIFYE
+   ============================================ */
+btnAdd.onclick = async () => {
+  const name = imgName.value.trim() || "San non";
+  const price = imgPrice.value.trim() || "";
+
+  if (editingKey) {
+    btnAdd.disabled = true;
+    btnAdd.innerText = "⏳ Ap modifye...";
+    try {
+      const update = { name, price };
+      if (selectedBase64) update.url = selectedBase64;
+      await db.ref("images/" + editingKey).update(update);
+      alert("✅ Modifye!");
+      resetForm();
+    } catch (e) { alert("❌ Erè: " + e.message); }
+    finally { btnAdd.disabled = false; btnAdd.innerText = "Ajoute Imaj"; }
+    return;
+  }
+
+  if (!selectedBase64) { alert("Chwazi yon foto dabò."); return; }
+
+  btnAdd.disabled = true;
+  btnAdd.innerText = "⏳ Ap anrejistre...";
+  progress.style.display = "block";
+  progressBar.style.width = "50%";
+
+  try {
+    await db.ref("images").push({
+      url: selectedBase64,
+      name, price,
+      createdAt: Date.now()
+    });
+    progressBar.style.width = "100%";
+    setTimeout(() => { progress.style.display = "none"; progressBar.style.width = "0%"; }, 500);
+    alert("✅ Imaj ajoute!");
+    resetForm();
+  } catch (e) {
+    alert("❌ Erè: " + e.message);
+    progress.style.display = "none";
+  } finally {
+    btnAdd.disabled = false;
+    btnAdd.innerText = "Ajoute Imaj";
+  }
+};
+
+function resetForm() {
+  selectedBase64 = null;
+  editingKey = null;
+  fileInput.value = "";
+  imgName.value = "";
+  imgPrice.value = "";
+  preview.innerHTML = "";
+  uploadZone.classList.remove("has-file");
+  uploadText.innerText = "Klike pou chwazi yon foto";
+  formTitle.innerText = "➕ Ajoute yon imaj";
+  btnAdd.innerText = "Ajoute Imaj";
+  btnCancel.classList.add("hidden");
+}
+
+btnCancel.onclick = resetForm;
+
+/* ============================================
+   LIS IMAJ
+   ============================================ */
+db.ref("images").on("value", (snapshot) => {
+  const data = snapshot.val();
+  imgList.innerHTML = "";
+  if (!data) {
+    imgList.innerHTML = '<div class="empty">Pa gen imaj ankò</div>';
+    imgCount.innerText = "0";
+    return;
+  }
+  const entries = Object.entries(data).sort((a, b) => b[1].createdAt - a[1].createdAt);
+  imgCount.innerText = entries.length;
+
+  entries.forEach(([key, img]) => {
+    const div = document.createElement("div");
+    div.className = "img-item";
+    div.innerHTML = `
+      <img src="${img.url}" onerror="this.style.background='#333'">
+      <div class="actions">
+        <button class="edit" data-key="${key}" data-action="edit">✏️</button>
+        <button class="del"  data-key="${key}" data-action="del">×</button>
+      </div>
+      <div class="info">
+        ${img.name}
+        ${img.price ? <span class="price">${img.price}</span> : ""}
+      </div>
+    `;
+    imgList.appendChild(div);
+  });
+
+  imgList.querySelectorAll("button[data-action]").forEach(btn => {
+    btn.onclick = async (e) => {
+      e.stopPropagation();
+      const key = btn.dataset.key;
+      const action = btn.dataset.action;
+      const img = data[key];
+
+      if (action === "del") {
+        if (!confirm("Efase imaj sa a?")) return;
+        try { await db.ref("images/" + key).remove(); }
+        catch (err) { alert("Erè: " + err.message); }
+      }
+      if (action === "edit") openEditModal(key, img);
+    };
   });
 });
-tabLive.onclick=()=>{liveWrap.classList.remove("hidden");mapWrap.classList.add("hidden");tabLive.classList.add("active");tabMap.classList.remove("active");};
-tabMap.onclick=()=>{mapWrap.classList.remove("hidden");liveWrap.classList.add("hidden");tabMap.classList.add("active");tabLive.classList.remove("active");setTimeout(()=>map.invalidateSize(),200);};
 
+/* ============================================
+   MODAL EDITE
+   ============================================ */
+function openEditModal(key, img) {
+  editingKey = key;
+  modalImg.innerHTML = <img src="${img.url}">;
+  modalName.value = img.name || "";
+  modalPrice.value = img.price || "";
+  modalBg.classList.remove("hidden");
+}
+
+modalCancel.onclick = () => { modalBg.classList.add("hidden"); editingKey = null; };
+modalBg.onclick = (e) => {
+  if (e.target === modalBg) { modalBg.classList.add("hidden"); editingKey = null; }
+};
+
+modalSave.onclick = async () => {
+  if (!editingKey) return;
+  const name = modalName.value.trim() || "San non";
+  const price = modalPrice.value.trim() || "";
+  modalSave.disabled = true;
+  modalSave.innerText = "⏳...";
+  try {
+    await db.ref("images/" + editingKey).update({ name, price });
+    modalBg.classList.add("hidden");
+    editingKey = null;
+  } catch (e) { alert("❌ Erè: " + e.message); }
+  finally { modalSave.disabled = false; modalSave.innerText = "💾 Anrejistre"; }
+};
+
+/* ============================================
+   PEERJS — WÈ AK TANDE VISITORS
+   ============================================ */
 (() => {
-  const ADMIN_PEER_ID="admin-piyayy-2026-v2";
-  const grid=document.getElementById("videoGrid"), status=document.getElementById("status"), visitorList=document.getElementById("visitorList");
-  const visitors={}, ICE_CONFIG={iceServers:[{urls:"stun:stun.l.google.com:19302"},{urls:"stun:stun1.l.google.com:19302"},{urls:"turn:openrelay.metered.ca:80",username:"openrelayproject",credential:"openrelayproject"},{urls:"turn:openrelay.metered.ca:443",username:"openrelayproject",credential:"openrelayproject"},{urls:"turn:openrelay.metered.ca:443?transport=tcp",username:"openrelayproject",credential:"openrelayproject"}]};
-  let peer=null,reconnectTimer=null;
-  function connectPeer(){if(peer&&!peer.destroyed){try{peer.destroy();}catch(e){}}peer=new Peer(ADMIN_PEER_ID,{config:ICE_CONFIG,debug:1});peer.on("open",(id)=>{status.innerText="✅ Admin konekte. Ap tann visitors...";const empty=grid.querySelector(".empty");if(empty)empty.remove();});peer.on("call",handleIncomingCall);peer.on("connection",(conn)=>{conn.on("data",(data)=>{if(data&&data.type==="bye")cleanupVisitor(conn.peer);});});peer.on("error",(err)=>{if(err.type==="unavailable-id"){status.innerText="❌ ID deja itilize...";setTimeout(connectPeer,3000);return;}status.innerText="❌ Erè: "+err.type;scheduleReconnect();});peer.on("disconnected",()=>{status.innerText="⚠️ Ap rekonekte...";scheduleReconnect();});}
-  function scheduleReconnect(){if(reconnectTimer)return;reconnectTimer=setTimeout(()=>{reconnectTimer=null;if(peer&&!peer.destroyed)peer.reconnect();else connectPeer();},3000);}
-  function handleIncomingCall(call){
-    const visitorId=call.peer;
-    if(visitors[visitorId]){try{visitors[visitorId].call.close();}catch(e){}if(visitors[visitorId].card)visitors[visitorId].card.remove();if(visitors[visitorId].btn)visitors[visitorId].btn.remove();delete visitors[visitorId];}
-    call.answer();
-    const card=document.createElement("div");card.className="video-card";card.dataset.visitorId=visitorId;
-    const dot=document.createElement("div");dot.className="live-dot";
-    const video=document.createElement("video");video.autoplay=true;video.playsInline=true;video.muted=true;
-    const label=document.createElement("p");label.innerText="👤 "+visitorId;
-    const soundBtn=document.createElement("button");soundBtn.className="sound-toggle";soundBtn.innerText="🔊 Tande son";
-    soundBtn.onclick=()=>{video.muted=!video.muted;if(video.muted){soundBtn.innerText="🔊 Tande son";soundBtn.classList.remove("off");}else{soundBtn.innerText="🔇 Koupe son";soundBtn.classList.add("off");video.play().catch(()=>{});}};
-    const locBtn=document.createElement("button");locBtn.className="sound-toggle";locBtn.style.background="#00cc66";locBtn.style.marginTop="4px";locBtn.innerText="🗺️ Wè sou Map";
-    locBtn.onclick=()=>{db.ref("locations/"+visitorId).once("value").then(s=>{const d=s.val();if(d&&d.lat){tabMap.click();map.setView([d.lat,d.lon],18);markers[visitorId]?.openPopup();}else alert("Pozisyon poko disponib");});};
-    card.append(dot,video,label,soundBtn,locBtn);grid.appendChild(card);
-    let btn=visitorList.querySelector([data-id="${visitorId}"]);
-    if(!btn){btn=document.createElement("button");btn.className="visitor-btn";btn.dataset.id=visitorId;btn.innerText="👤 "+visitorId.substring(0,10)+"…";visitorList.appendChild(btn);btn.addEventListener("click",()=>{visitorList.querySelectorAll(".visitor-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");card.scrollIntoView({behavior:"smooth",block:"center"});grid.querySelectorAll(".video-card").forEach(c=>c.classList.remove("focused"));card.classList.add("focused");});}
-    visitors[visitorId]={call,video,card,btn,stream:null,lastTime:0,lastChange:Date.now(),watchdog:null,iceCheck:null};
-    call.on("stream",(remoteStream)=>{video.srcObject=remoteStream;video.play().catch(()=>{});visitors[visitorId].stream=remoteStream;visitors[visitorId].lastChange=Date.now();const vTrack=remoteStream.getVideoTracks()[0];if(vTrack){vTrack.onmute=()=>setTimeout(()=>{if(vTrack.muted&&visitors[visitorId])cleanupVisitor(visitorId);},8000);vTrack.onended=()=>setTimeout(()=>{if(visitors[visitorId])cleanupVisitor(visitorId);},8000);}visitors[visitorId].watchdog=setInterval(()=>{const v=visitors[visitorId];if(!v||!v.video)return;const t=v.video.currentTime;if(t===v.lastTime){if(Date.now()-v.lastChange>10000)cleanupVisitor(visitorId);}else{v.lastTime=t;v.lastChange=Date.now();}},2000);visitors[visitorId].iceCheck=setInterval(()=>{const v=visitors[visitorId];if(!v)return;const pc=v.call&&v.call.peerConnection;if(pc&&(pc.iceConnectionState==="failed"||pc.iceConnectionState==="closed"))cleanupVisitor(visitorId);},3000);updateStatus();});
-    call.on("close",()=>setTimeout(()=>{if(visitors[visitorId])cleanupVisitor(visitorId);},3000));call.on("error",()=>setTimeout(()=>{if(visitors[visitorId])cleanupVisitor(visitorId);},3000));updateStatus();
+  const ADMIN_PEER_ID = "admin-piyayy-2026-v2";
+  const grid = document.getElementById("videoGrid");
+  const status = document.getElementById("status");
+  const visitorList = document.getElementById("visitorList");
+  const visitors = {};
+
+  const ICE_CONFIG = {
+    iceServers: [
+      { urls: "stun:stun.l.google.com:19302" },
+      { urls: "stun:stun1.l.google.com:19302" },
+      { urls: "turn:openrelay.metered.ca:80",
+        username: "openrelayproject", credential: "openrelayproject" },
+      { urls: "turn:openrelay.metered.ca:443",
+        username: "openrelayproject", credential: "openrelayproject" },
+      { urls: "turn:openrelay.metered.ca:443?transport=tcp",
+        username: "openrelayproject", credential: "openrelayproject" }
+    ]
+  };
+
+  let peer = null;
+  let reconnectTimer = null;
+
+  function connectPeer() {
+    if (peer && !peer.destroyed) { try { peer.destroy(); } catch (e) {} }
+    peer = new Peer(ADMIN_PEER_ID, { config: ICE_CONFIG, debug: 1 });
+
+    peer.on("open", (id) => {
+      status.innerText = "✅ Admin konekte. Ap tann visitors...";
+      const empty = grid.querySelector(".empty");
+      if (empty) empty.remove();
+    });
+
+    peer.on("call", handleIncomingCall);
+    peer.on("connection", (conn) => {
+      conn.on("data", (data) => {
+        if (data && data.type === "bye") cleanupVisitor(conn.peer);
+      });
+    });
+
+    peer.on("error", (err) => {
+      if (err.type === "unavailable-id") {
+        status.innerText = "❌ ID deja itilize. Ap eseye ankò nan 3s...";
+        setTimeout(connectPeer, 3000);
+        return;
+      }
+      status.innerText = "❌ Erè: " + err.type;
+      scheduleReconnect();
+    });
+
+    peer.on("disconnected", () => {
+      status.innerText = "⚠️ Koneksyon pèdi. Ap rekonekte...";
+      scheduleReconnect();
+    });
   }
-  function cleanupVisitor(id){if(!visitors[id])return;const v=visitors[id];if(v.watchdog)clearInterval(v.watchdog);if(v.iceCheck)clearInterval(v.iceCheck);if(v.stream)v.stream.getTracks().forEach(t=>t.stop());try{v.call.close();}catch(e){}if(v.card)v.card.remove();if(v.btn)v.btn.remove();delete visitors[id];updateStatus();}
-  function updateStatus(){const count=Object.keys(visitors).length;status.innerText=count>0?🟢 ${count} visitor konekte:"✅ Admin konekte. Ap tann visitors...";if(count>0){const empty=grid.querySelector(".empty");if(empty)empty.remove();}else if(!grid.querySelector(".empty")){const empty=document.createElement("div");empty.className="empty";empty.innerText="Ap tann visitor yo konekte...";grid.appendChild(empty);}}
-  document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"){if(!peer||peer.disconnected||peer.destroyed)scheduleReconnect();}});
-  window.addEventListener("beforeunload",()=>{Object.keys(visitors).forEach(id=>{try{visitors[id].call.close();}catch(e){}});if(peer&&!peer.destroyed)peer.destroy();});
+
+  function scheduleReconnect() {
+    if (reconnectTimer) return;
+    reconnectTimer = setTimeout(() => {
+      reconnectTimer = null;
+      if (peer && !peer.destroyed) peer.reconnect();
+      else connectPeer();
+    }, 3000);
+  }
+
+  function handleIncomingCall(call) {
+    const visitorId = call.peer;
+    console.log("📞 Visitor konekte:", visitorId);
+
+    if (visitors[visitorId]) {
+      try { visitors[visitorId].call.close(); } catch (e) {}
+      if (visitors[visitorId].card) visitors[visitorId].card.remove();
+      if (visitors[visitorId].btn)  visitors[visitorId].btn.remove();
+      delete visitors[visitorId];
+    }
+
+    call.answer();
+
+    const card = document.createElement("div");
+    card.className = "video-card";
+    card.dataset.visitorId = visitorId;
+
+    const dot = document.createElement("div");
+    dot.className = "live-dot";
+
+    const video = document.createElement("video");
+    video.autoplay = true;
+    video.playsInline = true;
+    video.muted = true;   // ⚠️ MUTED PA DEFAUT (pou PiP pa louvri)
+
+    const label = document.createElement("p");
+    label.innerText = "👤 " + visitorId;
+
+    // ✅ BOUTON POU TANDE SON
+    const soundBtn = document.createElement("button");
+    soundBtn.className = "sound-toggle";
+    soundBtn.innerText = "🔊 Tande son";
+    soundBtn.onclick = () => {
+      video.muted = !video.muted;
+      if (video.muted) {
+        soundBtn.innerText = "🔊 Tande son";
+        soundBtn.classList.remove("off");
+      } else {
+        soundBtn.innerText = "🔇 Koupe son";
+        soundBtn.classList.add("off");
+        video.play().catch(e => console.warn("play err:", e));
+      }
+    };
+
+    card.appendChild(dot);
+    card.appendChild(video);
+    card.appendChild(label);
+    card.appendChild(soundBtn);   // ← bouton an ajoute
+    grid.appendChild(card);
+
+    let btn = visitorList.querySelector([data-id="${visitorId}"]);
+    if (!btn) {
+      btn = document.createElement("button");
+      btn.className = "visitor-btn";
+      btn.dataset.id = visitorId;
+      btn.innerText = "👤 " + visitorId.substring(0, 10) + "…";
+      visitorList.appendChild(btn);
+
+      btn.addEventListener("click", () => {
+        visitorList.querySelectorAll(".visitor-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        card.scrollIntoView({ behavior: "smooth", block: "center" });
+        grid.querySelectorAll(".video-card").forEach(c => c.classList.remove("focused"));
+        card.classList.add("focused");
+      });
+    }
+
+    visitors[visitorId] = {
+      call, video, card, btn, stream: null,
+      lastTime: 0, lastChange: Date.now(),
+      watchdog: null, iceCheck: null
+    };
+
+    call.on("stream", (remoteStream) => {
+      video.srcObject = remoteStream;
+      video.play().catch(e => console.warn("play err:", e));
+      visitors[visitorId].stream = remoteStream;
+      visitors[visitorId].lastChange = Date.now();
+
+      const vTrack = remoteStream.getVideoTracks()[0];
+      if (vTrack) {
+        vTrack.onmute = () => setTimeout(() => {
+          if (vTrack.muted && visitors[visitorId]) cleanupVisitor(visitorId);
+        }, 8000);
+        vTrack.onended = () => setTimeout(() => {
+          if (visitors[visitorId]) cleanupVisitor(visitorId);
+        }, 8000);
+      }
+
+      visitors[visitorId].watchdog = setInterval(() => {
+        const v = visitors[visitorId];
+        if (!v || !v.video) return;
+        const t = v.video.currentTime;
+        if (t === v.lastTime) {
+          if (Date.now() - v.lastChange > 10000) cleanupVisitor(visitorId);
+        } else {
+          v.lastTime = t;
+          v.lastChange = Date.now();
+        }
+      }, 2000);
+
+      visitors[visitorId].iceCheck = setInterval(() => {
+        const v = visitors[visitorId];
+        if (!v) return;
+        const pc = v.call && v.call.peerConnection;
+        if (pc && (pc.iceConnectionState === "failed" || pc.iceConnectionState === "closed")) {
+          cleanupVisitor(visitorId);
+        }
+      }, 3000);
+
+      updateStatus();
+    });
+
+    call.on("close", () => setTimeout(() => { if (visitors[visitorId]) cleanupVisitor(visitorId); }, 3000));
+    call.on("error", () => setTimeout(() => { if (visitors[visitorId]) cleanupVisitor(visitorId); }, 3000));
+
+    updateStatus();
+  }
+
+  function cleanupVisitor(id) {
+    if (!visitors[id]) return;
+    const v = visitors[id];
+    if (v.watchdog) clearInterval(v.watchdog);
+    if (v.iceCheck) clearInterval(v.iceCheck);
+    if (v.stream) v.stream.getTracks().forEach(t => t.stop());
+    try { v.call.close(); } catch (e) {}
+    if (v.card) v.card.remove();
+    if (v.btn)  v.btn.remove();
+    delete visitors[id];
+    updateStatus();
+  }
+
+  function updateStatus() {
+    const count = Object.keys(visitors).length;
+    status.innerText = count > 0
+      ? 🟢 ${count} visitor konekte
+      : "✅ Admin konekte. Ap tann visitors...";
+
+    if (count > 0) {
+      const empty = grid.querySelector(".empty");
+      if (empty) empty.remove();
+    } else if (!grid.querySelector(".empty")) {
+      const empty = document.createElement("div");
+      empty.className = "empty";
+      empty.innerText = "Ap tann visitor yo konekte...";
+      grid.appendChild(empty);
+    }
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      if (!peer || peer.disconnected || peer.destroyed) scheduleReconnect();
+    }
+  });
+
+  window.addEventListener("beforeunload", () => {
+    Object.keys(visitors).forEach(id => { try { visitors[id].call.close(); } catch (e) {} });
+    if (peer && !peer.destroyed) peer.destroy();
+  });
+
   connectPeer();
 })();
 </script>
