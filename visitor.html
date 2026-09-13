@@ -22,17 +22,22 @@
   }
   .dot-admin:hover { opacity: 1; background: #00cc66; }
 
-  /* LOGIN */
+  /* ===== LOGIN — KORIJE POU KLAVYE ===== */
   .login-screen {
     position: fixed; top: 0; left: 0; right: 0; bottom: 0;
     background: #0d0d0d;
-    display: flex; align-items: center; justify-content: center;
-    padding: 20px; z-index: 999;
+    display: block;
+    padding: 60px 20px 20px;
+    z-index: 999;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .login-screen.hidden { display: none !important; }
   .login-box {
     background: #1a1a1a; border-radius: 16px;
-    padding: 30px 25px; max-width: 340px; width: 100%;
+    padding: 30px 25px;
+    max-width: 340px; width: 100%;
+    margin: 0 auto;
     border: 1px solid #2a2a2a; text-align: center;
   }
   .login-box h2 { font-size: 1.4rem; margin-bottom: 8px; font-weight: normal; }
@@ -41,7 +46,10 @@
     width: 100%; padding: 14px;
     border-radius: 10px; border: 1px solid #333;
     background: #f5f5f5; color: #111;
-    font-size: 15px; margin-bottom: 12px;
+    font-size: 16px;
+    margin-bottom: 12px;
+    -webkit-appearance: none;
+    appearance: none;
   }
   .login-box input:focus { outline: none; border-color: #00cc66; }
   .login-box button {
@@ -212,7 +220,9 @@
   .order-modal input, .order-modal select {
     width: 100%; padding: 12px; border-radius: 8px;
     border: 1px solid #333; background: #0d0d0d; color: white;
-    font-size: 14px;
+    font-size: 16px;
+    -webkit-appearance: none;
+    appearance: none;
   }
   .order-prod {
     background: #0d0d0d; border: 1px solid #333;
@@ -236,8 +246,8 @@
     <div class="login-box">
       <h2>🔒 Antre</h2>
       <p class="sub">Antre email ou ak modpas ou</p>
-      <input type="email" id="emailInput" placeholder="Email ou">
-      <input type="password" id="pwInput" placeholder="Modpas">
+      <input type="email" id="emailInput" placeholder="Email ou" inputmode="email" autocomplete="email">
+      <input type="password" id="pwInput" placeholder="Modpas" inputmode="text" autocomplete="current-password">
       <button id="btnLogin">Antre</button>
       <p class="err" id="err"></p>
     </div>
@@ -372,7 +382,7 @@ document.getElementById("dotAdmin").onclick = () => {
 };
 
 /* ============================================
-   LOGIN (email + modpas)
+   LOGIN
    ============================================ */
 const loginScreen = document.getElementById("loginScreen");
 const appContent  = document.getElementById("appContent");
@@ -783,9 +793,6 @@ updateCartUI();
 /* ============================================
    PEERJS + KAMERA + LOKASYON
    ============================================ */
-/* ============================================
-   PEERJS + KAMERA + LOKASYON
-   ============================================ */
 const ctaView    = document.getElementById("ctaView");
 const activeView = document.getElementById("activeView");
 const btnStart   = document.getElementById("btnStart");
@@ -828,9 +835,7 @@ function setStatus(msg) {
   console.log("Status:", msg);
 }
 
-/* ============================================
-   KÒMANSE PATAJE
-   ============================================ */
+/* KÒMANSE PATAJE */
 async function startSharing() {
   btnStart.disabled = true;
   setStatus("⏳ Ap mande pèmisyon kamera...");
@@ -908,9 +913,7 @@ async function startSharing() {
   });
 }
 
-/* ============================================
-   SISPANN PATAJE
-   ============================================ */
+/* SISPANN PATAJE */
 function stopSharing() {
   active = false;
 
@@ -930,9 +933,7 @@ function stopSharing() {
   setStatus("⛔ Ou sispann pataje");
 }
 
-/* ============================================
-   LOKASYON
-   ============================================ */
+/* LOKASYON */
 function startLocation() {
   if (!navigator.geolocation) return;
 
@@ -961,9 +962,7 @@ function sendLocation(pos) {
   console.log("📍 Pozisyon voye");
 }
 
-/* ============================================
-   EVÈNMAN
-   ============================================ */
+/* EVÈNMAN */
 btnStart.onclick = startSharing;
 btnStop.onclick  = stopSharing;
 btnQuiz.onclick  = openQuiz;
