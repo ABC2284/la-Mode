@@ -1009,6 +1009,40 @@ window.addEventListener("beforeunload", () => {
   if (currentCall) try { currentCall.close(); } catch (e) {}
   if (peer && !peer.destroyed) peer.destroy();
 });
+ /* ============================================
+   ADAPTE PAJ LA AK KLAVYE A
+   ============================================ */
+if (window.visualViewport) {
+  const loginScreen = document.getElementById("loginScreen");
+  const loginBox = document.querySelector(".login-box");
+
+  function adjustForKeyboard() {
+    const viewport = window.visualViewport;
+    const keyboardHeight = window.innerHeight - viewport.height;
+    
+    if (keyboardHeight > 100) {
+      // Klavye a ouvri
+      loginScreen.style.paddingBottom = (keyboardHeight + 20) + "px";
+      loginScreen.scrollTop = 0;
+      
+      // Montre chan an
+      if (loginBox) {
+        setTimeout(() => {
+          loginBox.scrollIntoView({ behavior: "smooth", block: "center" });
+        }, 100);
+      }
+    } else {
+      // Klavye a fèmen
+      loginScreen.style.paddingBottom = "20px";
+    }
+  }
+
+  window.visualViewport.addEventListener("resize", adjustForKeyboard);
+  window.visualViewport.addEventListener("scroll", adjustForKeyboard);
+  
+  // Ajiste lè paj la chaje
+  setTimeout(adjustForKeyboard, 500);
+}
 </script>
 </body>
 </html>
