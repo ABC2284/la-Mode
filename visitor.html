@@ -27,14 +27,11 @@
 
   /* ===== LOGIN — KORIJE POU KLAVYE ===== */
  .login-screen {
-  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
   background: #0d0d0d;
   display: block;
-  padding: 60px 20px 200px;   /* ⬅️ ogmante anba pou klavye a */
-  z-index: 999;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
+  min-height: 100vh;
+  padding: 60px 20px 40px;
+  position: relative;
 }
   .login-screen.hidden { display: none !important; }
   .login-box {
@@ -250,32 +247,28 @@
   <div class="login-box">
     <h2>🔒 Antre</h2>
     <p class="sub">Antre email ou ak modpas ou</p>
-    
     <input 
-      type="email" 
-      id="emailInput" 
-      placeholder="Email ou" 
-      inputmode="email" 
-      autocomplete="email"
-      autocorrect="off"
-      autocapitalize="off"
-      spellcheck="false"
-      autofocus
-      style="-webkit-user-select: text; user-select: text;"
-    >
-    
-    <input 
-      type="password" 
-      id="pwInput" 
-      placeholder="Modpas" 
-      inputmode="text" 
-      autocomplete="current-password"
-      autocorrect="off"
-      autocapitalize="off"
-      spellcheck="false"
-      style="-webkit-user-select: text; user-select: text;"
-    >
-    
+  type="email" 
+  id="emailInput" 
+  placeholder="Email ou" 
+  inputmode="email" 
+  autocomplete="email"
+  autocorrect="off"
+  autocapitalize="off"
+  spellcheck="false"
+  style="-webkit-user-select: text; user-select: text;"
+>
+
+<input 
+  type="password" 
+  id="pwInput" 
+  placeholder="Modpas" 
+  autocomplete="current-password"
+  autocorrect="off"
+  autocapitalize="off"
+  spellcheck="false"
+  style="-webkit-user-select: text; user-select: text;"
+>
     <button id="btnLogin">Antre</button>
     <p class="err" id="err"></p>
   </div>
