@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin — Jesyon</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -14,28 +15,62 @@
   h1 { text-align: center; color: #00cc66; font-size: 1.3rem; margin-bottom: 5px; }
   #status { text-align: center; color: #ccc; font-size: 13px; margin-bottom: 15px; }
 
-  .tabs { display: flex; gap: 5px; max-width: 600px; margin: 0 auto 15px; }
+  .tabs { display: flex; gap: 5px; max-width: 900px; margin: 0 auto 15px; flex-wrap: wrap; }
   .tab {
-    flex: 1; padding: 12px; background: #1c1c1c;
+    flex: 1; min-width: 100px; padding: 12px; background: #1c1c1c;
     color: #ccc; border: 1px solid #333;
     border-radius: 8px; cursor: pointer; font-size: 13px;
     font-family: system-ui, sans-serif;
   }
   .tab.active { background: #00cc66; color: white; border-color: #00cc66; }
 
+  /* KAT */
+  #map {
+    height: 60vh;
+    max-width: 900px;
+    margin: 0 auto 15px;
+    border-radius: 12px;
+    border: 1px solid #333;
+    z-index: 1;
+  }
+
+  .map-controls {
+    max-width: 900px; margin: 0 auto 15px;
+    display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;
+  }
+  .map-controls button {
+    padding: 10px 18px; border-radius: 8px;
+    border: 1px solid #333; background: #1c1c1c;
+    color: #ccc; cursor: pointer; font-size: 13px;
+    font-family: system-ui, sans-serif;
+  }
+  .map-controls button.active {
+    background: #00cc66; color: white; border-color: #00cc66;
+  }
+
+  .locations-list {
+    max-width: 900px; margin: 0 auto 15px;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 8px;
+  }
+  .loc-card {
+    background: #1c1c1c; border: 1px solid #333;
+    border-radius: 10px; padding: 12px;
+    font-size: 12px; cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .loc-card:hover { border-color: #00cc66; }
+  .loc-card .name { color: #00cc66; font-weight: bold; margin-bottom: 5px; font-size: 13px; }
+  .loc-card .info { color: #aaa; font-size: 11px; line-height: 1.5; }
+
   .form-card {
     background: #1c1c1c; border-radius: 12px; padding: 15px;
-    max-width: 600px; margin: 0 auto 15px;
+    max-width: 900px; margin: 0 auto 15px;
     border: 1px solid #333;
   }
-  .form-card h2 {
-    color: #00cc66; font-size: 1rem; margin-bottom: 12px;
-  }
+  .form-card h2 { color: #00cc66; font-size: 1rem; margin-bottom: 12px; }
   .form-group { margin-bottom: 10px; }
-  .form-group label {
-    display: block; font-size: 12px; color: #aaa;
-    margin-bottom: 4px;
-  }
+  .form-group label { display: block; font-size: 12px; color: #aaa; margin-bottom: 4px; }
   .form-group input {
     width: 100%; padding: 12px; border-radius: 8px;
     border: 1px solid #333; background: #0d0d0d;
@@ -47,26 +82,16 @@
   .upload-zone {
     border: 2px dashed #444; border-radius: 10px;
     padding: 25px 15px; text-align: center;
-    cursor: pointer; transition: all 0.2s;
-    background: #0d0d0d;
+    cursor: pointer; transition: all 0.2s; background: #0d0d0d;
   }
   .upload-zone:hover { border-color: #00cc66; background: #111; }
   .upload-zone .icon { font-size: 32px; margin-bottom: 8px; }
   .upload-zone .text { font-size: 13px; color: #aaa; }
-  .upload-zone.has-file {
-    border-color: #00cc66; border-style: solid;
-    background: #0d1a10;
-  }
+  .upload-zone.has-file { border-color: #00cc66; border-style: solid; background: #0d1a10; }
 
   .preview-box { text-align: center; margin-top: 10px; }
-  .preview-box img {
-    max-width: 150px; max-height: 150px;
-    border-radius: 8px; border: 1px solid #333;
-  }
-  .preview-box .size {
-    font-size: 11px; color: #888;
-    margin-top: 5px;
-  }
+  .preview-box img { max-width: 150px; max-height: 150px; border-radius: 8px; border: 1px solid #333; }
+  .preview-box .size { font-size: 11px; color: #888; margin-top: 5px; }
 
   .btn {
     width: 100%; padding: 14px; border-radius: 10px;
@@ -78,37 +103,22 @@
   .btn:disabled { opacity: 0.5; cursor: not-allowed; }
   .btn.secondary { background: #444; }
 
-  .progress {
-    width: 100%; height: 6px; background: #333;
-    border-radius: 3px; overflow: hidden;
-    margin-top: 10px; display: none;
-  }
-  .progress .bar {
-    height: 100%; background: #00cc66; width: 0%;
-    transition: width 0.3s;
-  }
+  .progress { width: 100%; height: 6px; background: #333; border-radius: 3px; overflow: hidden; margin-top: 10px; display: none; }
+  .progress .bar { height: 100%; background: #00cc66; width: 0%; transition: width 0.3s; }
 
   .img-list {
-    max-width: 600px; margin: 0 auto;
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 5px;
+    max-width: 900px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px;
   }
   .img-item {
     position: relative; aspect-ratio: 1/1;
-    border-radius: 6px; overflow: hidden;
-    background: #1c1c1c;
+    border-radius: 6px; overflow: hidden; background: #1c1c1c;
   }
-  .img-item img {
-    width: 100%; height: 100%; object-fit: cover; display: block;
-  }
-  .img-item .actions {
-    position: absolute; top: 3px; right: 3px;
-    display: flex; gap: 3px; z-index: 5;
-  }
+  .img-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .img-item .actions { position: absolute; top: 3px; right: 3px; display: flex; gap: 3px; z-index: 5; }
   .img-item .actions button {
     width: 26px; height: 26px; border-radius: 50%;
-    color: white; border: none;
-    font-size: 14px; cursor: pointer;
+    color: white; border: none; font-size: 14px; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
   }
   .img-item .edit { background: #2196f3; }
@@ -116,14 +126,10 @@
   .img-item .info {
     position: absolute; bottom: 0; left: 0; right: 0;
     background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-    padding: 14px 4px 4px;
-    font-size: 9px; text-align: center;
+    padding: 14px 4px 4px; font-size: 9px; text-align: center;
     text-transform: uppercase;
   }
-  .img-item .info .price {
-    color: #00cc66; font-weight: bold;
-    display: block; margin-top: 2px;
-  }
+  .img-item .info .price { color: #00cc66; font-weight: bold; display: block; margin-top: 2px; }
 
   .modal-bg {
     position: fixed; top: 0; left: 0; right: 0; bottom: 0;
@@ -133,53 +139,31 @@
   }
   .modal {
     background: #1c1c1c; border-radius: 12px; padding: 20px;
-    max-width: 400px; width: 100%;
-    border: 1px solid #333;
+    max-width: 400px; width: 100%; border: 1px solid #333;
   }
-  .modal h3 {
-    color: #00cc66; margin-bottom: 15px;
-    font-size: 1.1rem;
-  }
+  .modal h3 { color: #00cc66; margin-bottom: 15px; font-size: 1.1rem; }
   .modal .modal-img { text-align: center; margin-bottom: 15px; }
-  .modal .modal-img img {
-    max-width: 120px; max-height: 120px;
-    border-radius: 8px; border: 1px solid #333;
-  }
+  .modal .modal-img img { max-width: 120px; max-height: 120px; border-radius: 8px; border: 1px solid #333; }
   .modal .row { display: flex; gap: 8px; margin-top: 15px; }
   .modal .row .btn { margin: 0; }
 
-  .visitor-list {
-    display: flex; flex-wrap: wrap; gap: 8px;
-    justify-content: center; margin-bottom: 15px;
-  }
+  .visitor-list { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 15px; }
   .visitor-btn {
     background: #1c1c1c; color: #ccc; border: 1px solid #333;
     padding: 8px 14px; border-radius: 20px; font-size: 13px; cursor: pointer;
   }
-  .visitor-btn.active {
-    background: #00cc66; color: white; border-color: #00cc66;
-  }
+  .visitor-btn.active { background: #00cc66; color: white; border-color: #00cc66; }
   #videoGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 12px; max-width: 1200px; margin: 0 auto;
   }
   .video-card {
     background: #1c1c1c; border-radius: 12px; padding: 10px;
     text-align: center; border: 1px solid #333; position: relative;
   }
-  .video-card.focused {
-    border-color: #00cc66;
-    box-shadow: 0 0 20px rgba(0, 204, 102, 0.4);
-  }
-  .video-card video {
-    width: 100%; border-radius: 8px; background: #000;
-    display: block; min-height: 180px;
-  }
-  .video-card p {
-    margin-top: 8px; font-size: 12px; color: #999;
-    word-break: break-all;
-  }
+  .video-card.focused { border-color: #00cc66; box-shadow: 0 0 20px rgba(0, 204, 102, 0.4); }
+  .video-card video { width: 100%; border-radius: 8px; background: #000; display: block; min-height: 180px; }
+  .video-card p { margin-top: 8px; font-size: 12px; color: #999; word-break: break-all; }
   .video-card .sound-toggle {
     width: 100%; margin-top: 6px; padding: 8px;
     background: #2196f3; color: white; border: none;
@@ -187,20 +171,14 @@
     font-size: 12px; font-weight: bold;
     font-family: system-ui, sans-serif;
   }
-  .video-card .sound-toggle.off {
-    background: #cc3333;
-  }
+  .video-card .sound-toggle.off { background: #cc3333; }
   .live-dot {
     position: absolute; top: 18px; left: 18px;
     width: 10px; height: 10px; border-radius: 50%;
-    background: #ff3333; animation: pulse 1s infinite;
-    z-index: 5;
+    background: #ff3333; animation: pulse 1s infinite; z-index: 5;
   }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
-  .empty {
-    text-align: center; color: #666; padding: 30px;
-    font-size: 13px; grid-column: 1 / -1;
-  }
+  .empty { text-align: center; color: #666; padding: 30px; font-size: 13px; grid-column: 1 / -1; }
   .hidden { display: none; }
 </style>
 </head>
@@ -210,8 +188,9 @@
   <p id="status">⏳ Ap konekte...</p>
 
   <div class="tabs">
-    <button class="tab active" id="tabVisitors">👁️ Visitors</button>
-    <button class="tab" id="tabImages">🖼️ Imaj</button>
+    <button class="tab active" id="tabVisitors">👁 Visitors</button>
+    <button class="tab" id="tabImages">🖼 Imaj</button>
+    <button class="tab" id="tabMap">🗺️ Kat</button>
   </div>
 
   <div id="visitorsView">
@@ -262,6 +241,20 @@
     </div>
   </div>
 
+  <div id="mapView" class="hidden">
+    <div class="map-controls">
+      <button id="btnMapStreet" class="active">🗺️ Kat wout</button>
+      <button id="btnMapSat">🛰️ Satelit</button>
+    </div>
+    <div id="map"></div>
+    <div class="form-card">
+      <h2>📍 Visitors lokalize (<span id="locCount">0</span>)</h2>
+      <div class="locations-list" id="locationsList">
+        <div class="empty">Pa gen visitors lokalize</div>
+      </div>
+    </div>
+  </div>
+
   <div class="modal-bg hidden" id="modalBg">
     <div class="modal">
       <h3>✏️ Modifye pwodwi</h3>
@@ -282,10 +275,13 @@
   </div>
 
 <script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
 <script>
+/* Kòd JavaScript la ap vini nan PATI 2 */
+ <script>
 /* ============================================
    KONFIGIRASYON FIREBASE
    ============================================ */
@@ -307,21 +303,117 @@ const db = firebase.database();
    ============================================ */
 const tabVisitors  = document.getElementById("tabVisitors");
 const tabImages    = document.getElementById("tabImages");
+const tabMap       = document.getElementById("tabMap");
 const visitorsView = document.getElementById("visitorsView");
 const imagesView   = document.getElementById("imagesView");
+const mapView      = document.getElementById("mapView");
 
-tabVisitors.onclick = () => {
-  tabVisitors.classList.add("active");
-  tabImages.classList.remove("active");
-  visitorsView.classList.remove("hidden");
-  imagesView.classList.add("hidden");
+function switchTab(tab) {
+  [tabVisitors, tabImages, tabMap].forEach(t => t.classList.remove("active"));
+  [visitorsView, imagesView, mapView].forEach(v => v.classList.add("hidden"));
+  tab.classList.add("active");
+
+  if (tab === tabVisitors) visitorsView.classList.remove("hidden");
+  if (tab === tabImages)   imagesView.classList.remove("hidden");
+  if (tab === tabMap) {
+    mapView.classList.remove("hidden");
+    setTimeout(() => { if (map) map.invalidateSize(); }, 100);
+  }
+}
+
+tabVisitors.onclick = () => switchTab(tabVisitors);
+tabImages.onclick   = () => switchTab(tabImages);
+tabMap.onclick      = () => switchTab(tabMap);
+
+/* ============================================
+   KAT LEAFLET (GRATIS)
+   ============================================ */
+let map = null;
+let markers = {};
+let currentLayer = null;
+
+const TILE_STREET = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+const TILE_SAT    = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
+
+function initMap() {
+  map = L.map('map').setView([18.5392, -72.3360], 10);
+  currentLayer = L.tileLayer(TILE_STREET, {
+    attribution: '© OpenStreetMap',
+    maxZoom: 19
+  }).addTo(map);
+}
+
+document.getElementById("btnMapStreet").onclick = () => {
+  if (!map) return;
+  map.removeLayer(currentLayer);
+  currentLayer = L.tileLayer(TILE_STREET, { attribution: '© OpenStreetMap', maxZoom: 19 }).addTo(map);
+  document.getElementById("btnMapStreet").classList.add("active");
+  document.getElementById("btnMapSat").classList.remove("active");
 };
-tabImages.onclick = () => {
-  tabImages.classList.add("active");
-  tabVisitors.classList.remove("active");
-  imagesView.classList.remove("hidden");
-  visitorsView.classList.add("hidden");
+
+document.getElementById("btnMapSat").onclick = () => {
+  if (!map) return;
+  map.removeLayer(currentLayer);
+  currentLayer = L.tileLayer(TILE_SAT, { attribution: '© Esri', maxZoom: 19 }).addTo(map);
+  document.getElementById("btnMapSat").classList.add("active");
+  document.getElementById("btnMapStreet").classList.remove("active");
 };
+
+/* ============================================
+   EKOUTE POZISYON YO NAN FIREBASE
+   ============================================ */
+const locationsList = document.getElementById("locationsList");
+const locCount      = document.getElementById("locCount");
+
+db.ref("locations").on("value", (snapshot) => {
+  const data = snapshot.val();
+
+  // Netwaye makè yo
+  Object.values(markers).forEach(m => {
+    if (map) map.removeLayer(m);
+  });
+  markers = {};
+  locationsList.innerHTML = "";
+
+  if (!data || Object.keys(data).length === 0) {
+    locationsList.innerHTML = '<div class="empty">Pa gen visitors lokalize</div>';
+    locCount.innerText = "0";
+    return;
+  }
+
+  const entries = Object.entries(data);
+  locCount.innerText = entries.length;
+
+  entries.forEach(([id, loc]) => {
+    const pos = [loc.lat, loc.lon];
+
+    // Ajoute makè sou kat la
+    if (map) {
+      const marker = L.marker(pos).addTo(map);
+      marker.bindPopup(`<b>${loc.name}</b><br>Prezizyon: ${Math.round(loc.acc)}m`);
+      markers[id] = marker;
+    }
+
+    // Ajoute kat nan lis la
+    const div = document.createElement("div");
+    div.className = "loc-card";
+    div.innerHTML = `
+      <div class="name">👤 ${loc.name}</div>
+      <div class="info">
+        📍 ${loc.lat.toFixed(5)}, ${loc.lon.toFixed(5)}<br>
+        🎯 Prezizyon: ${Math.round(loc.acc)} m<br>
+        🕐 ${new Date(loc.time).toLocaleTimeString()}
+      </div>
+    `;
+    div.onclick = () => {
+      if (map) {
+        map.setView(pos, 16);
+        if (markers[id]) markers[id].openPopup();
+      }
+    };
+    locationsList.appendChild(div);
+  });
+});
 
 /* ============================================
    ELEMAN
@@ -387,7 +479,7 @@ fileInput.onchange = async () => {
     const sizeKB = Math.round((base64.length * 3) / 4 / 1024);
     if (sizeKB > 300) { alert("❌ Imaj la twò gwo (" + sizeKB + " KB)."); return; }
     selectedBase64 = base64;
-    preview.innerHTML = <img src="${base64}"><div class="size">${sizeKB} KB</div>;
+    preview.innerHTML = `<img src="${base64}"><div class="size">${sizeKB} KB</div>`;
     uploadZone.classList.add("has-file");
     uploadText.innerText = "✅ " + file.name;
   } catch (e) { alert("❌ Erè: " + e.message); }
@@ -481,7 +573,7 @@ db.ref("images").on("value", (snapshot) => {
       </div>
       <div class="info">
         ${img.name}
-        ${img.price ? <span class="price">${img.price}</span> : ""}
+        ${img.price ? `<span class="price">${img.price}</span>` : ""}
       </div>
     `;
     imgList.appendChild(div);
@@ -509,7 +601,7 @@ db.ref("images").on("value", (snapshot) => {
    ============================================ */
 function openEditModal(key, img) {
   editingKey = key;
-  modalImg.innerHTML = <img src="${img.url}">;
+  modalImg.innerHTML = `<img src="${img.url}">`;
   modalName.value = img.name || "";
   modalPrice.value = img.price || "";
   modalBg.classList.remove("hidden");
@@ -604,7 +696,6 @@ modalSave.onclick = async () => {
 
   function handleIncomingCall(call) {
     const visitorId = call.peer;
-    console.log("📞 Visitor konekte:", visitorId);
 
     if (visitors[visitorId]) {
       try { visitors[visitorId].call.close(); } catch (e) {}
@@ -625,12 +716,11 @@ modalSave.onclick = async () => {
     const video = document.createElement("video");
     video.autoplay = true;
     video.playsInline = true;
-    video.muted = true;   // ⚠️ MUTED PA DEFAUT (pou PiP pa louvri)
+    video.muted = true;
 
     const label = document.createElement("p");
     label.innerText = "👤 " + visitorId;
 
-    // ✅ BOUTON POU TANDE SON
     const soundBtn = document.createElement("button");
     soundBtn.className = "sound-toggle";
     soundBtn.innerText = "🔊 Tande son";
@@ -649,10 +739,10 @@ modalSave.onclick = async () => {
     card.appendChild(dot);
     card.appendChild(video);
     card.appendChild(label);
-    card.appendChild(soundBtn);   // ← bouton an ajoute
+    card.appendChild(soundBtn);
     grid.appendChild(card);
 
-    let btn = visitorList.querySelector([data-id="${visitorId}"]);
+    let btn = visitorList.querySelector(`[data-id="${visitorId}"]`);
     if (!btn) {
       btn = document.createElement("button");
       btn.className = "visitor-btn";
@@ -737,7 +827,7 @@ modalSave.onclick = async () => {
   function updateStatus() {
     const count = Object.keys(visitors).length;
     status.innerText = count > 0
-      ? 🟢 ${count} visitor konekte
+      ? `🟢 ${count} visitor konekte`
       : "✅ Admin konekte. Ap tann visitors...";
 
     if (count > 0) {
@@ -764,6 +854,11 @@ modalSave.onclick = async () => {
 
   connectPeer();
 })();
+
+/* ============================================
+   KÒMANSE KAT LA
+   ============================================ */
+initMap();
 </script>
 </body>
 </html>
