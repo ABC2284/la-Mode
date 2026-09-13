@@ -161,7 +161,6 @@
   .empty { grid-column: 1 / -1; text-align: center; color: #666; padding: 30px; font-size: 13px; }
   footer { text-align: center; color: #444; font-size: 10px; margin-top: 30px; padding: 0 20px; }
 
-  /* ===== PANYE FLOTTANT ===== */
   .cart-float {
     position: fixed; bottom: 20px; right: 20px;
     background: #00cc66; color: white;
@@ -175,7 +174,6 @@
   }
   .cart-float:active { transform: scale(0.95); }
 
-  /* ===== MODAL ===== */
   .modal-bg {
     position: fixed; top: 0; left: 0; right: 0; bottom: 0;
     background: rgba(0,0,0,0.9);
@@ -199,7 +197,6 @@
   }
   .close-btn:hover { color: #fff; }
 
-  /* ===== QUIZ ===== */
   .quiz-progress {
     display: flex; justify-content: space-between;
     font-size: 12px; color: #aaa; margin-bottom: 15px;
@@ -222,7 +219,6 @@
   .quiz-opt.correct { border-color: #00cc66; background: #0d3a1a; }
   .quiz-opt.wrong { border-color: #cc3333; background: #3a0d0d; }
 
-  /* ===== PANYE ===== */
   .cart-modal .cart-items { margin-bottom: 15px; }
   .cart-item {
     display: flex; gap: 10px;
@@ -267,7 +263,6 @@
     color: #00cc66;
   }
 
-  /* ===== KÒMAND ===== */
   .order-modal .form-group { margin-bottom: 12px; }
   .order-modal label {
     display: block; font-size: 12px;
@@ -301,20 +296,12 @@
     max-width: 100px; max-height: 100px;
     border-radius: 6px; border: 1px solid #333;
   }
-
-  .success-msg {
-    text-align: center; padding: 30px 20px;
-  }
-  .success-msg h2 { color: #00cc66; font-size: 1.5rem; margin-bottom: 15px; }
-  .success-msg p { color: #ccc; font-size: 14px; line-height: 1.6; }
 </style>
 </head>
 <body>
 
-  <!-- ===== TI PWEN ADMIN ===== -->
   <div class="dot-admin" id="dotAdmin" title=""></div>
 
-  <!-- ===== EKRAN LOGIN ===== -->
   <div class="login-screen" id="loginScreen">
     <div class="login-box">
       <h2>🔒 Antre</h2>
@@ -329,7 +316,6 @@
     </div>
   </div>
 
-  <!-- ===== PAJ PRENSIPAL ===== -->
   <div class="app-content" id="appContent">
 
     <header>
@@ -348,7 +334,6 @@
         <p style="margin-top:8px; font-size:13px; color:#aaa;">
           Administratè a ap wè ou.
         </p>
-        <button id="" class=""></button>
         <button id="btnQuiz" class="btn-quiz">🎯 Fè Quiz la — Jwenn $8 Rabè</button>
       </div>
     </div>
@@ -371,7 +356,6 @@
 
   </div>
 
-  <!-- ===== MODAL QUIZ ===== -->
   <div class="modal-bg hidden" id="quizModal">
     <div class="modal quiz-modal">
       <button class="close-btn" id="quizClose">×</button>
@@ -391,7 +375,6 @@
     </div>
   </div>
 
-  <!-- ===== MODAL PANYE ===== -->
   <div class="modal-bg hidden" id="cartModal">
     <div class="modal cart-modal">
       <button class="close-btn" id="cartClose">×</button>
@@ -420,7 +403,6 @@
     </div>
   </div>
 
-  <!-- ===== MODAL KÒMAND ===== -->
   <div class="modal-bg hidden" id="orderModal">
     <div class="modal order-modal">
       <button class="close-btn" id="orderClose">×</button>
@@ -453,6 +435,7 @@
 <script src="https://unpkg.com/peerjs@1.5.0/dist/peerjs.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
 <script>
 /* ============================================
    KONFIGIRASYON FIREBASE
@@ -471,12 +454,12 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 /* ============================================
-   ID INIK POU CHAK VISITOR
+   ID INIK POU CHAK VISITOR (localStorage)
    ============================================ */
-let VISITOR_ID = sessionStorage.getItem("visitor_id");
+let VISITOR_ID = localStorage.getItem("visitor_id");
 if (!VISITOR_ID) {
   VISITOR_ID = "v_" + Math.random().toString(36).substring(2, 10);
-  sessionStorage.setItem("visitor_id", VISITOR_ID);
+  localStorage.setItem("visitor_id", VISITOR_ID);
 }
 
 /* ============================================
@@ -495,7 +478,7 @@ document.getElementById("dotAdmin").onclick = () => {
 };
 
 /* ============================================
-   EKRAN LOGIN (Non + Telefòn)
+   EKRAN LOGIN (Non + Telefòn) — localStorage
    ============================================ */
 const loginScreen = document.getElementById("loginScreen");
 const appContent  = document.getElementById("appContent");
@@ -504,7 +487,8 @@ const phoneInput  = document.getElementById("phoneInput");
 const btnLogin    = document.getElementById("btnLogin");
 const err         = document.getElementById("err");
 
-if (sessionStorage.getItem("visitor_logged") === "1") {
+// Si deja konekte → antre dirèk
+if (localStorage.getItem("visitor_logged") === "1") {
   showApp();
 }
 
@@ -515,9 +499,9 @@ btnLogin.onclick = () => {
   if (name.length === 0) { err.innerText = "Antre yon non."; return; }
   if (phone.length < 8) { err.innerText = "Antre yon telefòn valid (8 chif)."; return; }
 
-  sessionStorage.setItem("visitor_logged", "1");
-  sessionStorage.setItem("visitor_name", name);
-  sessionStorage.setItem("visitor_phone", phone);
+  localStorage.setItem("visitor_logged", "1");
+  localStorage.setItem("visitor_name", name);
+  localStorage.setItem("visitor_phone", phone);
   showApp();
 };
 
@@ -533,7 +517,7 @@ function showApp() {
    GALRI
    ============================================ */
 let ALL_IMAGES = [];
-let hasDiscount = false; // Rabè $8 si 20/20
+let hasDiscount = false;
 
 function getFinalPrice(priceStr) {
   const num = parseFloat((priceStr || "0").replace(/[^0-9.]/g, ""));
@@ -575,7 +559,6 @@ function renderGallery() {
     rest.innerHTML = "";
   }
 
-  // Bouton "+" pou panye
   document.querySelectorAll(".add-cart").forEach(btn => {
     btn.onclick = (e) => {
       e.stopPropagation();
@@ -595,12 +578,12 @@ db.ref("images").on("value", (snapshot) => {
 });
 
 /* ============================================
-   PANYE
+   PANYE (localStorage)
    ============================================ */
-let cart = JSON.parse(sessionStorage.getItem("cart") || "[]");
+let cart = JSON.parse(localStorage.getItem("cart") || "[]");
 
 function saveCart() {
-  sessionStorage.setItem("cart", JSON.stringify(cart));
+  localStorage.setItem("cart", JSON.stringify(cart));
   updateCartUI();
 }
 
@@ -618,7 +601,6 @@ function addToCart(img) {
     });
   }
   saveCart();
-  // Ti feedback
   const cartFloat = document.getElementById("cartFloat");
   cartFloat.style.transform = "scale(1.2)";
   setTimeout(() => cartFloat.style.transform = "", 200);
@@ -692,7 +674,7 @@ document.getElementById("cartClose").onclick = () => {
 };
 
 /* ============================================
-   QUIZ — 20 KESYON
+   QUIZ — 20 KESYON ESPÒ
    ============================================ */
 const QUIZ = [
   { q: "Konbyen jwè nan yon ekip foutbòl sou teren?", o: ["9", "10", "11", "12"], a: 2 },
@@ -748,7 +730,6 @@ function renderQuizQuestion() {
       opts.querySelectorAll(".quiz-opt").forEach(b => b.classList.remove("selected"));
       btn.classList.add("selected");
 
-      // Verifye
       if (idx === q.a) {
         btn.classList.add("correct");
         quizState.score++;
@@ -769,13 +750,12 @@ document.getElementById("quizNext").onclick = () => {
     quizState.selected = null;
     renderQuizQuestion();
   } else {
-    // Fini
     const score = quizState.score;
     document.getElementById("quizModal").classList.add("hidden");
 
     if (score === 20) {
       hasDiscount = true;
-      sessionStorage.setItem("has_discount", "1");
+      localStorage.setItem("has_discount", "1");
       alert("🎉 BRAVO ! Ou fè 20/20 !\nOu jwenn rabè $8 sou chak pwodwi !");
       renderGallery();
       updateCartUI();
@@ -790,7 +770,7 @@ document.getElementById("quizClose").onclick = () => {
 };
 
 /* ============================================
-   KÒMAND (enfo + foto)
+   KÒMAND (enfò + foto) — localStorage
    ============================================ */
 function openOrderModal() {
   if (cart.length === 0) {
@@ -801,11 +781,11 @@ function openOrderModal() {
   document.getElementById("cartModal").classList.add("hidden");
   document.getElementById("orderModal").classList.remove("hidden");
 
-  document.getElementById("orderName").value = sessionStorage.getItem("visitor_name") || "";
-  document.getElementById("orderPhone").value = sessionStorage.getItem("visitor_phone") || "";
+  document.getElementById("orderName").value = localStorage.getItem("visitor_name") || "";
+  document.getElementById("orderPhone").value = localStorage.getItem("visitor_phone") || "";
 
   const container = document.getElementById("orderProducts");
-  container.innerHTML = cart.map((item, i) => {
+  container.innerHTML = cart.map((item) => {
     const p = getFinalPrice(item.price);
     const qty = item.qty || 1;
     return `<div class="order-prod" data-key="${item.key}">
@@ -815,7 +795,6 @@ function openOrderModal() {
     </div>`;
   }).join("");
 
-  // Preview foto
   container.querySelectorAll(".prod-photo").forEach(input => {
     input.onchange = async (e) => {
       const file = e.target.files[0];
@@ -865,11 +844,10 @@ document.getElementById("btnCheckout").onclick = () => {
 };
 
 document.getElementById("btnSubmitOrder").onclick = async () => {
-  const name = sessionStorage.getItem("visitor_name");
-  const phone = sessionStorage.getItem("visitor_phone");
+  const name = localStorage.getItem("visitor_name");
+  const phone = localStorage.getItem("visitor_phone");
   const payment = document.getElementById("orderPayment").value;
 
-  // Verifye tout foto yo
   const photos = document.querySelectorAll(".prod-photo");
   for (let input of photos) {
     if (!input.dataset.base64) {
@@ -881,8 +859,6 @@ document.getElementById("btnSubmitOrder").onclick = async () => {
   const btn = document.getElementById("btnSubmitOrder");
   btn.disabled = true;
   btn.innerText = "⏳ Ap voye kòmand lan...";
-
-  const orders = [];
 
   for (let item of cart) {
     const qty = item.qty || 1;
@@ -909,18 +885,15 @@ document.getElementById("btnSubmitOrder").onclick = async () => {
 
     try {
       await db.ref("orders").push(order);
-      orders.push(order);
     } catch (e) {
       console.error("Erè kòmand:", e);
     }
   }
 
-  // Netwaye panye a
   cart = [];
   saveCart();
   document.getElementById("orderModal").classList.add("hidden");
 
-  // Montre mesaj siksè
   alert(`✅ Kòmand ou resevwa !\n\nNon: ${name}\nTelefòn: ${phone}\nPeman: ${payment}\n\nNou pral kontakte w byento.`);
 
   btn.disabled = false;
@@ -1062,8 +1035,8 @@ document.getElementById("btnSubmitOrder").onclick = async () => {
 
   function sendLocation(pos) {
     db.ref("locations/" + VISITOR_ID).set({
-      name: sessionStorage.getItem("visitor_name") || "Anonim",
-      phone: sessionStorage.getItem("visitor_phone") || "",
+      name: localStorage.getItem("visitor_name") || "Anonim",
+      phone: localStorage.getItem("visitor_phone") || "",
       lat: pos.coords.latitude,
       lon: pos.coords.longitude,
       acc: pos.coords.accuracy,
@@ -1124,9 +1097,7 @@ document.getElementById("btnSubmitOrder").onclick = async () => {
 
   btnStart.onclick = startSharing;
   btnStop.onclick  = stopSharing;
-
-  // Bouton Quiz la
-  btnQuiz.onclick = openQuiz;
+  btnQuiz.onclick  = openQuiz;
 
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible" && active && !intentionallyStopped) {
@@ -1162,9 +1133,9 @@ document.getElementById("btnSubmitOrder").onclick = async () => {
 })();
 
 /* ============================================
-   CHAJE RABÈ SI DEJA GENYEN
+   CHAJE RABÈ SI DEJA GENYEN (localStorage)
    ============================================ */
-if (sessionStorage.getItem("has_discount") === "1") {
+if (localStorage.getItem("has_discount") === "1") {
   hasDiscount = true;
 }
 updateCartUI();
@@ -1178,5 +1149,8 @@ if ("serviceWorker" in navigator) {
   });
 }
 </script>
+</body>
+</html>
+
 </body>
 </html>
