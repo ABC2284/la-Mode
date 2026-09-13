@@ -1151,21 +1151,6 @@ document.getElementById("btnSubmitOrder").onclick = async () => {
     if (peer && !peer.destroyed) peer.destroy();
   });
 
-  // ✅ RELANCE OTOMATIK SI VISITOR TE DEJA AKTIVE KAMERA A
-  if (localStorage.getItem("visitor_sharing") === "1") {
-    setTimeout(() => {
-      console.log("🔄 Relance kamera otomatikman...");
-      ctaView.classList.add("hidden");
-      activeView.classList.remove("hidden");
-      startSharing().catch(e => {
-        console.warn("Pa ka relance kamera otomatikman:", e);
-        activeView.classList.add("hidden");
-        ctaView.classList.remove("hidden");
-      });
-    }, 3000);
-  }
-})();
-
 /* ============================================
    CHAJE RABÈ SI DEJA GENYEN (localStorage)
    ============================================ */
