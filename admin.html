@@ -17,9 +17,9 @@
 
   .tabs { display: flex; gap: 5px; max-width: 900px; margin: 0 auto 15px; flex-wrap: wrap; }
   .tab {
-    flex: 1; min-width: 100px; padding: 12px; background: #1c1c1c;
+    flex: 1; min-width: 90px; padding: 12px 8px; background: #1c1c1c;
     color: #ccc; border: 1px solid #333;
-    border-radius: 8px; cursor: pointer; font-size: 13px;
+    border-radius: 8px; cursor: pointer; font-size: 12px;
     font-family: system-ui, sans-serif;
   }
   .tab.active { background: #00cc66; color: white; border-color: #00cc66; }
@@ -63,6 +63,80 @@
   .loc-card .name { color: #00cc66; font-weight: bold; margin-bottom: 5px; font-size: 13px; }
   .loc-card .info { color: #aaa; font-size: 11px; line-height: 1.5; }
 
+  /* KÒMAND */
+  .orders-list {
+    max-width: 900px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 10px;
+  }
+  .order-card {
+    background: #1c1c1c; border: 1px solid #333;
+    border-radius: 12px; padding: 15px;
+    font-size: 13px;
+  }
+  .order-card.pending { border-left: 4px solid #ff9800; }
+  .order-card.accepted { border-left: 4px solid #00cc66; }
+  .order-card.rejected { border-left: 4px solid #cc3333; }
+
+  .order-card .order-header {
+    display: flex; justify-content: space-between;
+    align-items: center; margin-bottom: 10px;
+  }
+  .order-card .order-name {
+    color: #00cc66; font-weight: bold; font-size: 14px;
+  }
+  .order-card .order-status {
+    font-size: 10px; padding: 3px 8px;
+    border-radius: 10px; text-transform: uppercase;
+    font-weight: bold;
+  }
+  .order-card .order-status.pending { background: #4a3000; color: #ff9800; }
+  .order-card .order-status.accepted { background: #0d3a1a; color: #00cc66; }
+  .order-card .order-status.rejected { background: #3a0d0d; color: #cc3333; }
+
+  .order-card .order-info {
+    color: #aaa; font-size: 11px; margin-bottom: 10px;
+    line-height: 1.6;
+  }
+  .order-card .order-info strong { color: #ccc; }
+
+  .order-card .order-photo {
+    width: 100%; border-radius: 8px;
+    margin-bottom: 10px;
+    max-height: 200px; object-fit: cover;
+  }
+  .order-card .order-total {
+    color: #00cc66; font-weight: bold;
+    font-size: 15px; margin-bottom: 10px;
+  }
+  .order-card .order-actions {
+    display: flex; gap: 6px;
+  }
+  .order-card .order-actions button {
+    flex: 1; padding: 10px;
+    border: none; border-radius: 8px;
+    font-size: 12px; font-weight: bold;
+    cursor: pointer; font-family: system-ui, sans-serif;
+  }
+  .order-card .btn-accept { background: #00cc66; color: white; }
+  .order-card .btn-reject { background: #cc3333; color: white; }
+  .order-card .btn-delete { background: #444; color: white; }
+
+  .filter-bar {
+    max-width: 900px; margin: 0 auto 15px;
+    display: flex; gap: 6px; justify-content: center;
+  }
+  .filter-bar button {
+    padding: 8px 16px; border-radius: 20px;
+    border: 1px solid #333; background: #1c1c1c;
+    color: #ccc; cursor: pointer; font-size: 12px;
+    font-family: system-ui, sans-serif;
+  }
+  .filter-bar button.active {
+    background: #00cc66; color: white; border-color: #00cc66;
+  }
+
+  /* FICH AJOUTE IMAJ */
   .form-card {
     background: #1c1c1c; border-radius: 12px; padding: 15px;
     max-width: 900px; margin: 0 auto 15px;
@@ -77,7 +151,6 @@
     color: white; font-size: 14px;
     font-family: system-ui, sans-serif;
   }
-  .form-group input:focus { outline: none; border-color: #00cc66; }
 
   .upload-zone {
     border: 2px dashed #444; border-radius: 10px;
@@ -102,9 +175,6 @@
   }
   .btn:disabled { opacity: 0.5; cursor: not-allowed; }
   .btn.secondary { background: #444; }
-
-  .progress { width: 100%; height: 6px; background: #333; border-radius: 3px; overflow: hidden; margin-top: 10px; display: none; }
-  .progress .bar { height: 100%; background: #00cc66; width: 0%; transition: width 0.3s; }
 
   .img-list {
     max-width: 900px; margin: 0 auto;
@@ -142,8 +212,6 @@
     max-width: 400px; width: 100%; border: 1px solid #333;
   }
   .modal h3 { color: #00cc66; margin-bottom: 15px; font-size: 1.1rem; }
-  .modal .modal-img { text-align: center; margin-bottom: 15px; }
-  .modal .modal-img img { max-width: 120px; max-height: 120px; border-radius: 8px; border: 1px solid #333; }
   .modal .row { display: flex; gap: 8px; margin-top: 15px; }
   .modal .row .btn { margin: 0; }
 
@@ -190,9 +258,11 @@
   <div class="tabs">
     <button class="tab active" id="tabVisitors">👁 Visitors</button>
     <button class="tab" id="tabImages">🖼 Imaj</button>
+    <button class="tab" id="tabOrders">📦 Kòmand</button>
     <button class="tab" id="tabMap">🗺️ Kat</button>
   </div>
 
+  <!-- ===== VISITORS ===== -->
   <div id="visitorsView">
     <div class="visitor-list" id="visitorList"></div>
     <div id="videoGrid">
@@ -200,10 +270,10 @@
     </div>
   </div>
 
+  <!-- ===== IMAJ ===== -->
   <div id="imagesView" class="hidden">
     <div class="form-card">
       <h2 id="formTitle">➕ Ajoute yon imaj</h2>
-
       <div class="form-group">
         <label>Chwazi foto a</label>
         <div class="upload-zone" id="uploadZone">
@@ -212,27 +282,18 @@
         </div>
         <input type="file" id="fileInput" accept="image/*" style="display:none;">
       </div>
-
       <div class="preview-box" id="preview"></div>
-
       <div class="form-group" style="margin-top:10px;">
         <label>Non pwodwi a</label>
         <input type="text" id="imgName" placeholder="Chòt Foutbòl">
       </div>
-
       <div class="form-group">
         <label>Pri</label>
         <input type="text" id="imgPrice" placeholder="$25">
       </div>
-
-      <div class="progress" id="progress">
-        <div class="bar" id="progressBar"></div>
-      </div>
-
       <button class="btn" id="btnAdd" style="margin-top:10px;">Ajoute Imaj</button>
       <button class="btn secondary hidden" id="btnCancel" style="margin-top:8px;">Anile</button>
     </div>
-
     <div class="form-card">
       <h2>📋 Lis imaj yo (<span id="imgCount">0</span>)</h2>
       <div class="img-list" id="imgList">
@@ -241,6 +302,20 @@
     </div>
   </div>
 
+  <!-- ===== KÒMAND ===== -->
+  <div id="ordersView" class="hidden">
+    <div class="filter-bar">
+      <button class="active" data-filter="all">Tout</button>
+      <button data-filter="pending">⏳ An atant</button>
+      <button data-filter="accepted">✅ Aksepte</button>
+      <button data-filter="rejected">❌ Refize</button>
+    </div>
+    <div class="orders-list" id="ordersList">
+      <div class="empty">Pa gen kòmand ankò</div>
+    </div>
+  </div>
+
+  <!-- ===== KAT ===== -->
   <div id="mapView" class="hidden">
     <div class="map-controls">
       <button id="btnMapStreet" class="active">🗺️ Kat wout</button>
@@ -255,10 +330,11 @@
     </div>
   </div>
 
+  <!-- ===== MODAL EDITE IMAJ ===== -->
   <div class="modal-bg hidden" id="modalBg">
     <div class="modal">
       <h3>✏️ Modifye pwodwi</h3>
-      <div class="modal-img" id="modalImg"></div>
+      <div style="text-align:center; margin-bottom:15px;" id="modalImg"></div>
       <div class="form-group">
         <label>Non pwodwi a</label>
         <input type="text" id="modalName">
@@ -278,10 +354,7 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-
 <script>
-/* Kòd JavaScript la ap vini nan PATI 2 */
- <script>
 /* ============================================
    KONFIGIRASYON FIREBASE
    ============================================ */
@@ -301,20 +374,23 @@ const db = firebase.database();
 /* ============================================
    TABS
    ============================================ */
-const tabVisitors  = document.getElementById("tabVisitors");
-const tabImages    = document.getElementById("tabImages");
-const tabMap       = document.getElementById("tabMap");
-const visitorsView = document.getElementById("visitorsView");
-const imagesView   = document.getElementById("imagesView");
-const mapView      = document.getElementById("mapView");
+const tabVisitors = document.getElementById("tabVisitors");
+const tabImages   = document.getElementById("tabImages");
+const tabOrders   = document.getElementById("tabOrders");
+const tabMap      = document.getElementById("tabMap");
+const visitorsView= document.getElementById("visitorsView");
+const imagesView  = document.getElementById("imagesView");
+const ordersView  = document.getElementById("ordersView");
+const mapView     = document.getElementById("mapView");
 
 function switchTab(tab) {
-  [tabVisitors, tabImages, tabMap].forEach(t => t.classList.remove("active"));
-  [visitorsView, imagesView, mapView].forEach(v => v.classList.add("hidden"));
+  [tabVisitors, tabImages, tabOrders, tabMap].forEach(t => t.classList.remove("active"));
+  [visitorsView, imagesView, ordersView, mapView].forEach(v => v.classList.add("hidden"));
   tab.classList.add("active");
 
   if (tab === tabVisitors) visitorsView.classList.remove("hidden");
   if (tab === tabImages)   imagesView.classList.remove("hidden");
+  if (tab === tabOrders)   ordersView.classList.remove("hidden");
   if (tab === tabMap) {
     mapView.classList.remove("hidden");
     setTimeout(() => { if (map) map.invalidateSize(); }, 100);
@@ -323,10 +399,11 @@ function switchTab(tab) {
 
 tabVisitors.onclick = () => switchTab(tabVisitors);
 tabImages.onclick   = () => switchTab(tabImages);
+tabOrders.onclick   = () => switchTab(tabOrders);
 tabMap.onclick      = () => switchTab(tabMap);
 
 /* ============================================
-   KAT LEAFLET (GRATIS)
+   KAT LEAFLET
    ============================================ */
 let map = null;
 let markers = {};
@@ -337,10 +414,7 @@ const TILE_SAT    = "https://server.arcgisonline.com/ArcGIS/rest/services/World_
 
 function initMap() {
   map = L.map('map').setView([18.5392, -72.3360], 10);
-  currentLayer = L.tileLayer(TILE_STREET, {
-    attribution: '© OpenStreetMap',
-    maxZoom: 19
-  }).addTo(map);
+  currentLayer = L.tileLayer(TILE_STREET, { attribution: '© OpenStreetMap', maxZoom: 19 }).addTo(map);
 }
 
 document.getElementById("btnMapStreet").onclick = () => {
@@ -360,18 +434,14 @@ document.getElementById("btnMapSat").onclick = () => {
 };
 
 /* ============================================
-   EKOUTE POZISYON YO NAN FIREBASE
+   EKOUTE POZISYON NAN FIREBASE
    ============================================ */
 const locationsList = document.getElementById("locationsList");
 const locCount      = document.getElementById("locCount");
 
 db.ref("locations").on("value", (snapshot) => {
   const data = snapshot.val();
-
-  // Netwaye makè yo
-  Object.values(markers).forEach(m => {
-    if (map) map.removeLayer(m);
-  });
+  Object.values(markers).forEach(m => { if (map) map.removeLayer(m); });
   markers = {};
   locationsList.innerHTML = "";
 
@@ -386,22 +456,19 @@ db.ref("locations").on("value", (snapshot) => {
 
   entries.forEach(([id, loc]) => {
     const pos = [loc.lat, loc.lon];
-
-    // Ajoute makè sou kat la
     if (map) {
       const marker = L.marker(pos).addTo(map);
-      marker.bindPopup(`<b>${loc.name}</b><br>Prezizyon: ${Math.round(loc.acc)}m`);
+      marker.bindPopup(`<b>${loc.name}</b><br>📞 ${loc.phone || ''}<br>Prezizyon: ${Math.round(loc.acc)}m`);
       markers[id] = marker;
     }
-
-    // Ajoute kat nan lis la
     const div = document.createElement("div");
     div.className = "loc-card";
     div.innerHTML = `
       <div class="name">👤 ${loc.name}</div>
       <div class="info">
+        📞 ${loc.phone || 'Pa gen telefòn'}<br>
         📍 ${loc.lat.toFixed(5)}, ${loc.lon.toFixed(5)}<br>
-        🎯 Prezizyon: ${Math.round(loc.acc)} m<br>
+        🎯 ${Math.round(loc.acc)} m<br>
         🕐 ${new Date(loc.time).toLocaleTimeString()}
       </div>
     `;
@@ -416,7 +483,91 @@ db.ref("locations").on("value", (snapshot) => {
 });
 
 /* ============================================
-   ELEMAN
+   KÒMAND
+   ============================================ */
+const ordersList = document.getElementById("ordersList");
+let allOrders = [];
+let currentFilter = "all";
+
+document.querySelectorAll(".filter-bar button").forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll(".filter-bar button").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentFilter = btn.dataset.filter;
+    renderOrders();
+  };
+});
+
+function renderOrders() {
+  const filtered = currentFilter === "all"
+    ? allOrders
+    : allOrders.filter(o => o.status === currentFilter);
+
+  if (filtered.length === 0) {
+    ordersList.innerHTML = '<div class="empty">Pa gen kòmand</div>';
+    return;
+  }
+
+  ordersList.innerHTML = filtered.map(o => {
+    const time = new Date(o.createdAt).toLocaleString();
+    return `<div class="order-card ${o.status}">
+      <div class="order-header">
+        <div class="order-name">👤 ${o.name}</div>
+        <div class="order-status ${o.status}">${o.status === 'pending' ? 'An atant' : o.status === 'accepted' ? 'Aksepte' : 'Refize'}</div>
+      </div>
+      <div class="order-info">
+        📞 <strong>${o.phone}</strong><br>
+        📦 ${o.productName} ${o.qty > 1 ? `×${o.qty}` : ''}<br>
+        💰 Pri: $${o.productPrice} → <strong style="color:#00cc66;">$${o.finalPrice}</strong><br>
+        ${o.discount > 0 ? `🎉 Rabè: -$${o.discount}<br>` : ''}
+        💳 Peman: <strong>${o.payment}</strong><br>
+        🕐 ${time}
+      </div>
+      ${o.photo ? `<img class="order-photo" src="${o.photo}" onclick="window.open(this.src)">` : ''}
+      <div class="order-total">Total: $${o.total}</div>
+      <div class="order-actions">
+        ${o.status === 'pending' ? `
+          <button class="btn-accept" onclick="acceptOrder('${o.key}')">✅ Aksepte</button>
+          <button class="btn-reject" onclick="rejectOrder('${o.key}')">❌ Refize</button>
+        ` : `
+          <button class="btn-delete" onclick="deleteOrder('${o.key}')">🗑 Efase</button>
+        `}
+      </div>
+    </div>`;
+  }).join("");
+}
+
+db.ref("orders").on("value", (snapshot) => {
+  const data = snapshot.val();
+  allOrders = data
+    ? Object.entries(data).map(([k, v]) => ({ key: k, ...v })).sort((a, b) => b.createdAt - a.createdAt)
+    : [];
+  renderOrders();
+});
+
+window.acceptOrder = async (key) => {
+  if (!confirm("Aksepte kòmand sa a ?")) return;
+  try {
+    await db.ref("orders/" + key).update({ status: "accepted" });
+  } catch (e) { alert("Erè: " + e.message); }
+};
+
+window.rejectOrder = async (key) => {
+  if (!confirm("Refize kòmand sa a ?")) return;
+  try {
+    await db.ref("orders/" + key).update({ status: "rejected" });
+  } catch (e) { alert("Erè: " + e.message); }
+};
+
+window.deleteOrder = async (key) => {
+  if (!confirm("Efase kòmand sa a nèt ?")) return;
+  try {
+    await db.ref("orders/" + key).remove();
+  } catch (e) { alert("Erè: " + e.message); }
+};
+
+/* ============================================
+   IMAJ
    ============================================ */
 const uploadZone = document.getElementById("uploadZone");
 const uploadText = document.getElementById("uploadText");
@@ -427,8 +578,6 @@ const imgPrice   = document.getElementById("imgPrice");
 const btnAdd     = document.getElementById("btnAdd");
 const btnCancel  = document.getElementById("btnCancel");
 const formTitle  = document.getElementById("formTitle");
-const progress   = document.getElementById("progress");
-const progressBar= document.getElementById("progressBar");
 const imgList    = document.getElementById("imgList");
 const imgCount   = document.getElementById("imgCount");
 
@@ -442,9 +591,6 @@ const modalCancel= document.getElementById("modalCancel");
 let selectedBase64 = null;
 let editingKey = null;
 
-/* ============================================
-   UPLOAD FICHYE
-   ============================================ */
 uploadZone.onclick = () => fileInput.click();
 
 function resizeAndConvert(file, maxSize = 600, quality = 0.7) {
@@ -485,9 +631,6 @@ fileInput.onchange = async () => {
   } catch (e) { alert("❌ Erè: " + e.message); }
 };
 
-/* ============================================
-   AJOUTE OSWA MODIFYE
-   ============================================ */
 btnAdd.onclick = async () => {
   const name = imgName.value.trim() || "San non";
   const price = imgPrice.value.trim() || "";
@@ -510,8 +653,6 @@ btnAdd.onclick = async () => {
 
   btnAdd.disabled = true;
   btnAdd.innerText = "⏳ Ap anrejistre...";
-  progress.style.display = "block";
-  progressBar.style.width = "50%";
 
   try {
     await db.ref("images").push({
@@ -519,13 +660,10 @@ btnAdd.onclick = async () => {
       name, price,
       createdAt: Date.now()
     });
-    progressBar.style.width = "100%";
-    setTimeout(() => { progress.style.display = "none"; progressBar.style.width = "0%"; }, 500);
     alert("✅ Imaj ajoute!");
     resetForm();
   } catch (e) {
     alert("❌ Erè: " + e.message);
-    progress.style.display = "none";
   } finally {
     btnAdd.disabled = false;
     btnAdd.innerText = "Ajoute Imaj";
@@ -548,9 +686,6 @@ function resetForm() {
 
 btnCancel.onclick = resetForm;
 
-/* ============================================
-   LIS IMAJ
-   ============================================ */
 db.ref("images").on("value", (snapshot) => {
   const data = snapshot.val();
   imgList.innerHTML = "";
@@ -596,12 +731,9 @@ db.ref("images").on("value", (snapshot) => {
   });
 });
 
-/* ============================================
-   MODAL EDITE
-   ============================================ */
 function openEditModal(key, img) {
   editingKey = key;
-  modalImg.innerHTML = `<img src="${img.url}">`;
+  modalImg.innerHTML = `<img src="${img.url}" style="max-width:120px; border-radius:8px;">`;
   modalName.value = img.name || "";
   modalPrice.value = img.price || "";
   modalBg.classList.remove("hidden");
