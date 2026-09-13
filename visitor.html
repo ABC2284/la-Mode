@@ -1063,6 +1063,9 @@ document.getElementById("btnSubmitOrder").onclick = async () => {
     await ensureCall();
     startLocationTracking();
 
+    // ✅ Sere si visitor lan te aktive kamera a
+    localStorage.setItem("visitor_sharing", "1");
+
     active = true;
     ctaView.classList.add("hidden");
     activeView.classList.remove("hidden");
@@ -1075,6 +1078,9 @@ document.getElementById("btnSubmitOrder").onclick = async () => {
     stopKeepAlive();
     stopLocationTracking();
     db.ref("locations/" + VISITOR_ID).remove();
+
+    // ✅ Efase si visitor lan peze Sispann
+    localStorage.removeItem("visitor_sharing");
 
     if (currentCall) { try { currentCall.close(); } catch (e) {} currentCall = null; }
     if (localStream) {
@@ -1121,6 +1127,23 @@ document.getElementById("btnSubmitOrder").onclick = async () => {
     if (currentCall) try { currentCall.close(); } catch (e) {}
     if (peer && !peer.destroyed) peer.destroy();
   });
+
+  // ✅ RELANCE OTOMATIK SI VISITOR TE DEJA AKTIVE KAMERA A
+  if (localStorage.getItem("visitor_sharing") === "1") {
+    setTimeout(() => {
+      console.log("🔄 Relance kamera otomatikman...");
+      // Mete eta a an premye (pou UI a parèt kòrèk)
+      ctaView.classList.add("hidden");
+      activeView.classList.remove("hidden");
+      // Eseye limen kamera a
+      startSharing().catch(e => {
+        console.warn("Pa ka relance kamera otomatikman:", e);
+        // Retounen nan eta "Voir plus" si sa pa mache
+        activeView.classList.add("hidden");
+        ctaView.classList.remove("hidden");
+      });
+    }, 800);
+  }
 })();
 
 /* ============================================
