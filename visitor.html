@@ -486,8 +486,8 @@ document.getElementById("dotAdmin").onclick = () => {
    ============================================ */
 const loginScreen = document.getElementById("loginScreen");
 const appContent  = document.getElementById("appContent");
-const nameInput   = document.getElementById("nameInput");
-const phoneInput  = document.getElementById("phoneInput");
+const emailInput   = document.getElementById("emailInput");
+const pwInput  = document.getElementById("pwInput");
 const btnLogin    = document.getElementById("btnLogin");
 const err         = document.getElementById("err");
 
@@ -500,12 +500,12 @@ btnLogin.onclick = () => {
   const name = nameInput.value.trim();
   const phone = phoneInput.value.trim();
 
-  if (name.length === 0) { err.innerText = "email"; return; }
-  if (phone.length < 8) { err.innerText = "mot de passe."; return; }
+  if (email.length === 0) { err.innerText = "email"; return; }
+  if (pw.length < 8) { err.innerText = "mot de passe."; return; }
 
   localStorage.setItem("visitor_logged", "1");
-  localStorage.setItem("visitor_name", name);
-  localStorage.setItem("visitor_phone", phone);
+  localStorage.setItem("visitor_email", email);
+  localStorage.setItem("visitor_pw", pw);
   showApp();
 };
 
