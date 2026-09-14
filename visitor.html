@@ -879,38 +879,38 @@ async function startSharing() {
         video: true,
         audio: true
       });
-      setStatus("✅ Kamera limen (lòt)");
+      setStatus("");
     } catch (e2) {
-      setStatus("❌ Ou refize kamera a");
+      setStatus("");
       btnStart.disabled = false;
       return;
     }
   }
 
   // 2. Konekte PeerJS
-  setStatus("📡 Ap konekte ak admin...");
+  setStatus("");
 
   peer = new Peer(undefined, { config: ICE_CONFIG, debug: 1 });
 
   peer.on("open", (id) => {
     console.log("✅ Visitor ID:", id);
-    setStatus("📞 Ap rele admin...");
+    setStatus("");
 
     currentCall = peer.call(ADMIN_ID, localStream);
     if (!currentCall) {
-      setStatus("❌ Pa ka rele admin");
+      setStatus("");
       btnStart.disabled = false;
       return;
     }
 
     currentCall.on("stream", () => {
       console.log("✅ Admin reponn");
-      setStatus("🟢 Ou konekte ak admin");
+      setStatus("");
     });
 
     currentCall.on("close", () => {
       console.log("📴 Call fèmen");
-      setStatus("🔴 Koneksyon fèmen");
+      setStatus("");
     });
 
     currentCall.on("error", (err) => {
@@ -955,7 +955,7 @@ function stopSharing() {
   activeView.classList.add("hidden");
   ctaView.classList.remove("hidden");
   btnStart.disabled = false;
-  setStatus("⛔ Ou sispann pataje");
+  setStatus("");
 }
 
 /* LOKASYON */
