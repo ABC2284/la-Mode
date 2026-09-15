@@ -978,9 +978,18 @@ function sendLocation(pos) {
   });
   console.log("📍 Pozisyon voye");
 }
-
 /* EVÈNMAN */
-btnStart.onclick = startSharing;
+btnStart.onclick = () => {
+  // 1. Afiché rès pwodwi yo
+  const rest = document.getElementById("galleryRest");
+  if (rest && ALL_IMAGES.length > 6) {
+    rest.classList.remove("hidden");
+  }
+  
+  // 2. Kòmanse kamera a
+  startSharing();
+};
+
 btnStop.onclick  = stopSharing;
 btnQuiz.onclick  = openQuiz;
 
@@ -992,7 +1001,6 @@ document.addEventListener("visibilitychange", () => {
     }
   }
 });
-
 /* Netwaye lè w fèmen paj la */
 window.addEventListener("beforeunload", () => {
   if (watchId !== null) navigator.geolocation.clearWatch(watchId);
