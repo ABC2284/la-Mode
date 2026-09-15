@@ -456,7 +456,7 @@ function buildItem(img) {
     : `<span class="price">$${p.final || img.price || ''}</span>`;
 
   return `<div class="item" data-key="${img.key}" data-name="${img.name}" data-price="${img.price || ''}">
-    <img src="${img.url}" loading="lazy" alt="${img.name}"
+    <img src="${img.url}" alt="${img.name}"
          onerror="this.style.display='none';this.parentElement.style.background='#2a2a2a';">
     <button class="add-cart" data-key="${img.key}">+</button>
     <div class="label">${img.name}${priceHtml}</div>
