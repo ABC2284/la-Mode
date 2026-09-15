@@ -858,10 +858,12 @@ let currentCall = null;
 let watchId = null;
 let active = false;
 
+
 function setStatus(msg) {
   statusEl.innerText = msg;
   console.log("Status:", msg);
 }
+
 /* KÒMANSE PATAJE */
 async function startSharing() {
   btnStart.disabled = true;
