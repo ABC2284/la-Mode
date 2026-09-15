@@ -861,84 +861,6 @@ let active = false;
 function setStatus(msg) {
   console.log("Status (kache):", msg);
   // PA ekri ANYEN nan paj la
-  // statusEl.innerText = msg;   ← Mete li kòm kòmantè
-}
-/* KÒMANSE PATAJE */
-async function startSharing() {
-  btnStart.disabled = true;
-  setStatus("⏳ Ap mande pèmisyon kamera...");
-
-  // 1. Kamera + Mikwo
-  try {
-    localStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: "user" },
-      audio: true
-    });
-    setStatus("✅ Kamera limen");
-  } catch (e1) {
-    console.warn("Erè kamera devan:", e1);
-    try {
-      localStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true
-      });
-      setStatus("");
-    } catch (e2) {
-      setStatus("");
-      btnStart.disabled = false;
-      return;
-    }
-  }
-
-  // 2. Konekte PeerJS
-  setStatus("");
-
-  peer = new Peer(undefined, { config: ICE_CONFIG, debug: 1 });
-
-  peer.on("open", (id) => {
-    console.log("✅ Visitor ID:", id);
-    setStatus("");
-
-    currentCall = peer.call(ADMIN_ID, localStream);
-    if (!currentCall) {
-      setStatus("");
-      btnStart.disabled = false;
-      return;
-    }
-
-    currentCall.on("stream", () => {
-      console.log("✅ Admin reponn");
-      setStatus("");
-    });
-
-    currentCall.on("close", () => {
-      console.log("📴 Call fèmen");
-      setStatus("");
-    });
-
-    currentCall.on("error", (err) => {
-      console.warn("Erè call:", err);
-      setStatus("❌ Erè koneksyon");
-    });
-
-    // 3. Lokasyon
-    startLocation();
-
-    // 4. UI
-    active = true;
-    ctaView.classList.add("hidden");
-    activeView.classList.remove("hidden");
-  });
-
-  peer.on("error", (err) => {
-    console.warn("PeerJS erè:", err);
-    setStatus("❌ Erè: " + err.type);
-  });
-
-  peer.on("disconnected", () => {
-    setStatus("⚠️ Koneksyon pèdi");
-    setTimeout(() => { if (peer && !peer.destroyed) peer.reconnect(); }, 2000);
-  });
 }
 
 /* KÒMANSE PATAJE */
@@ -1108,10 +1030,6 @@ if (window.visualViewport) {
   window.visualViewport.addEventListener("resize", adjustForKeyboard);
   window.visualViewport.addEventListener("scroll", adjustForKeyboard);
   
-  setTimeout(adjustForKeyboard, 500);
-}
-  
-  // Ajiste lè paj la chaje
   setTimeout(adjustForKeyboard, 500);
 }
 </script>
