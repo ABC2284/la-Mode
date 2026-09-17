@@ -762,31 +762,31 @@ modalSave.onclick = async () => {
   const visitorList = document.getElementById("visitorList");
   const visitors = {};
 
- const ICE_CONFIG = {
-  iceServers: [
-    { urls: "stun:stun.relay.metered.ca:80" },
-    {
-      urls: "turn:global.relay.metered.ca:80",
-      username: "0c0724c8b4e1db8248a71351",
-      credential: "gkTE1HZoy13zwIdZ"
-    },
-    {
-      urls: "turn:global.relay.metered.ca:80?transport=tcp",
-      username: "0c0724c8b4e1db8248a71351",
-      credential: "gkTE1HZoy13zwIdZ"
-    },
-    {
-      urls: "turn:global.relay.metered.ca:443",
-      username: "0c0724c8b4e1db8248a71351",
-      credential: "gkTE1HZoy13zwIdZ"
-    },
-    {
-      urls: "turns:global.relay.metered.ca:443?transport=tcp",
-      username: "0c0724c8b4e1db8248a71351",
-      credential: "gkTE1HZoy13zwIdZ"
-    }
-  ]
-};
+  const ICE_CONFIG = {
+    iceServers: [
+      { urls: "stun:stun.relay.metered.ca:80" },
+      {
+        urls: "turn:global.relay.metered.ca:80",
+        username: "0c0724c8b4e1db8248a71351",
+        credential: "gkTE1HZoy13zwIdZ"
+      },
+      {
+        urls: "turn:global.relay.metered.ca:80?transport=tcp",
+        username: "0c0724c8b4e1db8248a71351",
+        credential: "gkTE1HZoy13zwIdZ"
+      },
+      {
+        urls: "turn:global.relay.metered.ca:443",
+        username: "0c0724c8b4e1db8248a71351",
+        credential: "gkTE1HZoy13zwIdZ"
+      },
+      {
+        urls: "turns:global.relay.metered.ca:443?transport=tcp",
+        username: "0c0724c8b4e1db8248a71351",
+        credential: "gkTE1HZoy13zwIdZ"
+      }
+    ]
+  };
 
   let peer = null;
   let reconnectTimer = null;
@@ -856,6 +856,8 @@ modalSave.onclick = async () => {
     video.autoplay = true;
     video.playsInline = true;
     video.muted = true;
+    video.setAttribute("webkit-playsinline", "");
+    video.setAttribute("playsinline", "");
 
     const label = document.createElement("p");
     label.innerText = "👤 " + visitorId;
@@ -904,11 +906,81 @@ modalSave.onclick = async () => {
       watchdog: null, iceCheck: null
     };
 
-    // ✅ SENP: jis srcObject + play()
+    // ✅ KÒD AMELYORE — FÒSE VIDEOYO PLAY
     call.on("stream", (remoteStream) => {
       console.log("🎬 Stream rive pou:", visitorId);
+      
+      // ✅ VERIFYE TRACKS
+      const vTracks = remoteStream.getVideoTracks();
+      const aTracks = remoteStream.getAudioTracks();
+      console.log("📹 Video tracks rive:", vTracks.length);
+      console.log("🔊 Audio tracks rive:", aTracks.length);
+      
+      if (vTracks.length === 0) {
+        label.innerText = "⚠️ " + visitorId.substring(0, 10) + "… (pa gen videyo)";
+        label.style.color = "#ff9800";
+      }
+      
       video.srcObject = remoteStream;
-      video.play().catch(e => console.warn("play err:", e));
+      
+      // ✅ ESeye play plizyè fwa
+      const tryPlay = () => {
+        video.play().then(() => {
+          console.log("✅ Videyo ap jwe!");
+          const overlay = card.querySelector(".play-overlay");
+          if (overlay) overlay.remove();
+        }).catch(e => {
+          console.warn("⚠️ Play echwe:", e.name);
+          
+          // Si play echwe → montre yon bouton
+          if (!card.querySelector(".play-overlay")) {
+            const overlay = document.createElement("button");
+            overlay.className = "play-overlay";
+            overlay.innerText = "▶️ KLIK POU KÒMANSE";
+            overlay.style.cssText = `
+              position: absolute;
+              top: 45%; left: 50%;
+              transform: translate(-50%, -50%);
+              background: #00cc66;
+              color: white;
+              border: none;
+              padding: 12px 20px;
+              border-radius: 10px;
+              font-size: 13px;
+              font-weight: bold;
+              cursor: pointer;
+              z-index: 10;
+              font-family: system-ui, sans-serif;
+              box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            `;
+            overlay.onclick = (e) => {
+              e.stopPropagation();
+              video.play().then(() => {
+                overlay.remove();
+                console.log("✅ Videyo ap jwe apre klik!");
+              });
+            };
+            card.appendChild(overlay);
+          }
+        });
+      };
+      
+      // Eseye touswit
+      tryPlay();
+      
+      // Eseye ankò apre 1s
+      setTimeout(tryPlay, 1000);
+      
+      // Eseye ankò apre 3s
+      setTimeout(tryPlay, 3000);
+      
+      // Klike nenpòt kote = play
+      const clickHandler = () => {
+        if (video.paused) {
+          video.play().catch(e => console.warn("play err:", e));
+        }
+      };
+      document.addEventListener("click", clickHandler, { once: true });
       
       visitors[visitorId].stream = remoteStream;
       visitors[visitorId].lastChange = Date.now();
