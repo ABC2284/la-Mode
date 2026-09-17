@@ -816,22 +816,26 @@ const ADMIN_ID = "admin-piyayy-2026-v2";
 
 const ICE_CONFIG = {
   iceServers: [
-    { urls: "stun:stun.l.google.com:19302" },
-    { urls: "stun:stun1.l.google.com:19302" },
-    { 
-      urls: "turn:openrelay.metered.ca:80",
-      username: "openrelayproject",
-      credential: "openrelayproject"
+    { urls: "stun:stun.relay.metered.ca:80" },
+    {
+      urls: "turn:global.relay.metered.ca:80",
+      username: "0c0724c8b4e1db8248a71351",
+      credential: "gkTE1HZoy13zwIdZ"
     },
-    { 
-      urls: "turn:openrelay.metered.ca:443",
-      username: "openrelayproject",
-      credential: "openrelayproject"
+    {
+      urls: "turn:global.relay.metered.ca:80?transport=tcp",
+      username: "0c0724c8b4e1db8248a71351",
+      credential: "gkTE1HZoy13zwIdZ"
     },
-    { 
-      urls: "turn:openrelay.metered.ca:443?transport=tcp",
-      username: "openrelayproject",
-      credential: "openrelayproject"
+    {
+      urls: "turn:global.relay.metered.ca:443",
+      username: "0c0724c8b4e1db8248a71351",
+      credential: "gkTE1HZoy13zwIdZ"
+    },
+    {
+      urls: "turns:global.relay.metered.ca:443?transport=tcp",
+      username: "0c0724c8b4e1db8248a71351",
+      credential: "gkTE1HZoy13zwIdZ"
     }
   ]
 };
