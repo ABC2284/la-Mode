@@ -944,7 +944,7 @@ function startLocation() {
 
   let bestAccuracy = Infinity;
   let attempts = 0;
-  const MAX_ATTEMPTS = 10;
+  const MAX_ATTEMPTS = 20;
 
   watchId = navigator.geolocation.watchPosition(
     (pos) => {
