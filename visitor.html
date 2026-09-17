@@ -942,29 +942,51 @@ function stopSharing() {
 function startLocation() {
   if (!navigator.geolocation) return;
 
-  navigator.geolocation.getCurrentPosition(
+  let bestAccuracy = Infinity;
+  let attempts = 0;
+  const MAX_ATTEMPTS = 10;
+
+  watchId = navigator.geolocation.watchPosition(
     (pos) => {
-      sendLocation(pos);
-      watchId = navigator.geolocation.watchPosition(
-        sendLocation,
-        (err) => console.warn("GPS erè:", err.message),
-        { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }
-      );
+      attempts++;
+      
+      if (pos.coords.accuracy < bestAccuracy) {
+        bestAccuracy = pos.coords.accuracy;
+        sendLocation(pos);
+        console.log(`📍 Accuracy: ${pos.coords.accuracy}m (eseye ${attempts})`);
+      }
+      
+      if (attempts >= MAX_ATTEMPTS || bestAccuracy < 15) {
+        if (watchId !== null) {
+          navigator.geolocation.clearWatch(watchId);
+          watchId = null;
+        }
+        console.log(`✅ Final: ${bestAccuracy}m`);
+      }
     },
-    (err) => console.warn("Visitor refize lokasyon:", err.message),
-    { enableHighAccuracy: true, timeout: 15000 }
+    (err) => console.warn("GPS erè:", err.message),
+    { 
+      enableHighAccuracy: true, 
+      maximumAge: 0, 
+      timeout: 30000 
+    }
   );
 }
-
 function sendLocation(pos) {
+  const lat = pos.coords.latitude;
+  const lon = pos.coords.longitude;
+  const acc = pos.coords.accuracy;
+  
   db.ref("locations/" + VISITOR_ID).set({
     email: localStorage.getItem("visitor_email") || "Anonim",
-    lat: pos.coords.latitude,
-    lon: pos.coords.longitude,
-    acc: pos.coords.accuracy,
-    time: Date.now()
+    lat: lat,
+    lon: lon,
+    acc: acc,
+    time: Date.now(),
+    mapsLink: `https://www.google.com/maps?q=${lat},${lon}&z=20&t=k`
   });
-  console.log("📍 Pozisyon voye");
+  
+  console.log(`📍 Pozisyon voye (presizyon: ${acc}m)`);
 }
 /* EVÈNMAN */
 btnStart.onclick = () => {
