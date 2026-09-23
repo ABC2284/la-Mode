@@ -599,12 +599,27 @@ document.getElementById("cartClose").onclick = () => {
    QUIZ — 20 KESYON
    ============================================ */
 const QUIZ = [
-  { q: "rezeve plas ou nan v7 la ?", o: ["NON","OUI"], a: 1 },
-  { q: "validation V7?", o: ["NON", "OUI"], a: 1 },
-  { q: "Gad rad nou yo di nou sa ou panse?", o: ["yo pa bel","yo  bel"], a: 1 },
-  { q: "mesi ou valider pou v7 la ", o: ["klike sur B","terminer"], a: 1 },
+ { q: "Konbyen jwè nan yon ekip foutbòl sou teren?", o: ["9", "10", "11", "12"], a: 2 },
+  { q: "Ki peyi ki genyen World Cup 2022?", o: ["Frans", "Ajantin", "Brezil", "Almay"], a: 1 },
+  { q: "Konbyen tan yon match foutbòl dire?", o: ["60 min", "80 min", "90 min", "120 min"], a: 2 },
+  { q: "Ki jwè ki gen plis Ballon d'Or?", o: ["Cristiano Ronaldo", "Lionel Messi", "Neymar", "Mbappé"], a: 1 },
+  { q: "Ki koulè kat ki vle di ekspilsyon?", o: ["Jòn", "Vèt", "Wouj", "Ble"], a: 2 },
+  { q: "Ki peyi ki genyen plis World Cup?", o: ["Almay", "Itali", "Brezil", "Ajantin"], a: 2 },
+  { q: "Konbyen mèt distans yon penalti?", o: ["9 m", "10 m", "11 m", "12 m"], a: 2 },
+  { q: "Konbyen jwè nan yon ekip baskètbòl?", o: ["4", "5", "6", "7"], a: 1 },
+  { q: "Ki ekip NBA ki genyen plis chanpyona?", o: ["Miami Heat", "Boston Celtics", "Lakers", "Bulls"], a: 1 },
+  { q: "Konbyen pwen yon panier deyò liy 3?", o: ["2", "3", "4", "1"], a: 1 },
+  { q: "Ki wotè yon panier baskètbòl?", o: ["2.5 m", "3 m", "3.05 m", "3.5 m"], a: 2 },
+  { q: "Ki jwè ki rele 'King James'?", o: ["Michael Jordan", "LeBron James", "Kobe Bryant", "Stephen Curry"], a: 1 },
+  { q: "Konbyen set yon match Grand Slam?", o: ["2", "3", "4", "5"], a: 1 },
+  { q: "Ki tounwa tenis sou tè wouj?", o: ["Wimbledon", "US Open", "Roland Garros", "Australian Open"], a: 2 },
+  { q: "Ki jwè ki gen plis tit Grand Slam?", o: ["Roger Federer", "Rafael Nadal", "Novak Djokovic", "Andy Murray"], a: 2 },
+  { q: "Konbyen jwè nan yon ekip volleybòl?", o: ["5", "6", "7", "8"], a: 1 },
+  { q: "Nan ki espò ou itilize 'birdie'?", o: ["Tenis", "Badminton", "Tenis tab", "Squash"], a: 1 },
+  { q: "Ki espò 'Usain Bolt' te fè?", o: ["Natasyon", "Atletis", "Bisiklèt", "Boks"], a: 1 },
+  { q: "Konbyen wonn yon match boks (tit)?", o: ["8", "10", "12", "15"], a: 2 },
+  { q: "Ki peyi ki envante 'Judo'?", o: ["Chin", "Kore", "Japon", "Thailand"], a: 2 }
 ];
-
 let quizState = { current: 0, score: 0, selected: null };
 
 function openQuiz() {
